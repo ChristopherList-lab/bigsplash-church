@@ -12,10 +12,9 @@ Then commit and push this folder. After the redirect is on, edit the files here 
 
 ## DNS (GoDaddy)
 
+- Delete every A record on `@` that GoDaddy put there (parking, shown as one row or two). If it refuses, turn off Forwarding first.
 - A record, host `@`, value `185.199.108.153`
 - A record, host `@`, value `185.199.109.153`
 - A record, host `@`, value `185.199.110.153`
 - A record, host `@`, value `185.199.111.153`
-- CNAME record, host `www`, value `christopherlist-lab.github.io`
-
-Remove GoDaddy's parked A record on `@` first.
+- Edit the existing `www` CNAME so its value is `christopherlist-lab.github.io`
