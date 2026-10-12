@@ -24,7 +24,7 @@ def must(text, old, new, label):
 
 # ---- home page ----
 s = (SRC / 'church' / 'index.html').read_text()
-s = s.replace('../assets/', 'assets/').replace('../js/intake.js', 'js/intake.js')
+s = s.replace('../assets/', 'assets/').replace('../ADs/', 'ADs/').replace('../js/intake.js', 'js/intake.js')
 s = must(s, '<link rel="canonical" href="https://bigsplash.video/church/">', f'<link rel="canonical" href="{DOMAIN}/">', 'canonical')
 s = must(s, '<meta property="og:url" content="https://bigsplash.video/church/">', f'<meta property="og:url" content="{DOMAIN}/">', 'og:url')
 s = must(s, 'https://bigsplash.video/assets/images/og-image.jpg', f'{DOMAIN}/assets/images/og-image.jpg', 'og:image')
@@ -40,7 +40,7 @@ t = t.replace('../../assets/', '../assets/')
 # ---- shared script and the assets the two pages use ----
 (OUT / 'js').mkdir(exist_ok=True)
 shutil.copy2(SRC / 'js' / 'intake.js', OUT / 'js' / 'intake.js')
-refs = set(re.findall(r'''(?:src|href)=["'](?:\.\./)?(assets/[^"'?#]+)''', s + t))
+refs = set(re.findall(r'''(?:src|href|poster)=["'](?:\.\./)?((?:assets|ADs)/[^"'?#]+)''', s + t))
 refs |= set(re.findall(r'''url\(['"]?(?:\.\./)?(assets/[^'")]+)''', s + t))
 refs.add('assets/images/og-image.jpg')
 for r in sorted(refs):
@@ -55,7 +55,7 @@ for r in sorted(refs):
 problems = []
 for name, text in (('index.html', s), ('thanks/index.html', t)):
     base = (OUT / name).parent
-    for m in re.finditer(r'''(?:src|href)=["']([^"']+)["']''', text):
+    for m in re.finditer(r'''(?:src|href|poster)=["']([^"']+)["']''', text):
         u = m.group(1)
         if re.match(r'^(https?:|mailto:|tel:|#|data:|javascript:)', u) or u in ('./', '../'):
             continue
