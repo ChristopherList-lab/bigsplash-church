@@ -16,15 +16,23 @@ from pathlib import Path
 SRC = Path.home() / 'Desktop' / 'BigsplashWeb_VIdeoONLY'
 OUT = Path(__file__).resolve().parent
 DOMAIN = 'https://bigsplash.church'
+MAIN = 'https://bigsplash.video'
 
 def must(text, old, new, label):
     if old not in text:
         sys.exit(f'sync: expected to find {label!r} in the source page')
     return text.replace(old, new)
 
+def main_site_links(text):
+    # /church/ is this site's home page. Other root-relative links (/frontdoor/, /privacy/)
+    # live on the main site, so point them there.
+    text = re.sub(r'''((?:src|href|poster)=["'])/church/''', rf'\1{DOMAIN}/', text)
+    text = re.sub(r'''((?:src|href|poster)=["'])/(?!/)''', rf'\1{MAIN}/', text)
+    return re.sub(r'''(content=["']\d+;\s*url=)/(?!/)''', rf'\1{MAIN}/', text)
+
 # ---- home page ----
 s = (SRC / 'church' / 'index.html').read_text()
-s = s.replace('../assets/', 'assets/').replace('../ADs/', 'ADs/').replace('../js/intake.js', 'js/intake.js')
+s = main_site_links(s.replace('../assets/', 'assets/').replace('../ADs/', 'ADs/').replace('../js/intake.js', 'js/intake.js'))
 s = must(s, '<link rel="canonical" href="https://bigsplash.video/church/">', f'<link rel="canonical" href="{DOMAIN}/">', 'canonical')
 s = must(s, '<meta property="og:url" content="https://bigsplash.video/church/">', f'<meta property="og:url" content="{DOMAIN}/">', 'og:url')
 s = must(s, 'https://bigsplash.video/assets/images/og-image.jpg', f'{DOMAIN}/assets/images/og-image.jpg', 'og:image')
@@ -33,7 +41,7 @@ s = must(s, '"url": "https://bigsplash.video", "email"', f'"url": "{DOMAIN}", "e
 
 # ---- thank-you page ----
 t = (SRC / 'church' / 'thanks' / 'index.html').read_text()
-t = t.replace('../../assets/', '../assets/')
+t = main_site_links(t.replace('../../assets/', '../assets/'))
 (OUT / 'thanks').mkdir(exist_ok=True)
 (OUT / 'thanks' / 'index.html').write_text(t)
 
