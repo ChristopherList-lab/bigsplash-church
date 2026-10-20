@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Rebuild this standalone church site from the main Big Splash repo.
 
-Until bigsplash.church is live, the church page is edited in
-~/Desktop/BigsplashWeb_VIdeoONLY/church and this script copies it here with the
-paths adjusted for a site that lives at the domain root.
+Until bigsplash.church is live, the church pages are edited in
+~/Desktop/BigsplashWeb_VIdeoONLY/church and this script copies them here with the
+paths adjusted for a site that lives at the domain root: the church page, the old
+thanks page and the founding pages (church/founding/: checkout, terms, welcome).
 
     python3 sync_from_main_site.py
 
@@ -33,8 +34,11 @@ def main_site_links(text):
 # ---- home page ----
 s = (SRC / 'church' / 'index.html').read_text()
 s = main_site_links(s.replace('../assets/', 'assets/').replace('../ADs/', 'ADs/').replace('../js/intake.js', 'js/intake.js'))
-s = must(s, '<link rel="canonical" href="https://bigsplash.video/church/">', f'<link rel="canonical" href="{DOMAIN}/">', 'canonical')
-s = must(s, '<meta property="og:url" content="https://bigsplash.video/church/">', f'<meta property="og:url" content="{DOMAIN}/">', 'og:url')
+# The source page may already point at bigsplash.church.
+s = s.replace('<link rel="canonical" href="https://bigsplash.video/church/">', f'<link rel="canonical" href="{DOMAIN}/">')
+if f'<link rel="canonical" href="{DOMAIN}/">' not in s:
+    sys.exit('sync: expected a canonical link in the source page')
+s = s.replace('<meta property="og:url" content="https://bigsplash.video/church/">', f'<meta property="og:url" content="{DOMAIN}/">')
 s = must(s, 'https://bigsplash.video/assets/images/og-image.jpg', f'{DOMAIN}/assets/images/og-image.jpg', 'og:image')
 s = must(s, '"url": "https://bigsplash.video", "email"', f'"url": "{DOMAIN}", "email"', 'JSON-LD url')
 (OUT / 'index.html').write_text(s)
@@ -45,11 +49,39 @@ t = main_site_links(t.replace('../../assets/', '../assets/'))
 (OUT / 'thanks').mkdir(exist_ok=True)
 (OUT / 'thanks' / 'index.html').write_text(t)
 
-# ---- shared script and the assets the two pages use ----
+# ---- founding church pages: checkout, terms and the welcome page after Stripe ----
+# church/founding/ in the main repo becomes founding/ here, one folder closer to the root.
+FOUNDING = ('founding/index.html', 'founding/terms/index.html', 'founding/welcome/index.html')
+founding = {}
+for name in FOUNDING:
+    src = SRC / 'church' / name
+    if not src.exists():
+        sys.exit(f'sync: church/{name} is missing in the main repo')
+    up = '../' * name.count('/')  # how far this page sits below the site root here
+    f = src.read_text().replace(f'../{up}assets/', f'{up}assets/').replace(f'../{up}js/intake.js', f'{up}js/intake.js')
+    f = main_site_links(f.replace('https://bigsplash.video/church/', f'{DOMAIN}/'))
+    founding[name] = f
+    (OUT / name).parent.mkdir(parents=True, exist_ok=True)
+    (OUT / name).write_text(f)
+
+# Stripe sends the pastor back to <origin>/church/founding/... (the worker builds those links from the
+# page's origin). These two stubs forward that path here to /founding/..., keeping ?session= and ?canceled=1.
+STUB = """<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="robots" content="noindex"><title>Big Splash</title>
+<script>location.replace('{to}' + location.search);</script>
+<meta http-equiv="refresh" content="0;url={to}"></head>
+<body style="background:#f8f5ee;font-family:sans-serif"><p><a href="{to}">Continue</a></p></body></html>
+"""
+for old, to in (('church/founding/index.html', '/founding/'), ('church/founding/welcome/index.html', '/founding/welcome/')):
+    (OUT / old).parent.mkdir(parents=True, exist_ok=True)
+    (OUT / old).write_text(STUB.replace('{to}', to))
+
+# ---- shared script and the assets the pages use ----
 (OUT / 'js').mkdir(exist_ok=True)
 shutil.copy2(SRC / 'js' / 'intake.js', OUT / 'js' / 'intake.js')
-refs = set(re.findall(r'''(?:src|href|poster)=["'](?:\.\./)?((?:assets|ADs)/[^"'?#]+)''', s + t))
-refs |= set(re.findall(r'''url\(['"]?(?:\.\./)?(assets/[^'")]+)''', s + t))
+pages = s + t + ''.join(founding.values())
+refs = set(re.findall(r'''(?:src|href|poster)=["'](?:\.\./)*((?:assets|ADs)/[^"'?#]+)''', pages))
+refs |= set(re.findall(r'''url\(['"]?(?:\.\./)*(assets/[^'")]+)''', pages))
 refs.add('assets/images/og-image.jpg')
 for r in sorted(refs):
     src = SRC / r
@@ -61,7 +93,7 @@ for r in sorted(refs):
 
 # ---- checks ----
 problems = []
-for name, text in (('index.html', s), ('thanks/index.html', t)):
+for name, text in [('index.html', s), ('thanks/index.html', t)] + list(founding.items()):
     base = (OUT / name).parent
     for m in re.finditer(r'''(?:src|href|poster)=["']([^"']+)["']''', text):
         u = m.group(1)
@@ -76,4 +108,4 @@ for name, text in (('index.html', s), ('thanks/index.html', t)):
         problems.append(f'{name}: still mentions bigsplash.video/church')
 if problems:
     sys.exit('sync: ' + '; '.join(problems))
-print(f'synced: index.html, thanks/index.html, js/intake.js, {len(refs)} assets')
+print(f'synced: index.html, thanks/index.html, {", ".join(FOUNDING)}, js/intake.js, {len(refs)} assets')
