@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Claude Files for Church Staff | Big Splash</title>
+<meta name="description" content="Free files church staff can add to a Claude project: plain voice rules, Reel hooks, first-visit texts, a visit page checklist, Reel safe zones and a month planner. From Big Splash.">
+<link rel="canonical" href="https://bigsplash.church/prompts/">
+<meta property="og:title" content="Free Claude files for church staff | Big Splash">
+<meta property="og:description" content="The instruction files our team uses to draft church posts, texts and web pages with Claude. Free to download.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://bigsplash.church/prompts/">
+<meta property="og:image" content="https://bigsplash.church/assets/images/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b0b0e">
+<meta name="color-scheme" content="dark">
+<link rel="icon" type="image/png" href="../assets/images/favicon.png">
+<link rel="apple-touch-icon" href="../assets/images/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night: #0b0b0e; --ink: #131318; --lime: #eff88b; --lime-hover: #f5fbb5;
+    --text: rgba(255, 255, 255, 0.78); --muted: rgba(255, 255, 255, 0.62); --line: rgba(255, 255, 255, 0.1);
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  html, body { margin: 0; background: var(--night); color: var(--text); font-family: 'Inter', system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+  body { font-size: 17px; line-height: 1.6; overflow-x: clip; }
+  img { max-width: 100%; height: auto; display: block; }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; border-radius: 6px; }
+  h1, h2, h3 { color: #ffffff; margin: 0; font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; text-wrap: balance; }
+  p { margin: 0; }
+  .wrap { width: 100%; max-width: 64rem; margin: 0 auto; padding: 0 1.25rem; }
+  @media (min-width: 768px) { .wrap { padding: 0 2rem; } }
+  .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  .skip { position: absolute; left: 1rem; top: -4rem; z-index: 100; background: var(--lime); color: var(--ink); font-weight: 700; padding: 0.6rem 1rem; border-radius: 9999px; text-decoration: none; }
+  .skip:focus { top: 1rem; }
+
+  /* Buttons, same shapes as the church page */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 600; font-size: 1rem; line-height: 1.2; text-decoration: none; border-radius: 9999px; padding: 0.9rem 1.5rem; min-height: 48px; transition: background 0.2s, border-color 0.2s, transform 0.2s; }
+  .btn:active { transform: scale(0.98); }
+  .btn svg { width: 1.15em; height: 1.15em; flex: none; }
+  .btn-lime { background: var(--lime); color: var(--ink); }
+  .btn-lime:hover { background: var(--lime-hover); }
+  .btn-ghost { border: 1.5px solid rgba(255, 255, 255, 0.32); color: #f1eee8; }
+  .btn-ghost:hover { border-color: var(--lime); background: rgba(239, 248, 139, 0.08); }
+  .btn-sm { padding: 0.6rem 1.15rem; min-height: 44px; font-size: 0.95rem; }
+
+  /* Nav */
+  .nav { position: sticky; top: 0; z-index: 50; background: rgba(11, 11, 14, 0.94); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+  .nav-in { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-top: 0.75rem; padding-bottom: 0.75rem; }
+  .logo { height: 2rem; width: auto; }
+  @media (min-width: 768px) { .logo { height: 2.25rem; } }
+
+  /* Hero: the church page's worship still under the same dark shade */
+  .hero { position: relative; isolation: isolate; padding: 3.5rem 0 3.5rem; overflow: hidden; }
+  .hero::before { content: ""; position: absolute; inset: 0; z-index: -2; background: var(--night) url('../assets/images/church-hero-loop-poster.webp') 50% 40% / cover no-repeat; }
+  .hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(11,11,14,0.62) 0%, rgba(11,11,14,0.78) 40%, rgba(11,11,14,0.93) 78%, #0b0b0e 100%); }
+  @media (min-width: 768px) { .hero { padding: 5.5rem 0 4.5rem; } }
+  .pill { display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid rgba(255,255,255,0.2); background: rgba(11,11,14,0.5); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); color: rgba(255,255,255,0.88); font-size: 0.8125rem; font-weight: 600; padding: 0.38rem 0.85rem 0.38rem 0.65rem; border-radius: 1.1rem; }
+  .pill img { width: 14px; height: 14px; flex: none; }
+  .pill b { color: var(--lime); font-weight: 700; }
+  .h1 { margin-top: 1.5rem; font-size: clamp(2.35rem, 10.5vw, 4.4rem); letter-spacing: -0.035em; line-height: 1.04; text-shadow: 0 2px 24px rgba(0,0,0,0.4); }
+  .h1 .line { display: block; }
+  .neon { color: var(--ink); text-shadow: none; background: linear-gradient(var(--lime), var(--lime)) no-repeat 0 0 / 100% 100%; -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 0.12em 0.04em; border-radius: 0.1em; }
+  @keyframes rise { from { opacity: 0; transform: translateY(0.45em); } }
+  @keyframes wipe { from { background-size: 0% 100%; color: #ffffff; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .h1 .line { animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .h1 .line + .line { animation-delay: 0.12s; }
+    .h1 .neon { animation: wipe 0.75s 0.8s cubic-bezier(0.65, 0, 0.35, 1) both; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+  .lede { margin-top: 1.5rem; max-width: 40rem; font-size: 1.125rem; line-height: 1.65; color: rgba(255,255,255,0.8); }
+  @media (min-width: 768px) { .lede { font-size: 1.25rem; } }
+
+  .steps { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; gap: 0.75rem; max-width: 44rem; }
+  @media (min-width: 768px) { .steps { grid-template-columns: 1fr 1fr; gap: 1rem; } }
+  .steps li { display: flex; gap: 0.85rem; align-items: flex-start; padding: 1rem 1.1rem; border: 1px solid var(--line); border-radius: 1rem; background: rgba(11, 11, 14, 0.55); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); font-size: 0.975rem; line-height: 1.5; }
+  .steps b { color: #ffffff; font-weight: 700; display: block; margin-bottom: 0.15rem; }
+  .num { flex: none; width: 1.9rem; height: 1.9rem; border-radius: 9999px; display: grid; place-items: center; background: var(--lime); color: var(--ink); font-weight: 800; font-size: 0.95rem; }
+  .hero-actions { margin-top: 1.75rem; display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+  /* Files */
+  .section { padding: 3.5rem 0; }
+  #files { scroll-margin-top: 3.5rem; }
+  @media (min-width: 768px) { .section { padding: 4.5rem 0; } }
+  .eyebrow { color: rgba(255,255,255,0.66); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+  .h2 { margin-top: 0.6rem; font-size: clamp(2rem, 7vw, 3.15rem); letter-spacing: -0.032em; }
+  .section-intro { margin-top: 0.9rem; max-width: 38rem; color: var(--text); }
+  .grid { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; gap: 1rem; }
+  @media (min-width: 680px) { .grid { grid-template-columns: 1fr 1fr; gap: 1.25rem; } }
+  .card { display: flex; flex-direction: column; gap: 0.6rem; padding: 1.4rem 1.3rem 1.3rem; border: 1px solid var(--line); border-radius: 1.25rem; background: linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.03)); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 30px 60px -34px rgba(0,0,0,0.8); }
+  .card h3 { font-size: 1.3rem; letter-spacing: -0.02em; line-height: 1.2; }
+  .card p { color: var(--text); font-size: 1rem; line-height: 1.55; }
+  .fname { font-family: var(--mono); font-size: 0.8rem; color: var(--lime); letter-spacing: 0; overflow-wrap: anywhere; }
+  .card .btn { margin-top: auto; align-self: flex-start; }
+  .card .card-foot { margin-top: auto; padding-top: 0.6rem; }
+  .card-all { border-color: rgba(239, 248, 139, 0.45); background: linear-gradient(180deg, rgba(239,248,139,0.1), rgba(239,248,139,0.03)); }
+
+  /* Review note */
+  .note { display: grid; gap: 1.25rem; padding: 1.5rem 1.35rem; border-radius: 1.25rem; border: 1px solid var(--line); background: #131318; }
+  @media (min-width: 768px) { .note { grid-template-columns: auto 1fr; gap: 1.5rem; padding: 2rem; } }
+  .note-icon { width: 3rem; height: 3rem; border-radius: 9999px; display: grid; place-items: center; background: rgba(239, 248, 139, 0.12); color: var(--lime); }
+  .note-icon svg { width: 1.5rem; height: 1.5rem; }
+  .note h2 { font-size: clamp(1.5rem, 5vw, 2rem); letter-spacing: -0.025em; }
+  .note p { margin-top: 0.75rem; color: var(--text); }
+  .credit { margin-top: 1.25rem; font-size: 0.925rem; color: var(--muted); }
+  .credit a { text-decoration: underline; text-underline-offset: 3px; }
+  .credit a:hover { color: var(--lime); }
+
+  /* Audit CTA */
+  .cta { text-align: center; padding: 4rem 0 4.5rem; border-top: 1px solid rgba(255,255,255,0.06); background: radial-gradient(60rem 22rem at 50% 0%, rgba(239,248,139,0.08), transparent 70%); }
+  .cta .h2 { margin-top: 0; }
+  .cta p { margin: 1rem auto 0; max-width: 36rem; color: var(--text); }
+  .cta .btn { margin-top: 1.75rem; font-size: 1.0625rem; }
+  .cta .small { margin-top: 0.9rem; font-size: 0.9rem; color: var(--muted); }
+
+  /* Footer */
+  .footer { background: var(--night); border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 2.5rem 0; font-size: 0.95rem; color: #a8a29e; }
+  .footer-in { display: flex; flex-direction: column; align-items: center; gap: 1rem; text-align: center; }
+  @media (min-width: 768px) { .footer-in { flex-direction: row; justify-content: space-between; text-align: left; } }
+  .footer a { text-decoration: underline; text-underline-offset: 4px; }
+  .footer a:hover { color: var(--lime); }
+  .footer .logo { height: 1.75rem; }
+</style>
+</head>
+<body>
+  <a class="skip" href="#files">Skip to the files</a>
+
+  <nav class="nav" aria-label="Main">
+    <div class="wrap nav-in">
+      <a href="../" aria-label="Big Splash for churches, home"><img src="../assets/images/logo-bigsplash-white-lime.svg" alt="Big Splash" class="logo" width="655" height="191"></a>
+      <a href="https://bigsplash.video/frontdoor/?utm_source=prompts_page" class="btn btn-lime btn-sm">Free audit</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="wrap">
+      <p><span class="pill"><img src="../assets/images/starburst-lime.svg" alt="" aria-hidden="true" width="14" height="14"><span><b>Our mission:</b> 100,000 families welcomed into the local church</span></span></p>
+      <h1 class="h1">
+        <span class="line">Free Claude files</span>
+        <span class="line"><span class="neon">for church staff</span></span>
+      </h1>
+      <p class="lede">Our team uses Claude, the AI made by Anthropic, to help draft church posts, follow-up texts and web pages. These are the instruction files behind that work. Add one to a Claude project, and Claude follows the same rules we do.</p>
+      <ol class="steps">
+        <li><span class="num" aria-hidden="true">1</span><div><b>Download a file below</b>Each one is a plain text file (.md). Any notes app can open it.</div></li>
+        <li><span class="num" aria-hidden="true">2</span><div><b>Add it to a Claude project</b>In Claude, open Projects, start a project and add the file to its knowledge. Then ask for a draft.</div></li>
+      </ol>
+      <div class="hero-actions">
+        <a href="#files" class="btn btn-lime">See the files</a>
+        <a href="files/bigsplash-claude-files.zip" download class="btn btn-ghost">Download all 7 (.zip)</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="files" class="section" aria-labelledby="files-h">
+      <div class="wrap">
+        <p class="eyebrow">Free downloads</p>
+        <h2 id="files-h" class="h2">Seven files, one job each</h2>
+        <p class="section-intro">Each file has a one-line purpose, setup steps, the rules Claude follows, a prompt to copy and two short examples. Change anything to fit your church.</p>
+
+        <ul class="grid">
+          <li class="card">
+            <p class="fname">church-social-voice.md</p>
+            <h3>Church social voice</h3>
+            <p>Our plain voice rules, so a family gets each post at a glance. Includes the busy-pastor test we run on every draft.</p>
+            <div class="card-foot"><a href="files/church-social-voice.md" download class="btn btn-lime">Download<span class="sr"> church-social-voice.md</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg></a></div>
+          </li>
+          <li class="card">
+            <p class="fname">double-hook-writer.md</p>
+            <h3>Double hook writer</h3>
+            <p>Writes 10 two-part Reel hooks: 6 words in the first second, then 8 more that keep people watching.</p>
+            <div class="card-foot"><a href="files/double-hook-writer.md" download class="btn btn-lime">Download<span class="sr"> double-hook-writer.md</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg></a></div>
+          </li>
+          <li class="card">
+            <p class="fname">sound-human-rules.md</p>
+            <h3>Sound-human rules</h3>
+            <p>Cleans AI drafts so they sound like a person from your church wrote them. Inspired by Hardik Pandya's Stop Slop.</p>
+            <div class="card-foot"><a href="files/sound-human-rules.md" download class="btn btn-lime">Download<span class="sr"> sound-human-rules.md</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg></a></div>
+          </li>
+          <li class="card">
+            <p class="fname">first-visit-follow-up-texts.md</p>
+            <h3>First-visit follow-up texts</h3>
+            <p>Drafts the texts before and after a family's first Sunday in your church's voice, with blanks where names go.</p>
+            <div class="card-foot"><a href="files/first-visit-follow-up-texts.md" download class="btn btn-lime">Download<span class="sr"> first-visit-follow-up-texts.md</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg></a></div>
+          </li>
+          <li class="card">
+            <p class="fname">plan-your-visit-page-checklist.md</p>
+            <h3>Plan-your-visit page checklist</h3>
+            <p>Checks your visit page line by line against what a parent needs to see on a phone, then rewrites what's missing.</p>
+            <div class="card-foot"><a href="files/plan-your-visit-page-checklist.md" download class="btn btn-lime">Download<span class="sr"> plan-your-visit-page-checklist.md</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg></a></div>
+          </li>
+          <li class="card">
+            <p class="fname">reel-safe-zones.md</p>
+            <h3>Reel safe zones</h3>
+            <p>Keeps the words on your Reels clear of the buttons and captions on Instagram, TikTok and YouTube Shorts.</p>
+            <div class="card-foot"><a href="files/reel-safe-zones.md" download class="btn btn-lime">Download<span class="sr"> reel-safe-zones.md</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg></a></div>
+          </li>
+          <li class="card">
+            <p class="fname">month-of-posts-planner.md</p>
+            <h3>Month-of-posts planner</h3>
+            <p>Plans 12 posts from your sermon series and church dates. Your team keeps the best half.</p>
+            <div class="card-foot"><a href="files/month-of-posts-planner.md" download class="btn btn-lime">Download<span class="sr"> month-of-posts-planner.md</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg></a></div>
+          </li>
+          <li class="card card-all">
+            <p class="fname">bigsplash-claude-files.zip</p>
+            <h3>All seven in one download</h3>
+            <p>Grab the whole set and add the files you need to a Claude project.</p>
+            <div class="card-foot"><a href="files/bigsplash-claude-files.zip" download class="btn btn-ghost">Download all<span class="sr"> seven files as a zip</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg></a></div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="review-h" style="padding-top: 0;">
+      <div class="wrap">
+        <div class="note">
+          <div class="note-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <div>
+            <h2 id="review-h">A person reads every draft</h2>
+            <p>Claude helps with the first draft. A person on your team reads every word before it goes out, and your pastor reads anything that speaks for your church's beliefs. Claude never replaces your pastor's voice or care for people.</p>
+            <p>Keep guests' names, phone numbers and prayer requests out of every AI chat. The files use blanks like [First name] instead.</p>
+          </div>
+        </div>
+        <p class="credit">sound-human-rules.md is our own church version of writing rules inspired by Hardik Pandya's Stop Slop (<a href="https://hvpandya.com" rel="noopener">hvpandya.com</a>). Claude is made by Anthropic. Big Splash isn't affiliated with Anthropic.</p>
+      </div>
+    </section>
+
+    <section class="cta" aria-labelledby="cta-h">
+      <div class="wrap">
+        <h2 id="cta-h" class="h2">Want us to check <span class="neon">your church?</span></h2>
+        <p>The Front Door Audit grades what a new family finds when they look up your church on a phone: your Google listing and reviews, your website, and your social and sermons.</p>
+        <a href="https://bigsplash.video/frontdoor/?utm_source=prompts_page" class="btn btn-lime">Get your free Front Door Audit <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></a>
+        <p class="small">Free, and no call needed.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-in">
+      <a href="../" aria-label="Big Splash for churches, home"><img src="../assets/images/logo-bigsplash-white-lime.svg" alt="Big Splash" class="logo" width="655" height="191" loading="lazy"></a>
+      <p>The marketing agency for the local church</p>
+      <p>&copy; 2026 Big Splash · Georgetown, TX · <a href="https://bigsplash.video/privacy/">Privacy</a></p>
+    </div>
+  </footer>
+</body>
+</html>
