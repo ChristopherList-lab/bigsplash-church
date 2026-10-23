@@ -587,14 +587,37 @@
 
   /* Report sheet on dark (lime is Big Splash's report color) */
   .j-chapter-report { padding-bottom: 6rem; }
-  .report-sheet { position: relative; border-radius: 1.5rem; background: linear-gradient(180deg, #1a1a20, #121216); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.9); }
-  .chip-sample { flex: none; font-size: 0.8125rem; font-weight: 600; padding: 0.25rem 0.7rem; border-radius: 9999px; background: rgba(255, 255, 255, 0.1); color: #f4f4f5; }
-  .r-tile { border-radius: 0.9rem; background: rgba(255, 255, 255, 0.05); padding: 1rem; }
-  .r-tile-line { background: transparent; border: 1px solid rgba(255, 255, 255, 0.12); }
-  /* Cost per family is the number elders ask about, so it gets the sheet's one lime tile. */
-  .r-tile-lime { background: #eff88b; color: #131318; }
-  .r-row { display: flex; justify-content: space-between; gap: 0.75rem; padding: 0.55rem 0.8rem; border-radius: 0.6rem; background: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.8); }
-  .r-row span:last-child { color: #ffffff; font-weight: 600; }
+  /* The sample report is the church's own: Cedar Bend's logo, teal and a serif, on paper. Big Splash signs it small at the foot. */
+  .cbr { --cb: #17545b; --cb-tint: #e6f0f0; --cb-line: #e4e1d9; --cb-copy: #3f3f47; --cb-muted: #5f5f68;
+    position: relative; overflow: hidden; border-radius: 1.25rem; background: #fbfaf7; color: var(--cb-copy); border-top: 6px solid var(--cb);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 50px 100px -40px rgba(0, 0, 0, 0.95); }
+  .cbr-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.15rem 1.4rem 1rem; border-bottom: 1px solid var(--cb-line); background: #ffffff; }
+  .cbr-logo { height: 2.4rem; width: auto; display: block; }
+  .cbr-sample { flex: none; font-size: 0.8125rem; font-weight: 600; padding: 0.25rem 0.7rem; border-radius: 9999px; background: #efeff2; color: #3a3a3c; }
+  .cbr-in { padding: 1.3rem 1.4rem 1.2rem; }
+  .cbr-kicker { font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cb); }
+  .cbr-title { margin-top: 0.15rem; font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-size: 1.85rem; font-weight: 700; line-height: 1.1; color: #131318; }
+  .cbr-note { margin-top: 0.35rem; font-size: 0.9375rem; color: var(--cb-muted); }
+  .cbr-kpis { margin-top: 1.15rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .cbr-kpis div { padding: 0.85rem 0.95rem; border-radius: 0.85rem; background: var(--cb-tint); }
+  .cbr-kpis p, .cbr-pair p { font-size: 0.875rem; color: #3d5558; }
+  .cbr-kpis b, .cbr-pair b { display: block; margin-top: 0.15rem; font-size: 1.95rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; color: var(--cb); }
+  .cbr-kpis small, .cbr-pair small { display: block; margin-top: 0.2rem; font-size: 0.8125rem; color: var(--cb-muted); }
+  .cbr-label { margin-top: 1.3rem; font-size: 0.875rem; font-weight: 600; color: #131318; }
+  .cbr-rows { margin-top: 0.4rem; border-top: 1px solid var(--cb-line); }
+  .cbr-rows li { display: flex; justify-content: space-between; gap: 0.75rem; padding: 0.55rem 0.1rem; border-bottom: 1px solid var(--cb-line); font-size: 0.9375rem; }
+  .cbr-rows b { color: #131318; font-weight: 700; }
+  .cbr-pair { margin-top: 1.15rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .cbr-pair > div { padding: 0.85rem 0.95rem; border-radius: 0.85rem; }
+  .cbr-rate { border: 1px solid var(--cb-line); background: #ffffff; }
+  .cbr-rate b span { font-size: 1rem; font-weight: 600; color: var(--cb-muted); }
+  .cbr-cost { background: var(--cb); }
+  .cbr .cbr-cost p, .cbr .cbr-cost small { color: rgba(255, 255, 255, 0.82); }
+  .cbr .cbr-cost b { color: #ffffff; }
+  .cbr-fine { margin-top: 1rem; font-size: 0.875rem; color: var(--cb-muted); }
+  .cbr-foot { display: flex; align-items: center; justify-content: flex-end; gap: 0.55rem; padding: 0.8rem 1.4rem; border-top: 1px solid var(--cb-line); background: #ffffff; font-size: 0.8125rem; color: var(--cb-muted); }
+  .cbr-foot img { height: 1.25rem; width: auto; display: block; }
+  @media (max-width: 420px) { .cbr-kpis b, .cbr-pair b { font-size: 1.6rem; } .cbr-foot { justify-content: center; flex-wrap: wrap; } }
 
   /* The sticky stage. Hidden until the journey script turns it on (1024px and up). */
   .j-stage { display: none; }
@@ -761,25 +784,32 @@
   .ps-chk { flex: none; width: 1.55em; height: 1.55em; border-radius: 50%; border: 2px solid #48484a; }
   .ps-fams li.done .ps-chk { border-color: var(--lime); background: var(--lime) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23131318' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 70% no-repeat; }
 
-  /* 6. Family report (Big Splash's report, so lime accents are fine here) */
-  .ps-report { gap: 0.6em; background: #000000; }
-  .ps-rhead { display: flex; align-items: center; justify-content: space-between; margin-top: 0.3em; }
-  .ps-rhead img { height: 1.45em; width: auto; display: block; }
-  .ps-report h4 { margin-top: 0.15em; }
+  /* 6. Family report: the church's own report in Cedar Bend's colors, signed small by Big Splash */
+  .ps-report { gap: 0.55em; background: #fbfaf7; color: #131318; }
+  .ps-report::after { background: rgba(0, 0, 0, 0.8); }
+  .ps-report .ps-bar { color: #000000; }
+  .ps-report .ps-bar::after { filter: invert(1); }
+  .ps-rhead { display: flex; align-items: center; justify-content: space-between; margin-top: 0.2em; padding-bottom: 0.55em; border-bottom: 1px solid #e4e1d9; }
+  .ps-rhead img { height: 1.85em; width: auto; display: block; }
+  .ps-report .ps-tag { background: #efeff2; color: #3a3a3c; }
+  .ps-report .ps-over { color: #17545b; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.75em; }
+  .ps-report h4 { margin-top: 0.05em; font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-size: 1.45em; font-weight: 700; color: #131318; }
   .ps-kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 0.45em; }
-  .ps-kpis p { padding: 0.6em 0.75em; border-radius: 0.9em; background: #1c1c1e; }
-  .ps-kpis small { display: block; font-size: 0.8125em; color: #a1a1aa; white-space: nowrap; }
-  .ps-kpis b { display: block; margin-top: 0.1em; font-size: 1.65em; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
-  .ps-bars { display: flex; flex-direction: column; gap: 0.5em; padding: 0.75em; border-radius: 0.9em; background: #1c1c1e; }
-  .ps-bars p { display: grid; grid-template-columns: 6em 1fr 1.4em; align-items: center; gap: 0.5em; font-size: 0.8125em; color: #d4d4d8; }
-  .ps-bars i { height: 0.5em; border-radius: 1em; background: #2c2c2e; overflow: hidden; }
-  .ps-bars i span { display: block; height: 100%; border-radius: 1em; background: rgba(255, 255, 255, 0.7); }
-  .ps-bars b { text-align: right; font-weight: 700; color: #ffffff; font-variant-numeric: tabular-nums; }
-  .ps-cost { display: flex; align-items: baseline; gap: 0.5em; padding: 0.6em 0.85em; border-radius: 0.9em; background: var(--lime); color: #131318; }
-  .ps-cost b { font-size: 1.65em; font-weight: 800; letter-spacing: -0.03em; }
-  .ps-cost span { font-size: 0.875em; font-weight: 600; }
-  .ps-rate { display: flex; align-items: center; justify-content: space-between; padding: 0.55em 0.75em; border-radius: 0.9em; border: 1px solid #2c2c2e; font-size: 0.8125em; color: #d4d4d8; }
-  .ps-rate b { font-size: 1.25em; color: #ffffff; font-weight: 800; }
+  .ps-kpis p { padding: 0.55em 0.75em; border-radius: 0.9em; background: #e6f0f0; }
+  .ps-kpis small { display: block; font-size: 0.8125em; color: #3d5558; white-space: nowrap; }
+  .ps-kpis b { display: block; margin-top: 0.1em; font-size: 1.6em; font-weight: 800; letter-spacing: -0.03em; color: #17545b; font-variant-numeric: tabular-nums; }
+  .ps-bars { display: flex; flex-direction: column; gap: 0.5em; padding: 0.7em 0.75em; border-radius: 0.9em; background: #ffffff; border: 1px solid #e4e1d9; }
+  .ps-bars p { display: grid; grid-template-columns: 6em 1fr 1.4em; align-items: center; gap: 0.5em; font-size: 0.8125em; color: #3f3f47; }
+  .ps-bars i { height: 0.5em; border-radius: 1em; background: #e6f0f0; overflow: hidden; }
+  .ps-bars i span { display: block; height: 100%; border-radius: 1em; background: #17545b; }
+  .ps-bars b { text-align: right; font-weight: 700; color: #131318; font-variant-numeric: tabular-nums; }
+  .ps-cost { display: flex; align-items: baseline; gap: 0.5em; padding: 0.55em 0.85em; border-radius: 0.9em; background: #17545b; color: #ffffff; }
+  .ps-cost b { font-size: 1.6em; font-weight: 800; letter-spacing: -0.03em; }
+  .ps-cost span { font-size: 0.875em; font-weight: 600; color: rgba(255, 255, 255, 0.85); }
+  .ps-rate { display: flex; align-items: center; justify-content: space-between; padding: 0.5em 0.75em; border-radius: 0.9em; border: 1px solid #e4e1d9; background: #ffffff; font-size: 0.8125em; color: #3f3f47; }
+  .ps-rate b { font-size: 1.25em; color: #17545b; font-weight: 800; }
+  .ps-rfoot { display: flex; align-items: center; justify-content: center; gap: 0.4em; margin-top: auto; font-size: 0.6875em; color: #5f5f68; }
+  .ps-rfoot img { height: 1.2em; width: auto; display: block; }
 
   /* ---------- Films: the real City Reach videos in a screening-room setting ---------- */
   .films { background: linear-gradient(180deg, var(--night), #101014 60%, var(--night)); }
@@ -1220,8 +1250,8 @@
             <div class="phone"><div class="phone-screen">
               <div class="ps ps-report" data-ps="6">
                 <div class="ps-bar"><span>8:30</span></div>
-                <div class="ps-rhead"><img src="assets/images/logo-bigsplash-white-lime.svg" width="655" height="191" alt="" loading="lazy"><span class="ps-tag">Sample</span></div>
-                <div><p class="ps-over">Cedar Bend Church</p><h4>Family report, October</h4></div>
+                <div class="ps-rhead"><img src="assets/images/church/sample-church-logo.svg" width="228" height="62" alt="" loading="lazy"><span class="ps-tag">Sample</span></div>
+                <div><p class="ps-over">Family report</p><h4>October 2026</h4></div>
                 <div class="ps-kpis">
                   <p><small>Planned a visit</small><b>23</b></p>
                   <p><small>Welcomed</small><b>11</b></p>
@@ -1236,42 +1266,42 @@
                 </div>
                 <p class="ps-cost"><b>$45</b><span>per family welcomed</span></p>
                 <p class="ps-rate"><span>First Sunday rating</span><span><b>4.7</b> of 5</span></p>
+                <p class="ps-rfoot"><span>Prepared by</span><img src="assets/images/logo-bigsplash-dark.svg" width="655" height="191" alt="" loading="lazy"></p>
               </div>
             </div></div>
           </div>
 
-          <div class="report-sheet mt-10 p-5 md:p-7 reveal">
-            <div class="flex items-center justify-between gap-4">
-              <div>
-                <p class="text-white font-semibold text-lg">Family report</p>
-                <p class="text-[15px] text-white/70">October</p>
+          <div class="report-sheet cbr mt-10 reveal">
+            <div class="cbr-head">
+              <img class="cbr-logo" src="assets/images/church/sample-church-logo.svg" alt="Cedar Bend Church" width="228" height="62" loading="lazy">
+              <span class="cbr-sample">Sample</span>
+            </div>
+            <div class="cbr-in">
+              <p class="cbr-kicker">Family report</p>
+              <p class="cbr-title">October 2026</p>
+              <p class="cbr-note">Made-up example: 280 people on a Sunday, $500 campaign budget</p>
+
+              <div class="cbr-kpis">
+                <div><p>Planned a visit</p><b class="tnum">23</b><small>picked a Sunday</small></div>
+                <div><p>Welcomed</p><b class="tnum">11</b><small>greeted by your welcome team</small></div>
+                <div><p>Came back</p><b class="tnum">6</b><small>for another Sunday</small></div>
+                <div><p>Took a next step</p><b class="tnum">2</b><small>joined a group or started serving</small></div>
               </div>
-              <span class="chip-sample">Sample</span>
-            </div>
-            <p class="mt-2 text-[15px] text-white/70">Made-up example: Cedar Bend Church, 280 people on a Sunday, $500 campaign budget</p>
 
-            <div class="mt-5 grid grid-cols-2 gap-3">
-              <div class="r-tile"><p class="text-sm text-white/70">Planned a visit</p><p class="mt-1 text-3xl font-bold text-white tnum">23</p><p class="mt-1 text-sm text-white/70">picked a Sunday</p></div>
-              <div class="r-tile"><p class="text-sm text-white/70">Welcomed</p><p class="mt-1 text-3xl font-bold text-white tnum">11</p><p class="mt-1 text-sm text-white/70">greeted by your welcome team</p></div>
-              <div class="r-tile"><p class="text-sm text-white/70">Came back</p><p class="mt-1 text-3xl font-bold text-white tnum">6</p><p class="mt-1 text-sm text-white/70">for another Sunday</p></div>
-              <div class="r-tile"><p class="text-sm text-white/70">Took a next step</p><p class="mt-1 text-3xl font-bold text-white tnum">2</p><p class="mt-1 text-sm text-white/70">joined a group or started serving</p></div>
-            </div>
+              <p class="cbr-label">Follow-up this month</p>
+              <ul class="cbr-rows">
+                <li><span>Thank-you texts sent</span><b class="tnum">11</b></li>
+                <li><span>Surveys answered</span><b class="tnum">7</b></li>
+                <li><span>Families invited back</span><b class="tnum">12</b></li>
+              </ul>
 
-            <div class="mt-6">
-              <p class="text-sm text-white/70 mb-3">Follow-up this month</p>
-              <div class="space-y-2 text-sm">
-                <div class="r-row"><span>Thank-you texts sent</span><span class="tnum">11</span></div>
-                <div class="r-row"><span>Surveys answered</span><span class="tnum">7</span></div>
-                <div class="r-row"><span>Families invited back</span><span class="tnum">12</span></div>
+              <div class="cbr-pair">
+                <div class="cbr-rate"><p>Families rated their first Sunday</p><b class="tnum">4.7 <span>of 5</span></b><small>from 7 surveys</small></div>
+                <div class="cbr-cost"><p>Budget per family welcomed</p><b class="tnum">$45</b><small>$500 for 11 families</small></div>
               </div>
+              <p class="cbr-fine">Your numbers will depend on your town and your budget.</p>
             </div>
-
-            <div class="mt-6 grid sm:grid-cols-2 gap-3 text-sm">
-              <div class="r-tile r-tile-line"><p class="text-white/70">Families rated their first Sunday</p><p class="mt-1 text-3xl font-bold text-white tnum">4.7 <span class="text-base font-medium text-white/65">of 5</span></p><p class="mt-1 text-sm text-white/70">from 7 surveys</p></div>
-              <div class="r-tile r-tile-lime"><p>Budget per family welcomed</p><p class="mt-1 text-3xl font-bold tnum">$45</p><p class="mt-1 text-sm">$500 for 11 families</p></div>
-            </div>
-
-            <p class="mt-6 text-[15px] text-white/70">Your numbers will depend on your town and your budget.</p>
+            <div class="cbr-foot"><span>Prepared for Cedar Bend Church by</span><img src="assets/images/logo-bigsplash-dark.svg" alt="Big Splash" width="655" height="191" loading="lazy"></div>
           </div>
         </div>
 

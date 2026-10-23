@@ -82,6 +82,19 @@
   .on-dark a:focus-visible { outline-color: #eff88b; }
 
 
+  /* Checkout popup: Stripe's embedded checkout in a sheet over the page, so the pastor stays on bigsplash.church. */
+  .co-modal { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 1rem; }
+  .co-backdrop { position: absolute; inset: 0; background: rgba(19, 19, 24, 0.6); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+  .co-panel { position: relative; display: flex; flex-direction: column; width: min(64rem, 100%); max-height: calc(100dvh - 2rem); overflow: hidden; background: #ffffff; border-radius: 1.25rem; box-shadow: 0 40px 90px -30px rgba(19, 19, 24, 0.6); }
+  .co-head { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.85rem 0.9rem 0.85rem 1.25rem; border-bottom: 1px solid #ddd8ce; }
+  .co-x { display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 9999px; color: #131318; }
+  .co-x:hover { background: rgba(19, 19, 24, 0.07); }
+  .co-body { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .co-status { padding: 4rem 1.5rem; text-align: center; color: #5f5f68; }
+  .co-foot { flex: none; padding: 0.8rem 1.25rem; border-top: 1px solid #ddd8ce; text-align: center; font-size: 0.95rem; color: #5f5f68; }
+  body.co-open { overflow: hidden; }
+  @media (max-width: 640px) { .co-modal { padding: 0; } .co-panel { width: 100%; height: 100dvh; max-height: 100dvh; border-radius: 0; } }
+
   /* Shared intake modal (js/intake.js) restyled light, as on /church/ */
   html body #intake-modal { --intake-accent: #131318 !important; --intake-accent-text: #ffffff !important; --intake-accent-glow: rgba(19,19,24,0.22) !important; }
   html body #intake-modal [data-intake-backdrop] { background: rgba(19,19,24,0.55); }
@@ -183,6 +196,22 @@
     </div>
   </main>
 
+  <!-- ========== CHECKOUT POPUP (on when STRIPE_PK is set in the script below) ========== -->
+  <div id="checkout-modal" class="co-modal" role="dialog" aria-modal="true" aria-labelledby="co-title" hidden>
+    <div class="co-backdrop" data-co-close></div>
+    <div class="co-panel">
+      <div class="co-head">
+        <p id="co-title" class="font-semibold text-ink"><span class="material-symbols-outlined align-[-0.2em] text-xl mr-1" aria-hidden="true">lock</span>Secure checkout <span id="co-term" class="text-muted font-normal"></span></p>
+        <button type="button" class="co-x" data-co-close aria-label="Close checkout"><span class="material-symbols-outlined" aria-hidden="true">close</span></button>
+      </div>
+      <div class="co-body">
+        <p id="co-status" class="co-status" role="status">Opening secure checkout…</p>
+        <div id="co-mount"></div>
+      </div>
+      <p class="co-foot">Still unsure? <button type="button" data-open-intake data-intake-service="Church" class="font-semibold text-ink underline underline-offset-4">Book a call with our team</button></p>
+    </div>
+  </div>
+
   <footer class="on-dark bg-ink px-4 md:px-8 py-10">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-[15px] text-stone-400 text-center md:text-left">
       <a href="https://bigsplash.church/" aria-label="Big Splash for churches, home"><img src="../assets/images/logo-bigsplash.svg" alt="Big Splash" class="h-7 w-auto"></a>
@@ -192,19 +221,85 @@
   </footer>
 
   <script>
-  // Checkout is two Stripe payment links on the Church Monthly Plan: 12 months at $1,497 and 6 months at $1,697.
-  // Each closes after 5 completed checkouts; deactivate both in Stripe once 5 churches have signed in total.
-  // An audit id from the scorecard rides along as client_reference_id, so Stripe shows which audit the church came from.
+  // Checkout for the Church Monthly Plan: 12 months at $1,497 or 6 months at $1,697.
+  // With STRIPE_PK set, a click opens Stripe's embedded checkout in a popup on this page. The Front Door worker
+  // (POST /checkout/session) makes the session and refuses once 5 founding subscriptions exist.
+  // Without STRIPE_PK, or if the popup can't open, each card is a plain link to its Stripe payment link.
+  // The payment links close after 5 checkouts each; deactivate both in Stripe once 5 churches have signed in total.
   (() => {
+    const STRIPE_PK = '';
+    const API = 'https://bigsplash-front-door.chris-bc4.workers.dev';
     const params = new URLSearchParams(location.search);
     const ref = (params.get('audit_id') || params.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 200);
+    const $ = (id) => document.getElementById(id);
+    const modal = $('checkout-modal');
+    let checkout = null;
+    let opener = null;
+    let stripeJs = null;
+
+    const loadStripe = () => stripeJs || (stripeJs = new Promise((resolve, reject) => {
+      if (window.Stripe) return resolve(window.Stripe);
+      const tag = document.createElement('script');
+      tag.src = 'https://js.stripe.com/v3/';
+      tag.onload = () => (window.Stripe ? resolve(window.Stripe) : reject(new Error('Stripe.js')));
+      tag.onerror = () => { stripeJs = null; reject(new Error('Stripe.js')); };
+      document.head.appendChild(tag);
+    }));
+
+    function close() {
+      if (checkout) { try { checkout.destroy(); } catch (e) {} checkout = null; }
+      $('co-mount').innerHTML = '';
+      modal.hidden = true;
+      document.body.classList.remove('co-open');
+      if (opener) opener.focus();
+    }
+
+    async function open(link) {
+      opener = link;
+      const term = link.dataset.term;
+      $('co-term').textContent = `· ${term}-month commitment`;
+      $('co-status').hidden = false;
+      $('co-status').textContent = 'Opening secure checkout…';
+      modal.hidden = false;
+      document.body.classList.add('co-open');
+      modal.querySelector('.co-x').focus();
+      try {
+        const Stripe = await loadStripe();
+        const stripe = Stripe(STRIPE_PK);
+        const fetchClientSecret = async () => {
+          const res = await fetch(`${API}/checkout/session`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ term, ref }) });
+          const data = await res.json().catch(() => ({}));
+          if (data.full) throw Object.assign(new Error(data.error), { full: true });
+          if (!res.ok || !data.client_secret) throw new Error(data.error || `HTTP ${res.status}`);
+          return data.client_secret;
+        };
+        checkout = await stripe.initEmbeddedCheckout({ fetchClientSecret });
+        if (modal.hidden) { checkout.destroy(); checkout = null; return; }
+        checkout.mount('#co-mount');
+        $('co-status').hidden = true;
+      } catch (err) {
+        if (err && err.full) {
+          $('co-status').textContent = 'All 5 founding spots are taken. Book a call with our team and we\'ll walk you through the regular plan.';
+          return;
+        }
+        // Anything else: send them to the same plan on Stripe's own page.
+        location.assign(link.href);
+      }
+    }
+
     document.querySelectorAll('.checkout-link').forEach((link) => {
       if (ref) link.href += (link.href.includes('?') ? '&' : '?') + 'client_reference_id=' + encodeURIComponent(ref);
-      link.addEventListener('click', () => {
-        try { if (window.fbq) fbq('track', 'InitiateCheckout', { value: Number(link.dataset.value), currency: 'USD' }); } catch (e) {}
-        try { if (window.bsTrack) bsTrack('founding_checkout_click', { term: link.dataset.term }); } catch (e) {}
+      link.addEventListener('click', (e) => {
+        try { if (window.fbq) fbq('track', 'InitiateCheckout', { value: Number(link.dataset.value), currency: 'USD' }); } catch (x) {}
+        try { if (window.bsTrack) bsTrack('founding_checkout_click', { term: link.dataset.term }); } catch (x) {}
+        if (!STRIPE_PK || e.metaKey || e.ctrlKey || e.shiftKey) return;
+        e.preventDefault();
+        open(link);
       });
     });
+    modal.querySelectorAll('[data-co-close]').forEach((el) => el.addEventListener('click', close));
+    modal.querySelector('[data-open-intake]').addEventListener('click', close);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) close(); });
   })();
   </script>
   <script src="../js/intake.js"></script>
