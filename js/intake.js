@@ -23,6 +23,16 @@
   const GHL_WEBHOOK_URL = '';
 
   // ========================================
+  // The "Book a call" form posts here first. The Front Door worker
+  // (worker-frontdoor, POST /contact) puts the person in GoHighLevel
+  // with the website-inquiry tag and a note, and posts Slack through
+  // LeadDesk. If it can't be reached, the form falls back to
+  // GHL_WEBHOOK_URL (when set), then to a pre-filled email.
+  // ========================================
+  const CONTACT_API_URL = 'https://bigsplash-front-door.chris-bc4.workers.dev/contact';
+  const CONTACT_TIMEOUT_MS = 15000;
+
+  // ========================================
   // !! PASTE YOUR AUDIT WORKER URL BELOW !!
   // Deploy worker/audit-content.js to Cloudflare Workers
   // (see comments at top of that file), then paste the
@@ -68,6 +78,19 @@
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return await response.json();
+  }
+
+  // POSTs the modal form to the Front Door worker. Throws on a timeout or any answer but ok.
+  async function sendContact(payload) {
+    const response = await fetch(CONTACT_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(CONTACT_TIMEOUT_MS),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || !data.ok) throw new Error(data.error || `HTTP ${response.status}`);
+    return data;
   }
 
   window.BigSplashIntake = { submit: submitToGHL, audit: runAudit };
@@ -195,6 +218,7 @@ body.intake-locked { overflow: hidden; }
       <form novalidate>
         <input type="hidden" name="service_tag" value="${service}">
         <input type="hidden" name="page_url" value="">
+        <input type="text" name="hp_x7" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
         ${fieldsHTML}
         <div data-intake-error class="hidden mb-4 text-sm text-red-400 font-label"></div>
         <button type="submit" data-intake-submit class="ia-submit w-full font-label text-sm tracking-widest uppercase font-bold py-4">${config.submitText}</button>
@@ -240,6 +264,8 @@ body.intake-locked { overflow: hidden; }
       formWrap.innerHTML = buildFormHTML(config, svc);
       formWrap.classList.remove('hidden');
       successWrap.classList.add('hidden');
+      successWrap.querySelector('h2').textContent = 'Got it.';
+      successWrap.querySelector('p').textContent = "We'll be in touch within one business day.";
 
       // Set page_url
       const pageInput = formWrap.querySelector('input[name="page_url"]');
@@ -269,17 +295,24 @@ body.intake-locked { overflow: hidden; }
         payload.submitted_at = new Date().toISOString();
 
         try {
-          if (!GHL_WEBHOOK_URL) {
+          let sent = false;
+          try {
+            await sendContact(payload);
+            sent = true;
+          } catch (err) {
+            console.error('[intake] contact worker failed:', err);
+          }
+          if (!sent && !GHL_WEBHOOK_URL) {
             // No webhook pasted in yet. Open a pre-filled email so the message
             // still reaches Chris, and say so plainly on the success screen.
-            const skip = ['form_type', 'service_tag', 'page_url', 'submitted_at'];
+            const skip = ['form_type', 'service_tag', 'page_url', 'submitted_at', 'hp_x7'];
             const lines = Object.entries(payload).filter(([k, v]) => !skip.includes(k) && String(v).trim()).map(([k, v]) => `${k}: ${v}`);
             const who = payload.church || payload.business || payload.company || payload.name || 'website';
             const mail = `mailto:chris@bigsplash.agency?subject=${encodeURIComponent(svc + ' inquiry: ' + who)}&body=${encodeURIComponent(lines.join('\n') + '\n\nSent from ' + (payload.page_url || window.location.href))}`;
             window.open(mail, '_self');
             successWrap.querySelector('h2').textContent = 'One more step.';
             successWrap.querySelector('p').textContent = 'Your email app opened with your message filled in. Press send and Chris will reply within one business day. If nothing opened, email chris@bigsplash.agency.';
-          } else {
+          } else if (!sent) {
             await submitToGHL(payload);
           }
           formWrap.classList.add('hidden');

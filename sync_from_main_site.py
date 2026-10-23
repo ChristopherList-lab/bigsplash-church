@@ -39,7 +39,9 @@ s = s.replace('<link rel="canonical" href="https://bigsplash.video/church/">', f
 if f'<link rel="canonical" href="{DOMAIN}/">' not in s:
     sys.exit('sync: expected a canonical link in the source page')
 s = s.replace('<meta property="og:url" content="https://bigsplash.video/church/">', f'<meta property="og:url" content="{DOMAIN}/">')
-s = must(s, 'https://bigsplash.video/assets/images/og-image.jpg', f'{DOMAIN}/assets/images/og-image.jpg', 'og:image')
+OG_IMAGE = 'assets/images/church/og-church.jpg'  # the church share image (1200x630)
+if f'{DOMAIN}/{OG_IMAGE}' not in s:
+    sys.exit('sync: expected the church og:image in the source page')
 s = must(s, '"url": "https://bigsplash.video", "email"', f'"url": "{DOMAIN}", "email"', 'JSON-LD url')
 (OUT / 'index.html').write_text(s)
 
@@ -82,7 +84,7 @@ shutil.copy2(SRC / 'js' / 'intake.js', OUT / 'js' / 'intake.js')
 pages = s + t + ''.join(founding.values())
 refs = set(re.findall(r'''(?:src|href|poster)=["'](?:\.\./)*((?:assets|ADs)/[^"'?#]+)''', pages))
 refs |= set(re.findall(r'''url\(['"]?(?:\.\./)*(assets/[^'")]+)''', pages))
-refs.add('assets/images/og-image.jpg')
+refs.add(OG_IMAGE)
 for r in sorted(refs):
     src = SRC / r
     if not src.exists():

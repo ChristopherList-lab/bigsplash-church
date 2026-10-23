@@ -1,0 +1,3 @@
+# GitHub Pages publishes every tracked file, so keep system files and private PDFs out.
+.DS_Store
+*.pdf
