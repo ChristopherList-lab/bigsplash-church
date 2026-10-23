@@ -550,6 +550,29 @@
   .rc-fine { margin-top: 1rem; font-size: 0.8125rem; color: rgba(255, 255, 255, 0.55); }
   .rc-link { color: #ffffff; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
   body.rc-open { overflow: hidden; }
+  /* The Front Door Audit in a popup: the form, the "checking" wait, then the scorecard itself in a frame. */
+  .af-panel { width: min(40rem, 100%); }
+  .af-panel.is-card { width: min(68rem, 100%); padding: 0; overflow: hidden; display: flex; flex-direction: column; height: calc(100dvh - 2rem); }
+  .af-grid { display: grid; gap: 0.9rem; margin-top: 1.4rem; }
+  @media (min-width: 640px) { .af-grid { grid-template-columns: 1fr 1fr; } .af-wide { grid-column: 1 / -1; } }
+  .af-label { display: block; margin-bottom: 0.35rem; font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.85); }
+  .af-label span { font-weight: 400; color: rgba(255, 255, 255, 0.5); }
+  .af-input { display: block; width: 100%; height: 3rem; padding: 0 0.9rem; border-radius: 0.75rem; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.18); color: #ffffff; font: inherit; font-size: 16px; }
+  select.af-input { appearance: none; -webkit-appearance: none; padding-right: 2.4rem; background-image: linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.6) 50%), linear-gradient(-45deg, transparent 50%, rgba(255,255,255,0.6) 50%); background-position: calc(100% - 18px) 52%, calc(100% - 12px) 52%; background-size: 6px 6px; background-repeat: no-repeat; }
+  select.af-input option { background: #17171c; color: #ffffff; }
+  .af-input::placeholder { color: rgba(255, 255, 255, 0.4); }
+  .af-input:focus { outline: none; border-color: #eff88b; box-shadow: 0 0 0 3px rgba(239, 248, 139, 0.18); }
+  .af-consent { display: flex; gap: 0.7rem; align-items: flex-start; font-size: 0.8125rem; line-height: 1.5; color: rgba(255, 255, 255, 0.65); }
+  .af-consent input { flex: none; width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; accent-color: #eff88b; }
+  .af-consent a { color: inherit; text-decoration: underline; }
+  .af-hp { position: absolute; left: -5000px; width: 1px; height: 1px; overflow: hidden; }
+  .af-spin { width: 2.4rem; height: 2.4rem; margin: 0 auto 1.2rem; border-radius: 50%; border: 3px solid rgba(255, 255, 255, 0.14); border-top-color: #eff88b; animation: af-spin 0.9s linear infinite; }
+  @keyframes af-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .af-spin { animation-duration: 2.7s; } }
+  .af-cardbar { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 3.6rem 0.75rem 1.25rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.95rem; color: rgba(255, 255, 255, 0.8); }
+  .af-frame { flex: 1; width: 100%; border: 0; background: #ffffff; }
+  .af-toast { position: fixed; z-index: 85; left: 1rem; bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0.9rem 0.75rem 1.1rem; border-radius: 9999px; background: #eff88b; color: #131318; font-weight: 700; box-shadow: 0 20px 40px -16px rgba(0, 0, 0, 0.8); }
+  @media (max-width: 767px) { .af-toast { bottom: 6rem; right: 1rem; justify-content: space-between; } }
   .journey { background: var(--night); }
   .j-col { padding: 0 1.25rem; }
   @media (min-width: 768px) { .j-col { padding: 0 2rem; max-width: 72rem; margin: 0 auto; } }
@@ -1627,6 +1650,56 @@
     <p class="max-w-6xl mx-auto mt-6 pt-6 border-t border-white/10 text-center md:text-left text-sm text-stone-400">We also make videos for Texas businesses. <a href="https://bigsplash.video/" class="underline underline-offset-4 hover:text-primary">See our work for businesses</a></p>
   </footer>
 
+  <!-- ========== Front Door Audit popup: every "free audit" button opens this ========== -->
+  <div id="audit-modal" class="rc-modal" role="dialog" aria-modal="true" aria-labelledby="af-title" hidden>
+    <div class="rc-backdrop" data-af-close></div>
+    <div class="rc-panel af-panel night">
+      <button type="button" class="rc-x" data-af-close aria-label="Close"><span class="material-symbols-outlined" aria-hidden="true">close</span></button>
+
+      <div id="af-ask">
+        <p class="eyebrow">Free Front Door Audit</p>
+        <h3 id="af-title" class="rc-h">See your church the way a new family does</h3>
+        <p class="mt-3 text-[15px] text-white/70">No call needed. Your scorecard is ready in a few minutes, and we email you a copy.</p>
+        <form id="af-form" novalidate>
+          <div class="af-grid">
+            <div class="af-wide"><label class="af-label" for="af-church">Church name</label><input class="af-input" id="af-church" name="church" required autocomplete="organization" maxlength="120"></div>
+            <div class="af-wide"><label class="af-label" for="af-address">Church address</label><input class="af-input" id="af-address" name="address" required placeholder="Street, city, state, ZIP" autocomplete="street-address" maxlength="200"></div>
+            <div><label class="af-label" for="af-website">Church website</label><input class="af-input" id="af-website" name="website" required placeholder="yourchurch.com" inputmode="url" maxlength="300"></div>
+            <div><label class="af-label" for="af-attendance">People on a Sunday</label>
+              <select class="af-input" id="af-attendance" name="attendance" required><option value="" selected disabled>Choose one</option><option>Under 100</option><option>100 to 249</option><option>250 to 499</option><option>500 to 999</option><option>1,000+</option></select></div>
+            <div><label class="af-label" for="af-name">Your name</label><input class="af-input" id="af-name" name="name" required autocomplete="name" maxlength="120"></div>
+            <div><label class="af-label" for="af-role">Your role</label>
+              <select class="af-input" id="af-role" name="role"><option value="" selected disabled>Choose one</option><option>Lead pastor</option><option>Executive pastor</option><option>Comms or creative</option><option>Other staff</option><option>Volunteer</option></select></div>
+            <div><label class="af-label" for="af-email">Email</label><input class="af-input" id="af-email" name="email" type="email" required autocomplete="email" maxlength="200"></div>
+            <div><label class="af-label" for="af-phone">Cell phone <span id="af-phone-hint">(optional)</span></label><input class="af-input" id="af-phone" name="phone" type="tel" autocomplete="tel" placeholder="512-555-0100" maxlength="40"></div>
+            <label class="af-consent af-wide" for="af-sms"><input id="af-sms" name="sms_consent" type="checkbox" value="yes"><span>Text me my scorecard. Big Splash will send up to 2 texts about my audit. Msg and data rates may apply. Reply HELP for help or STOP to opt out. <a href="https://bigsplash.video/privacy/" target="_blank" rel="noopener">Privacy policy</a></span></label>
+            <div><label class="af-label" for="af-instagram">Instagram <span>(optional)</span></label><input class="af-input" id="af-instagram" name="instagram" placeholder="@yourchurch" maxlength="60"></div>
+            <div><label class="af-label" for="af-facebook">Posts on Facebook <span>(optional)</span></label>
+              <select class="af-input" id="af-facebook" name="facebook_frequency"><option value="" selected disabled>Choose one</option><option>Several times a week</option><option>About once a week</option><option>A few times a month</option><option>Rarely or never</option><option>Not sure</option></select></div>
+            <div class="af-hp" aria-hidden="true"><label for="af-hp">Leave this empty</label><input id="af-hp" name="hp_x7" tabindex="-1" autocomplete="new-password"></div>
+          </div>
+          <button type="submit" id="af-go" class="btn-primary w-full justify-center mt-6 text-[17px]">Run my free audit</button>
+          <p id="af-err" class="rc-err" role="alert" hidden></p>
+        </form>
+      </div>
+
+      <div id="af-wait" class="text-center py-6" hidden aria-live="polite">
+        <div id="af-spin" class="af-spin"></div>
+        <h3 id="af-wait-title" class="rc-h">Checking your front door…</h3>
+        <p id="af-wait-text" class="mt-3 text-white/75">We're looking you up on Google and opening your website on a phone. This takes a few minutes.</p>
+        <p id="af-wait-note" class="mt-3 text-[15px] text-white/55">You can close this and keep reading. We'll let you know here when it's ready, and email you a copy.</p>
+        <p id="af-open-wrap" class="mt-6" hidden><button type="button" id="af-open" class="btn-primary">Open my scorecard</button></p>
+      </div>
+
+      <div id="af-card" hidden>
+        <div class="af-cardbar"><span><b class="text-white">Your Front Door scorecard</b></span><a id="af-newtab" href="#" target="_blank" rel="noopener" class="text-[15px] underline underline-offset-4 text-white/75">Open in a new tab</a></div>
+        <iframe id="af-frame" class="af-frame" title="Your Front Door Audit scorecard"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div id="af-toast" class="af-toast" role="status" hidden><span>Your Front Door scorecard is ready</span><button type="button" id="af-toast-open" class="btn-primary !py-2 !px-4 text-[15px]" style="background:#131318;color:#fff">Open</button></div>
+
   <!-- ========== "Count the families near your church" popup ========== -->
   <div id="reach-modal" class="rc-modal" role="dialog" aria-modal="true" aria-labelledby="rc-title" hidden>
     <div class="rc-backdrop" data-rc-close></div>
@@ -1864,6 +1937,142 @@
       })).observe(stage);
       reduce.addEventListener?.('change', syncVideos);
     } catch (e) {}
+  })();
+  </script>
+  <script>
+  // The Front Door Audit in a popup, so a pastor never leaves bigsplash.church. Every link to /frontdoor/ opens it
+  // (the link stays as the fallback). Same form and checks as bigsplash.video/frontdoor: POST /audit, then poll
+  // /result until the scorecard is ready and show it here in a frame. Closing the popup keeps the wait going; a
+  // toast says when it's ready.
+  (() => {
+    const API = 'https://bigsplash-front-door.chris-bc4.workers.dev';
+    const $ = (id) => document.getElementById(id);
+    const modal = $('audit-modal');
+    if (!modal) return;
+    const panel = modal.querySelector('.af-panel');
+    const form = $('af-form');
+    const page = new URLSearchParams(location.search);
+    let opener = null, cta = '', state = 'ask', cardUrl = '', leadTracked = false;
+
+    const view = (v) => {
+      state = v;
+      $('af-ask').hidden = v !== 'ask';
+      $('af-wait').hidden = v !== 'wait';
+      $('af-card').hidden = v !== 'card';
+      panel.classList.toggle('is-card', v === 'card');
+    };
+    function open(e, link) {
+      opener = link || null;
+      cta = (link && link.dataset.cta) || 'popup';
+      if (cta === 'reach_audit') {
+        const addr = $('rc-address') && $('rc-address').value.trim();
+        if (addr && !form.elements.address.value) form.elements.address.value = addr;
+        const rc = $('reach-modal'); if (rc) { rc.hidden = true; document.body.classList.remove('rc-open'); }
+      }
+      $('af-toast').hidden = true;
+      modal.hidden = false;
+      document.body.classList.add('rc-open');
+      if (state === 'ask') setTimeout(() => form.elements.church.focus(), 30);
+    }
+    function close() {
+      modal.hidden = true;
+      document.body.classList.remove('rc-open');
+      if (state === 'card') { $('af-frame').src = 'about:blank'; view('ask'); form.reset(); }
+      if (opener) opener.focus();
+    }
+    const fail = (msg, field) => { $('af-err').textContent = msg; $('af-err').hidden = false; if (field) form.elements[field].focus(); };
+    function waiting(title, text, done) {
+      view('wait');
+      $('af-wait-title').textContent = title;
+      $('af-wait-text').textContent = text;
+      $('af-spin').hidden = Boolean(done);
+      $('af-wait-note').hidden = Boolean(done);
+    }
+    function ready(url) {
+      cardUrl = url;
+      $('af-open-wrap').hidden = true;
+      if (modal.hidden) { waiting('Your scorecard is ready', '', true); $('af-toast').hidden = false; return; }
+      showCard();
+    }
+    function showCard() {
+      $('af-toast').hidden = true;
+      view('card');
+      $('af-frame').src = cardUrl;
+      $('af-newtab').href = cardUrl;
+      if (modal.hidden) { modal.hidden = false; document.body.classList.add('rc-open'); }
+    }
+    function trackLead(id) {
+      if (leadTracked) return;
+      leadTracked = true;
+      try { if (window.fbq) fbq('track', 'Lead', { content_name: 'Front Door Audit' }, { eventID: id }); } catch (x) {}
+      try { if (window.gtag) gtag('event', 'generate_lead'); } catch (x) {}
+    }
+    async function poll(id, url) {
+      for (let i = 0; i < 40; i++) {
+        await new Promise((r) => setTimeout(r, i < 6 ? 5000 : 8000));
+        try {
+          const res = await fetch(`${API}/result?id=${encodeURIComponent(id)}`);
+          if (res.ok) return ready(url);
+          const body = await res.json().catch(() => ({}));
+          if (body.status === 'review') return waiting("We're double-checking a few details", 'Your audit is done. Our team is double-checking a few details and will email your scorecard within one business day.', true);
+          if (body.status === 'failed') return waiting('Something went wrong', 'Something went wrong on our end. Our team has the details and will email your scorecard.', true);
+        } catch (x) {}
+      }
+      waiting('Your audit is still running', "It's taking longer than usual. We'll email you the scorecard as soon as it's ready.", true);
+      cardUrl = url; $('af-open-wrap').hidden = false;
+    }
+
+    form.elements.sms_consent.addEventListener('change', (e) => {
+      form.elements.phone.required = e.target.checked;
+      $('af-phone-hint').textContent = e.target.checked ? '(for your texts)' : '(optional)';
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      $('af-err').hidden = true;
+      const data = Object.fromEntries(new FormData(form).entries());
+      for (const k of ['church', 'address', 'website', 'name', 'email']) {
+        if (!String(data[k] || '').trim()) return fail('Please fill in every field above the optional ones.', k);
+      }
+      if (!data.attendance) return fail('Choose about how many people come on a Sunday.', 'attendance');
+      if (form.elements.sms_consent.checked) {
+        if (String(data.phone || '').replace(/\D/g, '').length < 10) return fail('Add your cell number so we can text your scorecard, or uncheck the text box.', 'phone');
+        data.sms_consent = 'yes';
+      } else {
+        delete data.sms_consent;
+      }
+      const utm = { utm_source: page.get('utm_source') || 'church_page', utm_medium: page.get('utm_medium') || '', utm_campaign: page.get('utm_campaign') || '', utm_content: page.get('utm_content') || cta };
+      data.utm = Object.entries(utm).filter(([, v]) => v).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&');
+      data.page_url = location.href.slice(0, 500);
+      const go = $('af-go');
+      go.disabled = true; go.textContent = 'Starting your audit…';
+      try {
+        const res = await fetch(`${API}/audit`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok || !body.ok) throw new Error(body.error || 'Something went wrong');
+        if (body.id === 'received') return waiting('Thanks', "We'll be in touch.", true);
+        trackLead(body.id);
+        waiting('Checking your front door…', "We're looking you up on Google and opening your website on a phone. This takes a few minutes.");
+        poll(body.id, body.url);
+      } catch (ex) {
+        const msg = String(ex.message || 'Something went wrong').replace(/\.$/, '');
+        fail(/failed to fetch|load failed|networkerror/i.test(msg)
+          ? "We couldn't reach our server. Check your connection and try again, or email chris@bigsplash.agency and we'll run it by hand."
+          : msg.includes('chris@bigsplash.agency') ? `${msg}.` : `${msg}. If it keeps happening, email chris@bigsplash.agency and we'll run it by hand.`);
+      } finally {
+        go.disabled = false; go.textContent = 'Run my free audit';
+      }
+    });
+
+    document.querySelectorAll('a[href*="/frontdoor/"]').forEach((a) => a.addEventListener('click', (e) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+      e.preventDefault();
+      open(e, a);
+    }));
+    modal.querySelectorAll('[data-af-close]').forEach((el) => el.addEventListener('click', close));
+    $('af-open').addEventListener('click', showCard);
+    $('af-toast-open').addEventListener('click', showCard);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) close(); });
   })();
   </script>
   <script>
