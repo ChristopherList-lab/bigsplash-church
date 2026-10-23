@@ -137,7 +137,7 @@
       </ol>
 
       <div class="note">
-        <p><b style="color:var(--ink)">Your first month is paid.</b> After that, $1,497 bills on the same date each month. Not happy in your first 90 days? Cancel by email with no cancellation fees.</p>
+        <p><b style="color:var(--ink)">Your first month is paid.</b> After that, your monthly fee bills on the same date each month for the <span id="term-length">6 or 12</span> month commitment you chose. Not happy in your first 90 days? Cancel by email with no cancellation fees.</p>
         <p>Your terms live at <a href="https://bigsplash.church/founding/terms/">Founding Church Terms</a>. Questions anytime: <a href="mailto:chris@bigsplash.agency">chris@bigsplash.agency</a>.</p>
       </div>
       </div>
@@ -157,7 +157,12 @@
     // Stripe's payment link sends the church here after checkout with ?session=cs_... A card payment has
     // gone through by then. A bank payment is still clearing, which takes a few business days.
     const $ = (id) => document.getElementById(id);
-    const session = new URLSearchParams(location.search).get('session') || '';
+    const params = new URLSearchParams(location.search);
+    const session = params.get('session') || '';
+    // ?term=12 or ?term=6 comes from the payment link the church used.
+    const term = ['6', '12'].includes(params.get('term')) ? params.get('term') : '';
+    const value = term === '6' ? 1697 : 1497;
+    if (term) $('term-length').textContent = term;
 
     function say(kind, title, text, icon) {
       const box = $('pay-status');
@@ -172,8 +177,8 @@
     function trackPurchase(id) {
       const key = `bs_purchase_${id}`;
       try { if (localStorage.getItem(key)) return; localStorage.setItem(key, '1'); } catch (e) {}
-      try { if (window.fbq) fbq('track', 'Purchase', { value: 1497, currency: 'USD', content_name: 'Church Monthly Plan, founding rate' }, { eventID: id }); } catch (e) {}
-      try { if (window.gtag) gtag('event', 'purchase', { transaction_id: id, value: 1497, currency: 'USD' }); } catch (e) {}
+      try { if (window.fbq) fbq('track', 'Purchase', { value, currency: 'USD', content_name: `Church Monthly Plan, founding rate${term ? `, ${term} months` : ''}` }, { eventID: id }); } catch (e) {}
+      try { if (window.gtag) gtag('event', 'purchase', { transaction_id: id, value, currency: 'USD' }); } catch (e) {}
     }
 
     if (/^cs_(live|test)_[A-Za-z0-9]{6,250}$/.test(session)) {
