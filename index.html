@@ -543,7 +543,15 @@
   .rc-big { margin-top: 0.3rem; font-size: clamp(3rem, 12vw, 4.25rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: #ffffff; font-variant-numeric: tabular-nums; }
   .rc-big small { margin-left: 0.4rem; font-size: 1.1rem; font-weight: 600; letter-spacing: 0; color: rgba(255, 255, 255, 0.7); }
   .rc-where { font-size: 0.95rem; font-weight: 600; color: #eff88b; }
-  .rc-map { display: block; width: min(19rem, 100%); margin: 1.4rem auto 0.4rem; overflow: visible; }
+  .rc-mapwrap { position: relative; margin: 1.3rem 0 0.9rem; aspect-ratio: 1 / 1; max-height: 26rem; border-radius: 1rem; overflow: hidden; background: #0c0c0c; border: 1px solid rgba(255, 255, 255, 0.08); }
+  @media (min-width: 640px) { .rc-mapwrap { aspect-ratio: 4 / 3; } }
+  .rc-map { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0.75rem; overflow: visible; transition: opacity 0.5s ease; }
+  #rc-gl { position: absolute; inset: 0; opacity: 0; transition: opacity 0.6s ease; }
+  .rc-mapwrap.gl-on #rc-gl { opacity: 1; }
+  .rc-mapwrap.gl-on .rc-map { opacity: 0; }
+  .rc-ringlabel { font: 700 10.5px/1 Inter, sans-serif; letter-spacing: 0.12em; color: #eff88b; background: rgba(12, 12, 12, 0.85); border: 1px solid rgba(239, 248, 139, 0.55); border-radius: 9999px; padding: 4px 9px; white-space: nowrap; }
+  .rc-ringlabel.is-five { color: rgba(255, 255, 255, 0.8); border-color: rgba(255, 255, 255, 0.3); }
+  .rc-mapwrap .maplibregl-ctrl-attrib { font-size: 10px; }
   .rc-map .rc-dot { fill: #eff88b; fill-opacity: 0.6; animation: rc-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: var(--d, 0ms); transform-box: fill-box; transform-origin: center; }
   @keyframes rc-pop { from { opacity: 0; transform: scale(0.2); } }
   @media (prefers-reduced-motion: reduce) { .rc-map .rc-dot { animation: none; } }
@@ -1722,13 +1730,16 @@
         <p id="rc-where" class="rc-where mt-1"></p>
         <p class="rc-big"><span id="rc-ten">0</span><small>households</small></p>
         <p id="rc-five" class="mt-3 text-white/75"></p>
-        <svg id="rc-map" class="rc-map" viewBox="-11.5 -11.5 23 23" role="img" aria-label="Dots for each Census tract within 10 miles of your church"></svg>
+        <div id="rc-mapwrap" class="rc-mapwrap" role="img" aria-label="A map of your church's area with a 10-mile ring and a dot for each Census tract inside it">
+          <div id="rc-gl"></div>
+          <svg id="rc-map" class="rc-map" viewBox="-11.5 -11.5 23 23" aria-hidden="true"></svg>
+        </div>
         <p class="text-white/80">Each one is a family your pastor's invitation could reach. We help you invite them and welcome the ones who come.</p>
         <div class="mt-6 flex flex-col sm:flex-row gap-3">
           <a href="https://bigsplash.video/frontdoor/?utm_source=church_page&amp;utm_content=reach_popup" data-cta="reach_audit" class="btn-primary justify-center">Get my free Front Door Audit</a>
           <button type="button" data-open-intake data-intake-service="Church" class="btn-ghost justify-center">Book a call with our team</button>
         </div>
-        <p class="rc-fine">Estimate from US Census data (ACS 2024, 5-year). Each dot is a Census tract, sized by its households. <button type="button" id="rc-again" class="rc-link">Check another address</button></p>
+        <p class="rc-fine">Estimate from US Census data (ACS 2024, 5-year). Each dot is a Census tract, sized by its households. Map data from OpenStreetMap. <button type="button" id="rc-again" class="rc-link">Check another address</button></p>
       </div>
     </div>
   </div>
@@ -2087,9 +2098,73 @@
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     let opener = null;
 
+    // The street map: MapLibre with OpenFreeMap's dark style (free, no key), loaded the first time the popup opens.
+    // Until it paints, or if it can't (no WebGL, blocked script), the SVG dot drawing stands in.
+    const GL_JS = 'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js';
+    const GL_CSS = 'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css';
+    let glLoad = null, map = null, labels = [];
+    const loadGL = () => glLoad || (glLoad = new Promise((resolve, reject) => {
+      if (window.maplibregl) return resolve(window.maplibregl);
+      const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = GL_CSS; document.head.appendChild(css);
+      const js = document.createElement('script'); js.src = GL_JS;
+      js.onload = () => (window.maplibregl ? resolve(window.maplibregl) : reject(new Error('maplibre')));
+      js.onerror = () => { glLoad = null; reject(new Error('maplibre')); };
+      document.head.appendChild(js);
+    }));
+    const ring = (lat0, lon0, miles) => {
+      const k = 69.17 * Math.cos(lat0 * Math.PI / 180), out = [];
+      for (let i = 0; i <= 96; i++) { const a = (i / 96) * 2 * Math.PI; out.push([lon0 + (miles * Math.sin(a)) / k, lat0 + (miles * Math.cos(a)) / 69.0]); }
+      return out;
+    };
+    async function streetMap(d) {
+      const wrap = $('rc-mapwrap');
+      wrap.classList.remove('gl-on');
+      if (typeof d.lat !== 'number' || typeof d.lon !== 'number') return;
+      let gl;
+      try { gl = await loadGL(); } catch (x) { return; }
+      const k = 69.17 * Math.cos(d.lat * Math.PI / 180);
+      const dots = { type: 'FeatureCollection', features: (d.points || []).map(([e, n, hh]) => ({ type: 'Feature', properties: { r: 2 + Math.sqrt(Math.max(hh, 0)) / 11 }, geometry: { type: 'Point', coordinates: [d.lon + e / k, d.lat + n / 69.0] } })) };
+      const rings = { type: 'FeatureCollection', features: [10, 5].map((m) => ({ type: 'Feature', properties: { m }, geometry: { type: 'Polygon', coordinates: [ring(d.lat, d.lon, m)] } })) };
+      const center = { type: 'Feature', geometry: { type: 'Point', coordinates: [d.lon, d.lat] } };
+      const ten = ring(d.lat, d.lon, 10);
+      const bounds = ten.reduce((b, [x, y]) => [[Math.min(b[0][0], x), Math.min(b[0][1], y)], [Math.max(b[1][0], x), Math.max(b[1][1], y)]], [[180, 90], [-180, -90]]);
+      try {
+        if (!map) {
+          map = new gl.Map({ container: 'rc-gl', style: 'https://tiles.openfreemap.org/styles/dark', bounds, fitBoundsOptions: { padding: 28 }, interactive: false, attributionControl: { compact: true } });
+          // A single missing tile also fires 'error', so only a slow style load gives up on the map.
+          await new Promise((res, rej) => { map.once('load', res); setTimeout(() => rej(new Error('slow')), 12000); });
+          map.addSource('rc-rings', { type: 'geojson', data: rings });
+          map.addSource('rc-dots', { type: 'geojson', data: dots });
+          map.addSource('rc-center', { type: 'geojson', data: center });
+          map.addLayer({ id: 'rc-ten-fill', type: 'fill', source: 'rc-rings', filter: ['==', ['get', 'm'], 10], paint: { 'fill-color': '#eff88b', 'fill-opacity': 0.06 } });
+          map.addLayer({ id: 'rc-ten-line', type: 'line', source: 'rc-rings', filter: ['==', ['get', 'm'], 10], paint: { 'line-color': '#eff88b', 'line-width': 2, 'line-dasharray': [2, 2] } });
+          map.addLayer({ id: 'rc-five-line', type: 'line', source: 'rc-rings', filter: ['==', ['get', 'm'], 5], paint: { 'line-color': '#ffffff', 'line-opacity': 0.35, 'line-width': 1.2, 'line-dasharray': [2, 2] } });
+          map.addLayer({ id: 'rc-dots', type: 'circle', source: 'rc-dots', paint: { 'circle-color': '#eff88b', 'circle-opacity': 0.55, 'circle-radius': ['get', 'r'] } });
+          map.addLayer({ id: 'rc-center-halo', type: 'circle', source: 'rc-center', paint: { 'circle-radius': 13, 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': '#eff88b', 'circle-stroke-width': 2 } });
+          map.addLayer({ id: 'rc-center', type: 'circle', source: 'rc-center', paint: { 'circle-radius': 6, 'circle-color': '#eff88b' } });
+        } else {
+          map.getSource('rc-rings').setData(rings);
+          map.getSource('rc-dots').setData(dots);
+          map.getSource('rc-center').setData(center);
+          map.resize();
+          map.fitBounds(bounds, { padding: 28, animate: false });
+        }
+        labels.forEach((m) => m.remove());
+        labels = [[10, ''], [5, ' is-five']].map(([m, cls]) => {
+          const el = document.createElement('span'); el.className = `rc-ringlabel${cls}`; el.textContent = `${m} MILES`;
+          return new gl.Marker({ element: el }).setLngLat([d.lon, d.lat + m / 69.0]).addTo(map);
+        });
+        map.once('idle', () => wrap.classList.add('gl-on'));
+        map.triggerRepaint();
+      } catch (x) {
+        wrap.classList.remove('gl-on');
+      }
+    }
+
     const show = (view) => { $('rc-ask').hidden = view !== 'ask'; $('rc-result').hidden = view !== 'result'; };
     function open(e) {
       opener = e.currentTarget;
+      loadGL().catch(() => {});
       show('ask');
       $('rc-err').hidden = true;
       modal.hidden = false;
@@ -2162,6 +2237,7 @@
         drawMap(d.points || []);
         show('result');
         countUp($('rc-ten'), d.ten);
+        streetMap(d);
         modal.querySelector('.rc-panel').scrollTop = 0;
       } catch (x) {
         fail("We couldn't reach our counter just now. Try again in a minute.");
