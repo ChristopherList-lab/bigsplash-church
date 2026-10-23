@@ -2123,7 +2123,7 @@
       let gl;
       try { gl = await loadGL(); } catch (x) { return; }
       const k = 69.17 * Math.cos(d.lat * Math.PI / 180);
-      const dots = { type: 'FeatureCollection', features: (d.points || []).map(([e, n, hh]) => ({ type: 'Feature', properties: { r: 2 + Math.sqrt(Math.max(hh, 0)) / 11 }, geometry: { type: 'Point', coordinates: [d.lon + e / k, d.lat + n / 69.0] } })) };
+      const dots = { type: 'FeatureCollection', features: (d.points || []).map(([e, n, hh]) => ({ type: 'Feature', properties: { r: 1.4 + Math.sqrt(Math.max(hh, 0)) / ((d.points || []).length > 110 ? 16 : 12) }, geometry: { type: 'Point', coordinates: [d.lon + e / k, d.lat + n / 69.0] } })) };
       const rings = { type: 'FeatureCollection', features: [10, 5].map((m) => ({ type: 'Feature', properties: { m }, geometry: { type: 'Polygon', coordinates: [ring(d.lat, d.lon, m)] } })) };
       const center = { type: 'Feature', geometry: { type: 'Point', coordinates: [d.lon, d.lat] } };
       const ten = ring(d.lat, d.lon, 10);
@@ -2139,7 +2139,7 @@
           map.addLayer({ id: 'rc-ten-fill', type: 'fill', source: 'rc-rings', filter: ['==', ['get', 'm'], 10], paint: { 'fill-color': '#eff88b', 'fill-opacity': 0.06 } });
           map.addLayer({ id: 'rc-ten-line', type: 'line', source: 'rc-rings', filter: ['==', ['get', 'm'], 10], paint: { 'line-color': '#eff88b', 'line-width': 2, 'line-dasharray': [2, 2] } });
           map.addLayer({ id: 'rc-five-line', type: 'line', source: 'rc-rings', filter: ['==', ['get', 'm'], 5], paint: { 'line-color': '#ffffff', 'line-opacity': 0.35, 'line-width': 1.2, 'line-dasharray': [2, 2] } });
-          map.addLayer({ id: 'rc-dots', type: 'circle', source: 'rc-dots', paint: { 'circle-color': '#eff88b', 'circle-opacity': 0.55, 'circle-radius': ['get', 'r'] } });
+          map.addLayer({ id: 'rc-dots', type: 'circle', source: 'rc-dots', paint: { 'circle-color': '#eff88b', 'circle-opacity': 0.5, 'circle-radius': ['get', 'r'] } });
           map.addLayer({ id: 'rc-center-halo', type: 'circle', source: 'rc-center', paint: { 'circle-radius': 13, 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': '#eff88b', 'circle-stroke-width': 2 } });
           map.addLayer({ id: 'rc-center', type: 'circle', source: 'rc-center', paint: { 'circle-radius': 6, 'circle-color': '#eff88b' } });
         } else {
