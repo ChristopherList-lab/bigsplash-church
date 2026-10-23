@@ -91,6 +91,9 @@
   .co-x:hover { background: rgba(19, 19, 24, 0.07); }
   .co-body { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
   .co-status { padding: 4rem 1.5rem; text-align: center; color: #5f5f68; }
+  .co-status.is-loading::before { content: ""; display: block; width: 2rem; height: 2rem; margin: 0 auto 1rem; border-radius: 50%; border: 3px solid #e4e1d9; border-top-color: #131318; animation: co-spin 0.8s linear infinite; }
+  @keyframes co-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .co-status.is-loading::before { animation-duration: 2.4s; } }
   .co-foot { flex: none; padding: 0.8rem 1.25rem; border-top: 1px solid #ddd8ce; text-align: center; font-size: 0.95rem; color: #5f5f68; }
   body.co-open { overflow: hidden; }
   @media (max-width: 640px) { .co-modal { padding: 0; } .co-panel { width: 100%; height: 100dvh; max-height: 100dvh; border-radius: 0; } }
@@ -259,6 +262,7 @@
       const term = link.dataset.term;
       $('co-term').textContent = `· ${term}-month commitment`;
       $('co-status').hidden = false;
+      $('co-status').classList.add('is-loading');
       $('co-status').textContent = 'Opening secure checkout…';
       modal.hidden = false;
       document.body.classList.add('co-open');
@@ -276,8 +280,12 @@
         checkout = await stripe.initEmbeddedCheckout({ fetchClientSecret });
         if (modal.hidden) { checkout.destroy(); checkout = null; return; }
         checkout.mount('#co-mount');
-        $('co-status').hidden = true;
+        // Stripe's frame paints a moment after it loads, so the spinner stays until then.
+        const frame = $('co-mount').querySelector('iframe');
+        const ready = () => { $('co-status').hidden = true; $('co-status').classList.remove('is-loading'); };
+        if (frame) { frame.addEventListener('load', () => setTimeout(ready, 600), { once: true }); setTimeout(ready, 8000); } else ready();
       } catch (err) {
+        $('co-status').classList.remove('is-loading');
         if (err && err.full) {
           $('co-status').textContent = 'All 5 founding spots are taken. Book a call with our team and we\'ll walk you through the regular plan.';
           return;
