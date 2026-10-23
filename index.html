@@ -570,7 +570,8 @@
   @keyframes af-spin { to { transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce) { .af-spin { animation-duration: 2.7s; } }
   .af-cardbar { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 3.6rem 0.75rem 1.25rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.95rem; color: rgba(255, 255, 255, 0.8); }
-  .af-frame { flex: 1; width: 100%; border: 0; background: #ffffff; }
+  #af-card:not([hidden]) { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .af-frame { flex: 1; min-height: 0; width: 100%; border: 0; background: #0b0b0e; }
   .af-toast { position: fixed; z-index: 85; left: 1rem; bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0.9rem 0.75rem 1.1rem; border-radius: 9999px; background: #eff88b; color: #131318; font-weight: 700; box-shadow: 0 20px 40px -16px rgba(0, 0, 0, 0.8); }
   @media (max-width: 767px) { .af-toast { bottom: 6rem; right: 1rem; justify-content: space-between; } }
   .journey { background: var(--night); }
