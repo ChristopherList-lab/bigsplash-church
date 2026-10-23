@@ -1401,7 +1401,7 @@
             <span class="plan-price tnum"><span class="sr-only">Price for our first 5 churches </span>$1,497</span><span class="text-white/65 text-lg">/month</span>
           </p>
           <p class="mt-4 text-[15px] text-white/75">Our first 5 churches lock in $1,497. New churches after that pay $1,997.</p>
-          <p class="mt-1 text-[15px] text-white/75">No long-term contract. You sign a simple month-to-month agreement. Cancel with 30 days notice.</p>
+          <p class="mt-1 text-[15px] text-white/75">No long-term contract. It's month to month. Not happy in your first 90 days? Cancel with no fees. After that, cancel with 30 days notice.</p>
           <ul class="mt-8 grid md:grid-cols-2 gap-x-8 gap-y-3.5 text-white/85">
             <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>A web page where new families plan their visit</li>
             <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>Your Facebook and Instagram campaign. We run it for you and aim it at families nearby.</li>
@@ -1411,12 +1411,8 @@
             <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>A short call each month to plan the month ahead</li>
           </ul>
           <div class="mt-auto pt-9">
-            <!-- Shows only when the front door worker says founding checkout is open (GET /founding/status). -->
-            <div id="founding-claim" class="mt-4" hidden>
-              <a href="https://bigsplash.church/founding/?utm_source=church_page" data-cta="price-founding" class="btn-primary w-full">Claim a founding spot <span class="material-symbols-outlined text-xl" aria-hidden="true">arrow_forward</span></a>
-              <p id="founding-left" class="mt-2 text-center text-sm font-semibold text-white tnum"></p>
-            </div>
-            <a href="https://bigsplash.video/frontdoor/?utm_source=church_page" data-cta="price-monthly" class="btn-primary w-full mt-4">Start with a free audit</a>
+            <a href="https://bigsplash.church/founding/?utm_source=church_page" data-cta="price-founding" class="btn-primary w-full">Claim a founding spot <span class="material-symbols-outlined text-xl" aria-hidden="true">arrow_forward</span></a>
+            <a href="https://bigsplash.video/frontdoor/?utm_source=church_page" data-cta="price-monthly" class="btn-ghost w-full mt-3">Start with a free audit</a>
             <p class="mt-4 text-[15px] text-white/70">Your campaign budget is separate. It starts at $500 a month.</p>
           </div>
         </div>
@@ -1510,7 +1506,7 @@
         <details class="group py-6"><summary class="flex justify-between items-center gap-6 cursor-pointer list-none"><span class="text-lg md:text-xl font-semibold text-white">Can you promise how many families will come?</span><span class="faq-plus material-symbols-outlined transition-transform duration-300 group-open:rotate-45 shrink-0" aria-hidden="true">add</span></summary>
           <p class="mt-4 text-white/75 leading-relaxed pr-10">No. The number depends on your town and your campaign budget. We count the families your welcome team checks off on Sunday. Each month, your family report shows the real number. Then your leaders can decide if it's working.</p></details>
         <details class="group py-6"><summary class="flex justify-between items-center gap-6 cursor-pointer list-none"><span class="text-lg md:text-xl font-semibold text-white">Is there a long-term contract?</span><span class="faq-plus material-symbols-outlined transition-transform duration-300 group-open:rotate-45 shrink-0" aria-hidden="true">add</span></summary>
-          <p class="mt-4 text-white/75 leading-relaxed pr-10">No. You sign a simple month-to-month agreement and can cancel with 30 days notice. Give a new campaign a few months before you judge it.</p></details>
+          <p class="mt-4 text-white/75 leading-relaxed pr-10">No. It's month to month, with a 90-day promise: if you're not happy in your first 90 days, cancel by email with no fees. After that, cancel any time with 30 days notice. Give a new campaign a few months before you judge it.</p></details>
         <details class="group py-6"><summary class="flex justify-between items-center gap-6 cursor-pointer list-none"><span class="text-lg md:text-xl font-semibold text-white">Do we own the videos?</span><span class="faq-plus material-symbols-outlined transition-transform duration-300 group-open:rotate-45 shrink-0" aria-hidden="true">add</span></summary>
           <p class="mt-4 text-white/75 leading-relaxed pr-10">Yes. You own the videos, your plan-your-visit page, the follow-up messages and your list of families. Post the videos anywhere you like.</p></details>
         <details class="group py-6"><summary class="flex justify-between items-center gap-6 cursor-pointer list-none"><span class="text-lg md:text-xl font-semibold text-white">Do we pay for the ads on top of your fee?</span><span class="faq-plus material-symbols-outlined transition-transform duration-300 group-open:rotate-45 shrink-0" aria-hidden="true">add</span></summary>
@@ -1626,14 +1622,6 @@
       if (c && window.bsTrack) bsTrack('cta_click', { location: c.dataset.cta });
     });
 
-    // Founding spots: the button and count stay hidden unless the worker says checkout is open.
-    // Local testing only: open http://localhost:8765/church/?api=http://localhost:8787 to use a worker on this Mac.
-    const API = (['localhost', '127.0.0.1'].includes(location.hostname) && new URLSearchParams(location.search).get('api')) || 'https://bigsplash-front-door.chris-bc4.workers.dev';
-    fetch(`${API}/founding/status`).then((r) => r.ok ? r.json() : null).then((s) => {
-      if (!s || s.open !== true || !Number.isInteger(s.spots_left) || !Number.isInteger(s.total) || s.spots_left < 1 || s.spots_left > s.total) return;
-      document.getElementById('founding-left').textContent = `${s.spots_left} of ${s.total} founding spots left`;
-      document.getElementById('founding-claim').hidden = false;
-    }).catch(() => {});
   })();
   </script>
   <script>
