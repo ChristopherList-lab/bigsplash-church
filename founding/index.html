@@ -227,7 +227,7 @@
   // Without STRIPE_PK, or if the popup can't open, each card is a plain link to its Stripe payment link.
   // The payment links close after 5 checkouts each; deactivate both in Stripe once 5 churches have signed in total.
   (() => {
-    const STRIPE_PK = '';
+    const STRIPE_PK = 'pk_live_51UT196ET0zR44hr3wrZQF6tHk2PidxTkYaR7xXGncx7K49coZFvgcMCDkeee7NnVaEKsoQxKW8IzrZ1BGLiIN9dO00rgX8UmLl'; // publishable, safe in the page
     const API = 'https://bigsplash-front-door.chris-bc4.workers.dev';
     const params = new URLSearchParams(location.search);
     const ref = (params.get('audit_id') || params.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 200);
