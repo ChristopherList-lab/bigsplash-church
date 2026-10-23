@@ -2154,7 +2154,8 @@
           const el = document.createElement('span'); el.className = `rc-ringlabel${cls}`; el.textContent = `${m} MILES`;
           return new gl.Marker({ element: el }).setLngLat([d.lon, d.lat + m / 69.0]).addTo(map);
         });
-        map.once('idle', () => wrap.classList.add('gl-on'));
+        // The compact credit opens itself on first load and covers the map; close it to its (i) button.
+        map.once('idle', () => { wrap.querySelector('.maplibregl-ctrl-attrib')?.classList.remove('maplibregl-compact-show'); wrap.classList.add('gl-on'); });
         map.triggerRepaint();
       } catch (x) {
         wrap.classList.remove('gl-on');
