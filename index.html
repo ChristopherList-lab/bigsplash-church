@@ -421,6 +421,11 @@
   .pc-return { --pc: #df8797; --pc-rgb: 223 135 151; }
   .problem-cards .pc { position: relative; border-color: rgb(var(--pc-rgb) / 0.16); background: radial-gradient(110% 60% at 0% 0%, rgb(var(--pc-rgb) / 0.13), rgb(var(--pc-rgb) / 0) 72%), linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)); }
   .problem-cards .pc::before { content: ""; position: absolute; top: -1px; left: 1.25rem; right: 1.25rem; height: 1px; background: linear-gradient(90deg, rgb(var(--pc-rgb) / 0), rgb(var(--pc-rgb) / 0.85) 28%, rgb(var(--pc-rgb) / 0) 88%); }
+  /* Hover: each card lifts a little and its color edge brightens. Uses translate, not transform, so it never fights the reveal. */
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .problem-cards .pc { transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), translate 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease, border-color 0.35s ease; }
+    .problem-cards .pc:hover { translate: 0 -6px; border-color: rgb(var(--pc-rgb) / 0.4); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 34px 60px -28px rgba(0, 0, 0, 0.9), 0 0 0 1px rgb(var(--pc-rgb) / 0.12); }
+  }
   .pc-art { display: flex; flex-direction: column; gap: 0.6rem; height: 7.5rem; padding: 0.75rem 0.85rem 0.8rem; border-radius: 0.9rem; overflow: hidden; border: 1px solid rgb(var(--pc-rgb) / 0.2); background: linear-gradient(180deg, rgb(var(--pc-rgb) / 0.1), rgb(var(--pc-rgb) / 0.025)), rgba(11, 11, 14, 0.5); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04); font-size: 0.6875rem; line-height: 1.2; color: rgba(255, 255, 255, 0.62); user-select: none; }
   .pc-art svg { display: block; width: 100%; height: 100%; }
   .pa-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; white-space: nowrap; font-weight: 600; }
@@ -601,7 +606,12 @@
     .j-on .j-chapter { min-height: 60vh; display: flex; flex-direction: column; justify-content: center; padding: 6rem 0 2rem; }
     .j-on .j-chapter-follow, .j-on .j-chapter-report { display: block; min-height: 0; padding-top: 10rem; }
     .j-on .journey > .j-grid > .j-col > .j-chapter:first-child { padding-top: 4rem; }
-    .j-on .j-chapter-report .report-sheet { margin-top: 3rem; }
+    /* The report chapter reaches across into the stage column: the text keeps its width on the left and the
+       report sheet takes the phone's place on the right, over the desk scene. The 7rem gap is the column's
+       3.5rem right padding on each side of the middle, so the text column stays exactly as wide as the others. */
+    .j-on .j-chapter-report { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 7rem; align-items: start; position: relative; z-index: 2;
+      margin-right: calc(-3.5rem - 50vw + max(2rem, calc((100vw - 72rem) / 2))); }
+    .j-on .j-chapter-report .report-sheet { margin-top: 0; width: 100%; max-width: 34rem; justify-self: center; }
     .j-on .j-step .j-num { color: rgba(255, 255, 255, 0.22); }
     .j-on .j-step.is-active .j-num { color: rgba(255, 255, 255, 0.92); }
     .j-on .j-stage { display: block; position: sticky; top: 0; height: 100vh; align-self: start; overflow: hidden; }
