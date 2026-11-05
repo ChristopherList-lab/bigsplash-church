@@ -62,6 +62,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 
 <script src="https://cdn.tailwindcss.com"></script>
@@ -362,12 +363,12 @@
   .glass { background: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03)); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.25rem; -webkit-backdrop-filter: blur(16px) saturate(1.15); backdrop-filter: blur(16px) saturate(1.15); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 30px 60px -34px rgba(0, 0, 0, 0.8); }
   .glass-strong { background: linear-gradient(180deg, rgba(30, 30, 37, 0.92), rgba(19, 19, 24, 0.92)); border-radius: 1.75rem; }
 
-  /* ---------- Problem: a map of Georgetown with a 10-mile ring, heading on the left, four worries as glass cards ----------
+  /* ---------- Problem: a map of Georgetown with a 10-mile ring, heading on the left, four worries as real objects on a desk ----------
      Everything on the map is placed from the pin: --px and --py put the pin in the section, --r is the ring's
      radius (10 miles), and each label's --dx and --dy are miles east and south of the pin divided by 10.
      The variables sit on the section so the heading's grid row can reserve room from the pin down to --below:
      the stat under the pin on phones, the whole ring from 640px. The map credit and the cards follow that row,
-     and the map fades out (--fade-a to --fade-b) before the cards, so their glass blurs near-black. */
+     and the map fades out (--fade-a to --fade-b) before the cards. */
   .problem { --r: 37vw; --px: 56%; --py: calc(236px + 24vw); --below: 7.25rem; --fade-a: calc(var(--py) + var(--below) - 1.25rem); --fade-b: calc(var(--py) + var(--below) + 0.25rem); }
   .problem-scene { position: absolute; z-index: 0; inset: 0; overflow: hidden; pointer-events: none; -webkit-mask-image: linear-gradient(180deg, #000 var(--fade-a), transparent var(--fade-b)); mask-image: linear-gradient(180deg, #000 var(--fade-a), transparent var(--fade-b)); }
   .pm-map { position: absolute; z-index: 0; left: calc(var(--px) - 1.6 * var(--r)); top: calc(var(--py) - 1.6 * var(--r)); width: calc(2.9 * var(--r)); height: calc(3.2 * var(--r)); }
@@ -411,96 +412,103 @@
   .problem { overflow-x: clip; }
   .problem-head { position: relative; isolation: isolate; }
   .problem-head::before { content: ""; position: absolute; z-index: -1; left: -6rem; top: 0; width: 46rem; max-width: 150%; height: 100%; background: radial-gradient(closest-side, rgba(11, 11, 14, 0.6), rgba(11, 11, 14, 0)); pointer-events: none; }
-  /* The four worries. Each card has its own muted accent (--pc, the same lightness for all four) for a soft corner
-     glow, a rim of light along the top edge and a small aria-hidden picture of the worry built in HTML:
-     a sponsored post with likes and no visits, a full staff week, clicks you can count next to visits you can't,
-     and a family's first Sunday with no second one yet. The card text stays the content. Lime stays off these cards. */
-  .pc-ads { --pc: #74a6ef; --pc-rgb: 116 166 239; }
-  .pc-time { --pc: #cd9a50; --pc-rgb: 205 154 80; }
-  .pc-track { --pc: #5cb7a9; --pc-rgb: 92 183 169; }
-  .pc-return { --pc: #df8797; --pc-rgb: 223 135 151; }
-  .problem-cards .pc { position: relative; border-color: rgb(var(--pc-rgb) / 0.16); background: radial-gradient(110% 60% at 0% 0%, rgb(var(--pc-rgb) / 0.13), rgb(var(--pc-rgb) / 0) 72%), linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)); }
-  .problem-cards .pc::before { content: ""; position: absolute; top: -1px; left: 1.25rem; right: 1.25rem; height: 1px; background: linear-gradient(90deg, rgb(var(--pc-rgb) / 0), rgb(var(--pc-rgb) / 0.85) 28%, rgb(var(--pc-rgb) / 0) 88%); }
-  /* Hover: each card lifts a little and its color edge brightens. Uses translate, not transform, so it never fights the reveal. */
+  /* The four worries as things a church staffer handles every week, laid on an oak desk under warm light:
+     the church's text on a phone, a wall calendar with every day written in, the welcome desk's sticky-note tally
+     and a guest's name tag. Each worry and its answer sit on a cream card laid on top. The desk is one photo
+     (desk-oak-wide.webp from 1024px, desk-oak-tall.webp below) behind the whole row, edge to edge. It comes out of
+     the night at the top and fades back into it at the bottom, like a pool of lamplight, so the dark map above and
+     the dark journey below meet it without a seam. The objects are HTML and CSS with handwriting in Caveat (pen) and
+     Permanent Marker, sized in em from .ob-art's font size, so one number scales every object per breakpoint.
+     Light comes from the top left, so shadows fall down and to the right. The pictures are aria-hidden. */
+  .problem-cards { position: relative; isolation: isolate; margin-top: 4.25rem; }
+  .problem-cards::before, .problem-cards::after { content: ""; position: absolute; left: 50%; width: 100vw; translate: -50% 0; pointer-events: none; }
+  .problem-cards::before { z-index: -1; top: -3.5rem; bottom: -5rem; background: #b98d5c url("assets/images/church/problem/desk-oak-tall.webp") 50% 0 / cover no-repeat; -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 6rem), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 6rem), transparent); }
+  /* The lamplight starts at the cards: above them the desk, and the top of the phone, sink into the dark. */
+  .problem-cards::after { z-index: 5; top: -3.5rem; height: 6rem; background: linear-gradient(180deg, #0b0b0e 0%, #0b0b0e 30%, rgb(11 11 14 / 0.6) 55%, rgb(11 11 14 / 0) 100%); }
+  .ob { position: relative; display: flex; flex-direction: column; }
+  /* The art row: no z-index here, so each object can sit under its card (phone, calendar) or on it (sticky note, name tag). */
+  .ob-art { position: relative; flex: none; height: 13.5em; font-size: 15px; }
+  .ob-paper { position: relative; z-index: 2; flex: 1; padding: 2.1rem 1.3rem 1.5rem; border-radius: 2px; color: #544b40; background: linear-gradient(165deg, rgb(255 255 255 / 0.35), rgb(255 255 255 / 0) 45%, rgb(80 50 20 / 0.05)), url("assets/images/church/problem/paper-fiber.webp") 0 0 / 22rem, #f5efe2; background-blend-mode: normal, multiply, normal; box-shadow: 0 0 0 0.5px rgb(90 60 30 / 0.18), 0 1px 1.5px rgb(70 45 20 / 0.28), 0.35rem 0.8rem 1.4rem -0.4rem rgb(60 36 12 / 0.5); }
+  .ob-ads .ob-paper { rotate: -0.6deg; background-position: 0 0, 10% 20%, 0 0; }
+  .ob-time .ob-paper { rotate: 0.5deg; background-position: 0 0, 60% 10%, 0 0; }
+  .ob-track .ob-paper { rotate: -0.4deg; background-position: 0 0, 30% 70%, 0 0; }
+  .ob-return .ob-paper { rotate: 0.7deg; background-position: 0 0, 80% 40%, 0 0; }
+  .ob-paper h3 { color: #1e1a15; }
+  .ob-paper a { color: #1e1a15; text-decoration-color: rgb(30 26 21 / 0.4); }
+  .ob-paper a:hover { text-decoration-color: currentColor; }
   @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    .problem-cards .pc { transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), translate 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease, border-color 0.35s ease; }
-    .problem-cards .pc:hover { translate: 0 -6px; border-color: rgb(var(--pc-rgb) / 0.4); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 34px 60px -28px rgba(0, 0, 0, 0.9), 0 0 0 1px rgb(var(--pc-rgb) / 0.12); }
+    .ob-paper { transition: translate 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease; }
+    .ob:hover .ob-paper { translate: 0 -3px; box-shadow: 0 0 0 0.5px rgb(90 60 30 / 0.18), 0 2px 3px rgb(70 45 20 / 0.24), 0.5rem 1.2rem 1.8rem -0.4rem rgb(60 36 12 / 0.5); }
   }
-  .pc-art { display: flex; flex-direction: column; gap: 0.6rem; height: 7.5rem; padding: 0.75rem 0.85rem 0.8rem; border-radius: 0.9rem; overflow: hidden; border: 1px solid rgb(var(--pc-rgb) / 0.2); background: linear-gradient(180deg, rgb(var(--pc-rgb) / 0.1), rgb(var(--pc-rgb) / 0.025)), rgba(11, 11, 14, 0.5); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04); font-size: 0.6875rem; line-height: 1.2; color: rgba(255, 255, 255, 0.62); user-select: none; }
-  .pc-art svg { display: block; width: 100%; height: 100%; }
-  .pa-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; white-space: nowrap; font-weight: 600; }
-  .pa-top > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-  .pa-key { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--pc); }
-  .pa-key::before { content: ""; width: 0.375rem; height: 0.375rem; border-radius: 50%; background: var(--pc); box-shadow: 0 0 0 3px rgb(var(--pc-rgb) / 0.18); }
-  /* Facebook ads: a sponsored post that collects likes and sends no one to church */
-  .pa-post { display: flex; align-items: center; gap: 0.5rem; }
-  .pa-av { flex: none; width: 1.5rem; height: 1.5rem; padding: 0.2rem; border-radius: 50%; background: radial-gradient(circle at 32% 28%, rgb(var(--pc-rgb) / 0.9), #1d5fc4 78%); fill: rgba(255, 255, 255, 0.92); box-shadow: 0 0 0 2px rgba(11, 11, 14, 0.6); }
-  .pa-who { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
-  .pa-who b { font-weight: 600; color: rgba(255, 255, 255, 0.9); white-space: nowrap; }
-  .pa-who small { align-self: flex-start; padding: 0.05rem 0.4rem; border-radius: 1rem; background: rgb(var(--pc-rgb) / 0.16); color: var(--pc); font-size: 0.5625rem; font-weight: 600; letter-spacing: 0.04em; }
-  .pa-more { margin-left: auto; width: 0.875rem; height: 0.25rem; background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 1.2px, transparent 1.6px) 0 50% / 0.29rem 100% repeat-x; }
-  .pa-media { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 0.45rem; border-radius: 0.4rem; background: radial-gradient(70% 140% at 85% 120%, rgb(var(--pc-rgb) / 0.22), rgb(var(--pc-rgb) / 0) 70%), linear-gradient(115deg, rgb(var(--pc-rgb) / 0.3), rgb(var(--pc-rgb) / 0.07) 65%); }
-  .pa-play { position: relative; width: 1rem; height: 1rem; border-radius: 50%; background: rgba(255, 255, 255, 0.88); }
-  .pa-play::after { content: ""; position: absolute; left: 0.36rem; top: 0.28rem; border-style: solid; border-width: 0.22rem 0 0.22rem 0.36rem; border-color: transparent transparent transparent #1d3f78; }
-  .pa-dur { padding: 0.05rem 0.3rem; border-radius: 0.25rem; background: rgba(11, 11, 14, 0.55); font-size: 0.5625rem; font-weight: 600; color: rgba(255, 255, 255, 0.8); }
-  .pa-stats { display: flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
-  .pa-stats b { font-weight: 600; color: rgba(255, 255, 255, 0.82); }
-  .pa-reacts { display: flex; }
-  .pa-reacts i { width: 1rem; height: 1rem; border-radius: 50%; padding: 0.2rem; box-shadow: 0 0 0 1.5px #16161b; }
-  .pa-like { position: relative; z-index: 1; background: #3f7fdc; fill: #ffffff; }
-  .pa-heart { margin-left: -0.25rem; background: rgb(var(--pc-rgb) / 0.55); fill: #ffffff; }
-  .pa-zero { margin-left: auto; padding: 0.15rem 0.45rem; border-radius: 1rem; border: 1px dashed rgb(var(--pc-rgb) / 0.55); color: var(--pc); font-weight: 600; }
-  /* No time: a staff week with one open slot */
-  .pa-week { flex: 1; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); grid-template-rows: auto repeat(3, minmax(0, 1fr)); gap: 0.2rem 0.25rem; }
-  .pa-week span { text-align: center; font-size: 0.5625rem; font-weight: 600; color: rgba(255, 255, 255, 0.5); }
-  .pa-week span:last-of-type { color: var(--pc); }
-  .pa-week i { --f: 0.32; border-radius: 1px 0.2rem 0.2rem 1px; background: linear-gradient(90deg, rgb(var(--pc-rgb) / 0.95) 0 2px, rgb(var(--pc-rgb) / var(--f)) 2px); }
-  .pa-week i.c { --f: 0.5; }
-  .pa-week i.o { border-radius: 0.2rem; background: none; border: 1px dashed rgb(var(--pc-rgb) / 0.6); }
-  /* Can't tell if it works: clicks you can count, then a dashed column for visits with a question mark */
-  .pa-bars { flex: 1; display: flex; align-items: flex-end; gap: 0.3rem; padding-bottom: 1px; border-bottom: 1px solid rgba(255, 255, 255, 0.14); }
-  .pa-bars i { flex: 1; height: calc(var(--h) * 100%); border-radius: 0.2rem 0.2rem 0 0; background: linear-gradient(180deg, rgb(var(--pc-rgb) / 0.8), rgb(var(--pc-rgb) / 0.32)); transform-origin: 50% 100%; }
-  .pa-bars .pa-q { height: 100%; display: grid; place-items: center; background: rgb(var(--pc-rgb) / 0.08); border: 1px dashed rgb(var(--pc-rgb) / 0.6); border-bottom: 0; font-style: normal; font-size: 0.9375rem; font-weight: 700; color: var(--pc); }
-  .pa-axis { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: 0.3rem; margin-top: -0.25rem; white-space: nowrap; font-weight: 600; }
-  .pa-axis span { display: flex; justify-content: center; }
-  .pa-axis span:first-child { grid-column: 1 / 6; }
-  .pa-axis span:last-child { color: var(--pc); }
-  /* Never see them again: a first Sunday checked off, a second one still a question */
-  .pa-path { flex: 1; position: relative; display: grid; grid-template-columns: 1fr 1fr; align-content: center; }
-  .pa-step { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; white-space: nowrap; }
-  .pa-step i { display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 50%; font-style: normal; font-size: 0.875rem; font-weight: 700; }
-  .pa-step b { font-weight: 600; }
-  .pa-done i { padding: 0.35rem; background: var(--pc); box-shadow: 0 0 0 4px rgb(var(--pc-rgb) / 0.16); fill: none; stroke: #16161b; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-  .pa-done b { color: rgba(255, 255, 255, 0.86); }
-  .pa-next i { border: 1.5px dashed rgb(var(--pc-rgb) / 0.7); color: var(--pc); }
-  .pa-next b { color: rgba(255, 255, 255, 0.5); }
-  .pa-link { position: absolute; left: calc(25% + 1.25rem); right: calc(25% + 1.25rem); top: calc(50% - 0.2rem - 0.6em - 0.75px); height: 1.5px; background: linear-gradient(90deg, rgb(var(--pc-rgb) / 0.8), rgb(var(--pc-rgb) / 0.8) 40%, rgb(var(--pc-rgb) / 0) 40%) 0 0 / 0.5rem 100% repeat-x; -webkit-mask-image: linear-gradient(90deg, #000, rgba(0, 0, 0, 0.25)); mask-image: linear-gradient(90deg, #000, rgba(0, 0, 0, 0.25)); }
-  /* Four narrow columns from 1024px to 1279px: a little less padding, the key drops its dot, one reaction dot
-     keeps room between likes and visits, and the Sundays stack their labels and sit at the ends so the line between them stays long. */
-  @media (min-width: 1024px) and (max-width: 1279px) {
-    .pc-art { padding-left: 0.7rem; padding-right: 0.7rem; } .pa-key::before { display: none; } .pa-stats { gap: 0.3rem; } .pa-zero { padding: 0.15rem 0.35rem; }
-    .pa-heart { display: none; }
-    .pa-path { grid-template-columns: 3rem 3rem; justify-content: space-between; }
-    .pa-step b { width: min-content; white-space: normal; text-align: center; }
-    .pa-link { left: 2.75rem; right: 2.75rem; top: calc(50% - 0.2rem - 1.2em - 0.75px); }
+
+  /* 1. The church's phone: its top sinks into the dark and its bottom slips under the card, so only the texts show. */
+  .ob-paper h3 { font-size: 1.08rem; }
+  .ob-paper p { font-size: 0.95rem; }
+  @media (max-width: 639px) { .problem-cards.desk > * { width: 100%; max-width: 21rem; margin-inline: auto; } }
+  .ob-phone { position: absolute; z-index: 1; left: 50%; top: -3.6em; width: 11.6em; height: 24.5em; margin-left: -5.8em; rotate: -6deg; padding: 0.14em; border-radius: 2.15em; background: linear-gradient(90deg, #26262a, #8d8d94 1.2%, #45454b 3%, #2f2f34 12%, #2f2f34 88%, #45454b 97%, #8d8d94 98.8%, #26262a); box-shadow: 0 0 0 0.4px rgb(0 0 0 / 0.6), 0.12em 0.2em 0.25em rgb(45 25 8 / 0.45), 0.5em 1em 1.5em -0.2em rgb(45 25 8 / 0.5); }
+  .ob-glass { position: relative; height: 100%; padding: 0.36em; border-radius: 2em; background: #060607; }
+  .ob-glass::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(125deg, rgb(255 255 255 / 0) 30%, rgb(255 255 255 / 0.14) 44%, rgb(255 255 255 / 0.04) 52%, rgb(255 255 255 / 0) 64%); pointer-events: none; }
+  .ob-screen { display: flex; flex-direction: column; gap: 0.2em; height: 100%; padding: 5.5em 0.62em 0; border-radius: 1.65em; overflow: hidden; background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Inter, sans-serif; font-size: 0.74em; line-height: 1.28; letter-spacing: -0.01em; }
+  .ob-stamp { align-self: center; margin-bottom: 0.45em; text-align: center; font-size: 0.8em; line-height: 1.3; color: #8e8e93; }
+  .ob-stamp b { font-weight: 600; }
+  .ob-bub { position: relative; max-width: 80%; padding: 0.42em 0.8em 0.46em; border-radius: 1.2em; }
+  .ob-bub.out { align-self: flex-end; background: #0a84ff; color: #ffffff; }
+  .ob-bub.in { align-self: flex-start; margin-top: 0.45em; background: #e9e9eb; color: #111111; }
+  /* iOS tails: a curl in the bubble's color, trimmed by a curve in the screen's white. */
+  .ob-bub.tail::before, .ob-bub.tail::after { content: ""; position: absolute; bottom: 0; height: 1.25em; }
+  .ob-bub.out.tail::before { right: -0.42em; width: 1.25em; background: #0a84ff; border-bottom-left-radius: 0.95em 0.85em; }
+  .ob-bub.out.tail::after { right: -0.75em; width: 0.75em; background: #ffffff; border-bottom-left-radius: 0.6em; }
+  .ob-bub.in.tail::before { left: -0.42em; width: 1.25em; background: #e9e9eb; border-bottom-right-radius: 0.95em 0.85em; }
+  .ob-bub.in.tail::after { left: -0.75em; width: 0.75em; background: #ffffff; border-bottom-right-radius: 0.6em; }
+
+  /* 2. A wall calendar on wire binding, every weekday written in, Friend Day circled in red, the red pen beside it. */
+  .ob-cal { position: absolute; z-index: 1; left: 50%; top: 1.9em; width: 16em; margin-left: -8em; rotate: 1.6deg; padding: 0.95em 0.55em 0.6em; background: linear-gradient(170deg, rgb(255 255 255 / 0.3), rgb(255 255 255 / 0) 50%), url("assets/images/church/problem/paper-fiber.webp") 30% 40% / 20em, #fbf9f4; background-blend-mode: normal, multiply, normal; box-shadow: 0 0 0 0.5px rgb(90 60 30 / 0.2), 0 1px 1.5px rgb(70 45 20 / 0.3), 0.3em 0.7em 1.2em -0.3em rgb(60 36 12 / 0.45); }
+  .ob-wire { position: absolute; left: 0; top: -0.5em; width: 100%; height: 1.15em; overflow: visible; filter: drop-shadow(0.06em 0.12em 0.08em rgb(40 25 10 / 0.45)); }
+  .ob-cal-month { margin: 0.25em 0 0.35em; text-align: center; font-family: Georgia, "Times New Roman", serif; font-size: 0.86em; letter-spacing: 0.3em; text-transform: uppercase; color: #262626; }
+  .ob-cal-month span { font-size: 0.8em; letter-spacing: 0.12em; color: #8a8a8a; }
+  .ob-cal-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); margin-bottom: 0.2em; text-align: center; font-size: 0.36em; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #6b6b6b; }
+  .ob-cal-days .sun { color: #b5352b; }
+  .ob-cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border-left: 1px solid #d3cbbd; border-top: 1px solid #d3cbbd; }
+  .ob-cal-grid i { position: relative; display: block; height: 2.15em; padding: 0.1em 0.14em; overflow: visible; border-right: 1px solid #d3cbbd; border-bottom: 1px solid #d3cbbd; font-style: normal; }
+  .ob-cal-grid b { display: block; font-family: Georgia, serif; font-size: 0.5em; font-weight: 400; line-height: 1.1; color: #3d3d3d; }
+  .ob-cal-grid .sun b { color: #b5352b; }
+  .ob-cal-grid .next b { color: #c4bdb1; }
+  .ob-cal-grid small { display: block; overflow: hidden; white-space: nowrap; font-size: 0.3em; line-height: 1.2; color: #9a948a; }
+  .ob-cal-grid em { display: block; margin-top: 0.04em; font-family: Caveat, cursive; font-style: normal; font-weight: 600; font-size: 0.66em; line-height: 0.88; rotate: var(--t, -1deg); }
+  .ob-cal-grid em.x { text-decoration: line-through; text-decoration-thickness: 0.09em; }
+  .ink-b { color: #2a3f97; } .ink-k { color: #2b2b2e; } .ink-r { color: #c0352b; }
+  .ob-circle { position: absolute; z-index: 1; left: -0.4em; top: -0.32em; width: calc(100% + 0.8em); height: calc(100% + 0.62em); overflow: visible; fill: none; stroke: #c0352b; stroke-width: 1.7px; stroke-linecap: round; stroke-linejoin: round; opacity: 0.92; }
+  .ob-circle path { vector-effect: non-scaling-stroke; }
+  .ob-pen { position: absolute; z-index: 1; left: 50%; top: 10.4em; width: 8.6em; height: auto; margin-left: -0.6em; rotate: -18deg; filter: drop-shadow(0.1em 0.16em 0.1em rgb(45 25 8 / 0.45)) drop-shadow(0.3em 0.5em 0.5em rgb(45 25 8 / 0.22)); }
+
+  /* 3. The welcome desk's sticky note, stuck on the card: a tally of Sunday guests and no idea where they came from. */
+  .ob-sticky { position: absolute; z-index: 3; left: 50%; top: 4.6em; width: 10.4em; height: 10em; margin-left: -5.4em; rotate: 3.5deg; padding: 1.1em 0.95em 0; color: #233371; background: linear-gradient(180deg, rgb(0 0 0 / 0.04) 0, rgb(0 0 0 / 0) 1.6em), linear-gradient(180deg, rgb(255 255 255 / 0) 65%, rgb(255 255 255 / 0.22) 100%), url("assets/images/church/problem/paper-fiber.webp") 0 0 / 14em, #f8e46f; background-blend-mode: normal, normal, multiply, normal; box-shadow: 0 0 0 0.5px rgb(120 90 20 / 0.25), 0 1px 1px rgb(70 45 10 / 0.2), 0.25em 1em 0.9em -0.55em rgb(50 30 5 / 0.5); }
+  .ob-sticky p { font-family: Caveat, cursive; font-weight: 700; line-height: 1; }
+  .ob-sticky-head { font-size: 1.32em; rotate: -2deg; }
+  .ob-tally { display: block; width: 6.6em; height: 2.2em; margin: 0.45em 0 0.35em 0.15em; fill: none; stroke: #233371; stroke-width: 2.6; stroke-linecap: round; }
+  .ob-sticky-note { font-size: 1.2em; rotate: -3deg; }
+
+  /* 4. A guest's name tag, stuck on the card, one corner peeling. */
+  .ob-tag { position: absolute; z-index: 3; left: 50%; top: 5.9em; width: 12.6em; height: 8.6em; margin-left: -6.1em; rotate: -4deg; filter: drop-shadow(0 1px 1px rgb(50 30 10 / 0.3)) drop-shadow(0.25em 0.5em 0.6em rgb(50 30 10 / 0.3)); }
+  .ob-tag-face { position: relative; height: 100%; overflow: hidden; border-radius: 0.55em; background: linear-gradient(150deg, rgb(255 255 255 / 0.5), rgb(255 255 255 / 0) 40%, rgb(0 0 0 / 0.03)), #fbfbf8; clip-path: polygon(0 0, 100% 0, 100% 78%, 88% 100%, 0 100%); }
+  .ob-tag-face::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 0.55em; background: #d9312f; }
+  .ob-tag-band { padding: 0.45em 0 0.4em; background: #d9312f; text-align: center; color: #ffffff; }
+  .ob-tag-band b { display: block; font-family: "Arial Black", "Helvetica Neue", Inter, sans-serif; font-size: 1.85em; font-weight: 900; line-height: 0.95; letter-spacing: 0.04em; text-transform: uppercase; }
+  .ob-tag-band span { display: block; margin-top: 0.15em; font-size: 0.68em; font-weight: 600; letter-spacing: 0.04em; }
+  .ob-tag-name { margin-top: 0.2em; text-align: center; font-family: "Permanent Marker", cursive; font-size: 2.1em; line-height: 1.2; color: #1c1c1e; rotate: -3deg; }
+  .ob-tag-fold { position: absolute; inset: 0; filter: drop-shadow(-0.08em -0.06em 0.12em rgb(40 25 10 / 0.35)); }
+  .ob-tag-fold i { position: absolute; inset: 0; background: linear-gradient(135deg, #f3f2ee 60%, #d9d7d0 85%); clip-path: polygon(100% 78%, 88% 100%, 85.35% 82.86%); }
+
+  /* Tablets: two columns; the objects grow with the column. */
+  @media (min-width: 640px) { .ob-art { font-size: min(2.2vw, 17px); } }
+  /* Four columns from 1024px on the wide desk photo, the objects sized to fit a narrow column. */
+  @media (min-width: 1024px) {
+    .problem-cards::before { background-image: url("assets/images/church/problem/desk-oak-wide.webp"); background-position: 50% 0; }
+    .ob-art { font-size: min(1.06vw, 13.5px); }
+    .ob-paper { padding: 1.9rem 1.3rem 1.4rem; }
+    .problem-cards.desk { max-width: 62rem; margin-inline: auto; }
   }
-  /* Phones: bigger labels in a shorter panel. The ad puts its Sponsored tag beside the name to make room. */
-  @media (max-width: 639px) {
-    .pc-art { height: 6.25rem; gap: 0.45rem; padding-top: 0.65rem; padding-bottom: 0.65rem; font-size: 0.8125rem; }
-    .pa-who small, .pa-dur, .pa-week span { font-size: 0.6875rem; }
-    .pa-who { flex-direction: row; align-items: center; gap: 0.45rem; }
-    .pa-zero { padding-top: 0.1rem; padding-bottom: 0.1rem; }
-    .pa-axis { margin-top: -0.15rem; }
-  }
-  @media (max-width: 359px) { .pa-more { display: none; } }
-  /* Once, as a card fades up: the bars rise and the path draws toward the second Sunday. */
-  @media (prefers-reduced-motion: no-preference) {
-    .pc .pa-bars i { transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.25s; }
-    .pc .pa-bars i:nth-child(2) { transition-delay: 0.32s; } .pc .pa-bars i:nth-child(3) { transition-delay: 0.39s; } .pc .pa-bars i:nth-child(4) { transition-delay: 0.46s; } .pc .pa-bars i:nth-child(5) { transition-delay: 0.53s; } .pc .pa-bars i:nth-child(6) { transition-delay: 0.6s; }
-    .pc.reveal:not(.visible) .pa-bars i { transform: scaleY(0.2); }
-    .pc .pa-link { transition: clip-path 1s cubic-bezier(0.65, 0, 0.35, 1) 0.35s; clip-path: inset(0 0 0 0); }
-    .pc.reveal:not(.visible) .pa-link { clip-path: inset(0 100% 0 0); }
-  }
+  @media (min-width: 768px) { .problem-cards::before { bottom: -7rem; } }
   /* Below 350px the stat wraps to three lines, so the row reaches a little lower. */
   @media (max-width: 349px) { .problem { --below: 8.25rem; } }
   @media (min-width: 640px) {
@@ -1044,7 +1052,7 @@
        the phone crop keeps 16 miles west, 13 east and 16 north and south). The pin, ring and labels are HTML on top,
        placed in units of the ring's radius (--r = 10 miles), so they stay true to the map at every width.
        The household count uses the Front Door Audit's method (worker-frontdoor/src/reach.js): Census tracts
-       whose center sits within 10 miles of the pin, rounded to the nearest 100. The four worries follow as glass cards. -->
+       whose center sits within 10 miles of the pin, rounded to the nearest 100. The four worries follow as real objects on an oak desk, each with a paper card. -->
   <section class="problem relative px-5 md:px-8 pb-20 md:pb-28" data-screen-label="03 Problem">
     <div class="problem-scene" role="img" aria-label="Map of Georgetown, Texas. A church near downtown sits at the center of a 10-mile circle. About 129,200 households live within 10 miles of downtown Georgetown.">
       <picture class="pm-map">
@@ -1068,52 +1076,113 @@
         <h2 class="display h2">Your message is good. Families nearby <span class="hl">haven't heard it yet.</span></h2>
         <button type="button" class="btn-primary mt-8 text-[17px]" data-reach-open data-cta="reach">Count the families near your church <span class="material-symbols-outlined text-xl" aria-hidden="true">arrow_forward</span></button>
       </div>
-      <div class="problem-cards grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-        <div class="glass pc pc-ads p-6 lg:p-7 reveal">
-          <div class="pc-art" aria-hidden="true">
-            <div class="pa-post"><span class="pa-av"><svg viewBox="0 0 16 16"><path d="M7.1 3.5h1.8v2.6h2.6v1.8H8.9v4.6H7.1V7.9H4.5V6.1h2.6z"/></svg></span><span class="pa-who"><b>Your church</b><small>Sponsored</small></span><span class="pa-more"></span></div>
-            <div class="pa-media"><span class="pa-play"></span><span class="pa-dur">0:30</span></div>
-            <div class="pa-stats">
-              <span class="pa-reacts"><i class="pa-like"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1zm22-11c0-1.1-.9-2-2-2h-6.3l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73z"/></svg></i><i class="pa-heart"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z"/></svg></i></span>
-              <b>1.2K likes</b><span class="pa-zero">0 visits</span>
+      <div class="problem-cards desk grid sm:grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-6 lg:gap-x-6">
+        <div class="ob ob-ads reveal">
+          <div class="ob-art" aria-hidden="true">
+            <div class="ob-phone"><div class="ob-glass"><div class="ob-screen">
+              <p class="ob-stamp"><b>iMessage</b><br>Today 9:41 AM</p>
+              <p class="ob-bub out">Hi Sarah! It's Cedar Bend Church.</p>
+              <p class="ob-bub out tail">Can we save your family seats Sunday at 9?</p>
+              <p class="ob-bub in tail">Yes please! See you then</p>
+            </div></div></div>
+          </div>
+          <div class="ob-paper">
+            <h3 class="text-[1.2rem] leading-snug font-semibold">"We tried Facebook ads and nobody came."</h3>
+            <p class="mt-3 text-base leading-relaxed">Families who see your ad need two more things: a page to plan a visit and a text from your church. We set up both.</p>
+          </div>
+        </div>
+        <div class="ob ob-time reveal">
+          <div class="ob-art" aria-hidden="true">
+            <div class="ob-cal">
+              <svg class="ob-wire" viewBox="0 0 256 18" preserveAspectRatio="none" focusable="false">
+                <defs>
+                  <linearGradient id="ob-wire-metal" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#151517"/><stop offset="0.45" stop-color="#7d7d84"/><stop offset="0.6" stop-color="#3a3a3f"/><stop offset="1" stop-color="#111113"/></linearGradient>
+                  <pattern id="ob-wire-loops" width="9" height="18" patternUnits="userSpaceOnUse">
+                    <rect x="1.6" y="10.2" width="5.8" height="3.6" rx="1.2" fill="#5b3f22" opacity="0.55"/>
+                    <rect x="1.4" y="0.6" width="2.3" height="12.6" rx="1.15" fill="url(#ob-wire-metal)"/>
+                    <rect x="5.1" y="0.6" width="2.3" height="12.6" rx="1.15" fill="url(#ob-wire-metal)"/>
+                  </pattern>
+                </defs>
+                <rect x="4" y="0" width="104" height="18" fill="url(#ob-wire-loops)"/>
+                <rect x="148" y="0" width="104" height="18" fill="url(#ob-wire-loops)"/>
+                <path d="M108 6.4 C 116 6.4, 120 1.2, 128 1.2 C 136 1.2, 140 6.4, 148 6.4" fill="none" stroke="#2a2a2e" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M108 6.4 C 116 6.4, 120 1.2, 128 1.2 C 136 1.2, 140 6.4, 148 6.4" fill="none" stroke="#9a9aa1" stroke-width="0.5" stroke-linecap="round" transform="translate(0 -0.5)"/>
+              </svg>
+              <p class="ob-cal-month">November <span>2026</span></p>
+              <p class="ob-cal-days"><span class="sun">Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></p>
+              <div class="ob-cal-grid">
+                <i class="sun"><b>1</b></i>
+                <i><b>2</b><em class="ink-b">staff 10a</em></i>
+                <i><b>3</b><em class="ink-k" style="--t: 2deg">hosp. visit</em></i>
+                <i><b>4</b><em class="ink-b">youth 7p</em></i>
+                <i><b>5</b><em class="ink-k" style="--t: -3deg">budget!!</em></i>
+                <i><b>6</b><em class="ink-b x">day off</em><em class="ink-k" style="--t: -4deg">sermon</em></i>
+                <i><b>7</b><em class="ink-b">wedding 2p</em></i>
+                <i class="sun circled"><b>8</b><em class="ink-r" style="--t: -5deg">Friend Day!</em>
+                  <svg class="ob-circle" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false"><path d="M20 20 C 40 4, 80 6, 93 30 C 104 54, 88 90, 52 93 C 18 96, 3 72, 7 47 C 10 28, 30 12, 62 10"/></svg></i>
+                <i><b>9</b><em class="ink-b">staff 10a</em></i>
+                <i><b>10</b><em class="ink-k" style="--t: 3deg">funeral 11</em></i>
+                <i><b>11</b><small>Veterans Day</small><em class="ink-b">youth</em></i>
+                <i><b>12</b><em class="ink-b" style="--t: -2deg">elders 7p</em></i>
+                <i><b>13</b><em class="ink-r">sermon!!</em></i>
+                <i><b>14</b><em class="ink-k" style="--t: 2deg">men's bkfst</em></i>
+                <i class="sun"><b>15</b></i>
+                <i><b>16</b><em class="ink-b">staff 10a</em></i>
+                <i><b>17</b><em class="ink-k x">lunch w/ Dan</em><em class="ink-b">counseling</em></i>
+                <i><b>18</b><em class="ink-b">youth</em></i>
+                <i><b>19</b><em class="ink-k" style="--t: -3deg">food drive</em></i>
+                <i><b>20</b><em class="ink-r">sermon</em></i>
+                <i><b>21</b><em class="ink-k">set up 9a</em></i>
+                <i class="sun"><b>22</b></i>
+                <i><b>23</b><em class="ink-b">staff 10a</em></i>
+                <i><b>24</b><em class="ink-k">pies?</em></i>
+                <i><b>25</b><em class="ink-b">youth</em></i>
+                <i><b>26</b><small>Thanksgiving</small></i>
+                <i><b>27</b><em class="ink-k">office closed</em></i>
+                <i><b>28</b></i>
+                <i class="sun"><b>29</b><small>Advent begins</small></i>
+                <i><b>30</b><em class="ink-b">staff 10a</em></i>
+                <i class="next"><b>1</b></i><i class="next"><b>2</b></i><i class="next"><b>3</b></i><i class="next"><b>4</b></i><i class="next"><b>5</b></i>
+              </div>
+            </div>
+            <img class="ob-pen" src="assets/images/church/problem/pen-red.webp" width="600" height="96" alt="" loading="lazy" decoding="async">
+          </div>
+          <div class="ob-paper">
+            <h3 class="text-[1.2rem] leading-snug font-semibold">"Nobody on staff has time."</h3>
+            <p class="mt-3 text-base leading-relaxed">Your staff is busy enough. We build your campaign and run it for you, and you approve each piece before it goes out.</p>
+          </div>
+        </div>
+        <div class="ob ob-track reveal">
+          <div class="ob-art" aria-hidden="true">
+            <div class="ob-sticky">
+              <p class="ob-sticky-head">Sunday guests</p>
+              <svg class="ob-tally" viewBox="0 0 132 44" focusable="false">
+                <path d="M8 6 C 8.6 16, 7.8 28, 8.6 39"/><path d="M19 5 C 19.8 17, 18.6 28, 19.4 38"/><path d="M30 6.5 C 30.4 17, 29.6 29, 30.6 39.5"/><path d="M41 5.5 C 41.6 16, 40.8 27, 41.4 38"/>
+                <path d="M2 30 C 16 23, 32 15, 48 9"/>
+                <path d="M64 6 C 64.6 17, 63.8 28, 64.6 39"/><path d="M75 5 C 75.6 16, 75 28, 75.8 38.5"/>
+              </svg>
+              <p class="ob-sticky-note">from the ads??</p>
             </div>
           </div>
-          <h3 class="mt-4 sm:mt-5 text-[1.2rem] leading-snug font-semibold text-white">"We tried Facebook ads and nobody came."</h3>
-          <p class="mt-3 text-base leading-relaxed text-white/75">Families who see your ad need two more things: a page to plan a visit and a text from your church. We set up both.</p>
+          <div class="ob-paper">
+            <h3 class="text-[1.2rem] leading-snug font-semibold">"We can't tell if any of it works."</h3>
+            <p class="mt-3 text-base leading-relaxed">We count families: the ones who plan a visit and the ones your welcome team greets on Sunday.</p>
+          </div>
         </div>
-        <div class="glass pc pc-time p-6 lg:p-7 reveal">
-          <div class="pc-art" aria-hidden="true">
-            <div class="pa-top"><span>Staff calendar</span><span class="pa-key">Booked</span></div>
-            <div class="pa-week">
-              <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
-              <i></i><i></i><i></i><i class="c"></i><i></i><i></i><i class="c"></i>
-              <i></i><i></i><i class="c"></i><i></i><i></i><i class="o"></i><i></i>
-              <i class="c"></i><i></i><i></i><i></i><i class="c"></i><i></i><i></i>
+        <div class="ob ob-return reveal">
+          <div class="ob-art" aria-hidden="true">
+            <div class="ob-tag">
+              <div class="ob-tag-face">
+                <div class="ob-tag-band"><b>Hello</b><span>my name is</span></div>
+                <p class="ob-tag-name">Sarah</p>
+              </div>
+              <span class="ob-tag-fold"><i></i></span>
             </div>
           </div>
-          <h3 class="mt-4 sm:mt-5 text-[1.2rem] leading-snug font-semibold text-white">"Nobody on staff has time."</h3>
-          <p class="mt-3 text-base leading-relaxed text-white/75">Your staff is busy enough. We build your campaign and run it for you, and you approve each piece before it goes out.</p>
-        </div>
-        <div class="glass pc pc-track p-6 lg:p-7 reveal">
-          <div class="pc-art" aria-hidden="true">
-            <div class="pa-top"><span>Last 30 days</span><span class="pa-key">Did it work?</span></div>
-            <div class="pa-bars"><i style="--h: 0.5"></i><i style="--h: 0.36"></i><i style="--h: 0.62"></i><i style="--h: 0.44"></i><i style="--h: 0.55"></i><i class="pa-q">?</i></div>
-            <div class="pa-axis"><span>Clicks</span><span>Visits</span></div>
+          <div class="ob-paper">
+            <h3 class="text-[1.2rem] leading-snug font-semibold">"Families visit once and we never see them again."</h3>
+            <p class="mt-3 text-base leading-relaxed">We text each new family from a number in your church's name. Then we check in for six Sundays. <a href="#follow-up" class="underline underline-offset-4">See how we follow up</a>.</p>
           </div>
-          <h3 class="mt-4 sm:mt-5 text-[1.2rem] leading-snug font-semibold text-white">"We can't tell if any of it works."</h3>
-          <p class="mt-3 text-base leading-relaxed text-white/75">We count families: the ones who plan a visit and the ones your welcome team greets on Sunday.</p>
-        </div>
-        <div class="glass pc pc-return p-6 lg:p-7 reveal">
-          <div class="pc-art" aria-hidden="true">
-            <div class="pa-top"><span>New family</span><span class="pa-key">Visited once</span></div>
-            <div class="pa-path">
-              <span class="pa-link"></span>
-              <span class="pa-step pa-done"><i><svg viewBox="0 0 16 16"><path d="M3.6 8.4l2.9 2.9 5.9-6.4"/></svg></i><b>1st Sunday</b></span>
-              <span class="pa-step pa-next"><i>?</i><b>2nd Sunday</b></span>
-            </div>
-          </div>
-          <h3 class="mt-4 sm:mt-5 text-[1.2rem] leading-snug font-semibold text-white">"Families visit once and we never see them again."</h3>
-          <p class="mt-3 text-base leading-relaxed text-white/75">We text each new family from a number in your church's name. Then we check in for six Sundays. <a href="#follow-up" class="underline underline-offset-4 decoration-white/50 text-white">See how we follow up</a>.</p>
         </div>
       </div>
       <p class="map-credit">Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>. Household estimate from US Census data.</p>
