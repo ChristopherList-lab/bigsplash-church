@@ -445,21 +445,13 @@
   .ob-paper h3 { font-size: 1.08rem; }
   .ob-paper p { font-size: 0.95rem; }
   @media (max-width: 639px) { .problem-cards.desk > * { width: 100%; max-width: 21rem; margin-inline: auto; } }
-  .ob-phone { position: absolute; z-index: 1; left: 50%; top: -3.6em; width: 11.6em; height: 24.5em; margin-left: -5.8em; rotate: -6deg; padding: 0.14em; border-radius: 2.15em; background: linear-gradient(90deg, #26262a, #8d8d94 1.2%, #45454b 3%, #2f2f34 12%, #2f2f34 88%, #45454b 97%, #8d8d94 98.8%, #26262a); box-shadow: 0 0 0 0.4px rgb(0 0 0 / 0.6), 0.12em 0.2em 0.25em rgb(45 25 8 / 0.45), 0.5em 1em 1.5em -0.2em rgb(45 25 8 / 0.5); }
-  .ob-glass { position: relative; height: 100%; padding: 0.36em; border-radius: 2em; background: #060607; }
-  .ob-glass::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(125deg, rgb(255 255 255 / 0) 30%, rgb(255 255 255 / 0.14) 44%, rgb(255 255 255 / 0.04) 52%, rgb(255 255 255 / 0) 64%); pointer-events: none; }
-  .ob-screen { display: flex; flex-direction: column; gap: 0.2em; height: 100%; padding: 5.5em 0.62em 0; border-radius: 1.65em; overflow: hidden; background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Inter, sans-serif; font-size: 0.74em; line-height: 1.28; letter-spacing: -0.01em; }
-  .ob-stamp { align-self: center; margin-bottom: 0.45em; text-align: center; font-size: 0.8em; line-height: 1.3; color: #8e8e93; }
-  .ob-stamp b { font-weight: 600; }
-  .ob-bub { position: relative; max-width: 80%; padding: 0.42em 0.8em 0.46em; border-radius: 1.2em; }
+  /* Just the texts, set on the desk: the church's two blue bubbles and the family's grey reply. */
+  .ob-texts { position: absolute; z-index: 1; left: 50%; bottom: 1.5em; width: 16.5em; margin-left: -8.25em; rotate: -2deg; display: flex; flex-direction: column; gap: 0.3em; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Inter, sans-serif; font-size: 0.95em; line-height: 1.28; letter-spacing: -0.01em; }
+  .ob-bub { position: relative; max-width: 86%; text-wrap: pretty; padding: 0.5em 0.85em 0.54em; border-radius: 1.2em; box-shadow: 0 0.1em 0.15em rgb(0 0 0 / 0.35), 0 0.5em 1.1em -0.3em rgb(0 0 0 / 0.6); }
+  .ob-bub.out.tail { border-bottom-right-radius: 0.35em; }
+  .ob-bub.in.tail { border-bottom-left-radius: 0.35em; }
   .ob-bub.out { align-self: flex-end; background: #0a84ff; color: #ffffff; }
   .ob-bub.in { align-self: flex-start; margin-top: 0.45em; background: #e9e9eb; color: #111111; }
-  /* iOS tails: a curl in the bubble's color, trimmed by a curve in the screen's white. */
-  .ob-bub.tail::before, .ob-bub.tail::after { content: ""; position: absolute; bottom: 0; height: 1.25em; }
-  .ob-bub.out.tail::before { right: -0.42em; width: 1.25em; background: #0a84ff; border-bottom-left-radius: 0.95em 0.85em; }
-  .ob-bub.out.tail::after { right: -0.75em; width: 0.75em; background: #ffffff; border-bottom-left-radius: 0.6em; }
-  .ob-bub.in.tail::before { left: -0.42em; width: 1.25em; background: #e9e9eb; border-bottom-right-radius: 0.95em 0.85em; }
-  .ob-bub.in.tail::after { left: -0.75em; width: 0.75em; background: #ffffff; border-bottom-right-radius: 0.6em; }
 
   /* 2. A wall calendar on wire binding, every weekday written in, Friend Day circled in red, the red pen beside it. */
   .ob-cal { position: absolute; z-index: 1; left: 50%; top: 1.9em; width: 16em; margin-left: -8em; rotate: 1.6deg; padding: 0.95em 0.55em 0.6em; background: linear-gradient(170deg, rgb(255 255 255 / 0.3), rgb(255 255 255 / 0) 50%), url("assets/images/church/problem/paper-fiber.webp") 30% 40% / 20em, #fbf9f4; background-blend-mode: normal, multiply, normal; box-shadow: 0 0 0 0.5px rgb(90 60 30 / 0.2), 0 1px 1.5px rgb(70 45 20 / 0.3), 0.3em 0.7em 1.2em -0.3em rgb(60 36 12 / 0.45); }
@@ -1079,12 +1071,11 @@
       <div class="problem-cards desk grid sm:grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-6 lg:gap-x-6">
         <div class="ob ob-ads reveal">
           <div class="ob-art" aria-hidden="true">
-            <div class="ob-phone"><div class="ob-glass"><div class="ob-screen">
-              <p class="ob-stamp"><b>iMessage</b><br>Today 9:41 AM</p>
+            <div class="ob-texts">
               <p class="ob-bub out">Hi Sarah! It's Cedar Bend Church.</p>
               <p class="ob-bub out tail">Can we save your family seats Sunday at 9?</p>
               <p class="ob-bub in tail">Yes please! See you then</p>
-            </div></div></div>
+            </div>
           </div>
           <div class="ob-paper">
             <h3 class="text-[1.2rem] leading-snug font-semibold">"We tried Facebook ads and nobody came."</h3>
