@@ -415,14 +415,14 @@
   /* The four worries as things a church staffer handles every week, laid on an oak desk under warm light:
      the church's text on a phone, a wall calendar with every day written in, the welcome desk's sticky-note tally
      and a guest's name tag. Each worry and its answer sit on a cream card laid on top. The desk is one photo
-     (desk-oak-wide.webp from 1024px, desk-oak-tall.webp below) behind the whole row, edge to edge. It comes out of
+     (desk-black-wide.webp from 1024px, desk-black-tall.webp below) behind the whole row, edge to edge. It comes out of
      the night at the top and fades back into it at the bottom, like a pool of lamplight, so the dark map above and
      the dark journey below meet it without a seam. The objects are HTML and CSS with handwriting in Caveat (pen) and
      Permanent Marker, sized in em from .ob-art's font size, so one number scales every object per breakpoint.
      Light comes from the top left, so shadows fall down and to the right. The pictures are aria-hidden. */
   .problem-cards { position: relative; isolation: isolate; margin-top: 4.25rem; }
   .problem-cards::before, .problem-cards::after { content: ""; position: absolute; left: 50%; width: 100vw; translate: -50% 0; pointer-events: none; }
-  .problem-cards::before { z-index: -1; top: -3.5rem; bottom: -5rem; background: #b98d5c url("assets/images/church/problem/desk-oak-tall.webp") 50% 0 / cover no-repeat; -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 6rem), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 6rem), transparent); }
+  .problem-cards::before { z-index: -1; top: -3.5rem; bottom: -5rem; background: #1b1714 url("assets/images/church/problem/desk-black-tall.webp") 50% 0 / cover no-repeat; -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 6rem), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 6rem), transparent); }
   /* The lamplight starts at the cards: above them the desk, and the top of the phone, sink into the dark. */
   .problem-cards::after { z-index: 5; top: -3.5rem; height: 6rem; background: linear-gradient(180deg, #0b0b0e 0%, #0b0b0e 30%, rgb(11 11 14 / 0.6) 55%, rgb(11 11 14 / 0) 100%); }
   .ob { position: relative; display: flex; flex-direction: column; }
@@ -503,7 +503,7 @@
   @media (min-width: 640px) { .ob-art { font-size: min(2.2vw, 17px); } }
   /* Four columns from 1024px on the wide desk photo, the objects sized to fit a narrow column. */
   @media (min-width: 1024px) {
-    .problem-cards::before { background-image: url("assets/images/church/problem/desk-oak-wide.webp"); background-position: 50% 0; }
+    .problem-cards::before { background-image: url("assets/images/church/problem/desk-black-wide.webp"); background-position: 50% 0; }
     .ob-art { font-size: min(1.06vw, 13.5px); }
     .ob-paper { padding: 1.9rem 1.3rem 1.4rem; }
     .problem-cards.desk { max-width: 62rem; margin-inline: auto; }
