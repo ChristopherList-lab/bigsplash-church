@@ -70,7 +70,7 @@
   tailwind.config = {
     theme: { extend: {
       colors: {
-        primary: '#eff88b', ocean: '#6a9686', ink: '#131318', paper: '#f8f5ee', band: '#f1ece1', line: '#ddd8ce',
+        primary: '#eff88b', secondary: '#58bfc0', ocean: '#6a9686', ink: '#131318', paper: '#f8f5ee', band: '#f1ece1', line: '#ddd8ce',
         copy: '#3f3f47', muted: '#5f5f68', olive: '#56610a',
         // tokens the shared intake modal (js/intake.js) expects, set light for this page
         background: '#131318', 'on-surface': '#131318', 'surface-container-low': '#ffffff',
@@ -145,8 +145,9 @@
   .on-dark .btn-primary { background: #eff88b; color: #1f2200; }
   .on-dark .btn-primary .material-symbols-outlined { color: inherit; }
   .on-dark .btn-primary:hover { background: #f5fbb5; }
-  .on-dark .btn-ghost { border-color: rgba(255,255,255,0.32); color: #f1eee8; }
-  .on-dark .btn-ghost:hover { border-color: #eff88b; background: rgba(239,248,139,0.08); }
+  .on-dark .btn-ghost { border-color: rgba(88,191,192,0.6); color: #f1eee8; }
+  .on-dark .btn-ghost:hover { border-color: var(--teal); background: rgba(88,191,192,0.1); }
+  .on-dark .btn-ghost:active { border-color: var(--teal-hover); }
   .on-dark a:focus-visible, .on-dark button:focus-visible { outline-color: #eff88b; }
 
   [hidden] { display: none !important; }
@@ -178,7 +179,7 @@
   .nav-dark { background: rgba(11, 11, 14, 0.94); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
   .nav-dark.scrolled { background: #0b0b0e; border-bottom-color: rgba(255, 255, 255, 0.1); }
   .nav-link-dark { color: rgba(255, 255, 255, 0.7); transition: color 0.2s; }
-  .nav-link-dark:hover { color: #ffffff; }
+  .nav-link-dark:hover { color: var(--teal); }
   .nav-dark a:focus-visible, .nav-dark button:focus-visible { outline-color: #eff88b; }
   .btn-lime { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; background: #eff88b; color: #131318; font-weight: 600; border-radius: 9999px; transition: background 0.2s, transform 0.2s; }
   .btn-lime:hover { background: #f5fbb5; }
@@ -210,7 +211,7 @@
 
   .film-credit { display: inline-flex; align-items: center; gap: 0.6rem; font-size: 0.8rem; color: rgba(255, 255, 255, 0.6); }
   .film-toggle { width: 2rem; height: 2rem; border-radius: 9999px; display: grid; place-items: center; border: 1px solid rgba(255, 255, 255, 0.28); color: #ffffff; background: rgba(11, 11, 14, 0.4); transition: border-color 0.2s; }
-  .film-toggle:hover { border-color: #eff88b; }
+  .film-toggle:hover { border-color: var(--teal); }
   .film-toggle .material-symbols-outlined { font-size: 1.1rem; }
 
   @media (max-width: 420px) { .hero-eyebrow { font-size: 0.75rem; gap: 0.4rem; padding: 0.35rem 0.75rem 0.35rem 0.6rem; } }
@@ -319,8 +320,10 @@
      ~/Desktop/BigSplash_Design/church-scenes/SCENES.md: never captioned as a real church or family).
      The middle of the page follows one family's first Sunday with a sticky phone on desktop.
      <main class="night"> and the root both paint near-black, so an overscroll bounce at either end stays dark.
-     The paper rule near the top stays as the light default and this rule paints over it. The intake modal paints its own surfaces. */
-  :root { --night: #0b0b0e; --ink: #131318; --ink-2: #17171d; --lime: #eff88b; --bubble: #0a70f0; }
+     The paper rule near the top stays as the light default and this rule paints over it. The intake modal paints its own surfaces.
+     Electric teal is the second accent, about 5% of the page: section labels, second-button edges, hovers, small icons, the
+     follow-up timeline and the add-on card's tint. Lime keeps the main buttons and the highlighted phrase. */
+  :root { --night: #0b0b0e; --ink: #131318; --ink-2: #17171d; --lime: #eff88b; --teal: #58bfc0; --teal-hover: #43a9aa; --teal-surface: #152729; --bubble: #0a70f0; }
   .hero-edge path { fill: #0b0b0e; }
   /* overflow-x: hidden on body makes it a scroll container, which stops position: sticky. clip trims the same overflow without that. */
   body { overflow-x: clip; }
@@ -329,8 +332,8 @@
   .night section { position: relative; }
   #how, #follow-up, #report, #films, #audit, #levels, #christmas, #faq { scroll-margin-top: 4.5rem; }
   .night .display { color: #ffffff; }
-  /* Lime marks one thing per section (a key phrase, the main button, the price), so eyebrows stay quiet. */
-  .night .eyebrow { display: inline-flex; align-items: center; color: rgba(255, 255, 255, 0.66); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+  /* Lime marks one thing per section (a key phrase, the main button, the price), so eyebrows take the teal. */
+  .night .eyebrow { display: inline-flex; align-items: center; color: var(--teal); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
   .night .reveal .eyebrow { transform: none; }
   .h2 { font-size: clamp(2.25rem, 5.6vw, 4rem); line-height: 1.06; letter-spacing: -0.036em; }
   .h2-sm { font-size: clamp(2rem, 4.4vw, 3.15rem); line-height: 1.05; letter-spacing: -0.032em; }
@@ -350,18 +353,22 @@
   .night .btn-primary, #mobile-cta .btn-primary { background: #eff88b; color: #131318; }
   .night .btn-primary .material-symbols-outlined, #mobile-cta .btn-primary .material-symbols-outlined { color: inherit; }
   .night .btn-primary:hover, #mobile-cta .btn-primary:hover { background: #f5fbb5; }
-  .night .btn-ghost { border-color: rgba(255, 255, 255, 0.32); color: #f1eee8; }
-  .night .btn-ghost:hover { border-color: #eff88b; background: rgba(239, 248, 139, 0.08); }
+  .night .btn-ghost { border-color: rgba(88, 191, 192, 0.6); color: #f1eee8; }
+  .night .btn-ghost:hover { border-color: var(--teal); background: rgba(88, 191, 192, 0.1); }
+  .night .btn-ghost:active { border-color: var(--teal-hover); }
   .night a:focus-visible, .night button:focus-visible, .night summary:focus-visible, .night video:focus-visible, #mobile-cta a:focus-visible { outline: 2px solid #eff88b; outline-offset: 3px; }
-  /* Check marks below the hero sit on a soft white disc; the hero keeps its lime ticks. */
-  .night .tick { background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.9); }
-  .night .icon-badge { background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.88); }
+  /* Check marks below the hero sit on a soft teal disc; the hero keeps its lime ticks. */
+  .night .tick { background: rgba(88, 191, 192, 0.16); color: var(--teal); }
+  .night .icon-badge { background: var(--teal-surface); color: var(--teal); }
   .text-primary { color: #eff88b; }
   .label-quiet { color: rgba(255, 255, 255, 0.62); }
+  .icon-teal { color: var(--teal); }
 
   /* Glass cards on dark */
   .glass { background: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03)); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.25rem; -webkit-backdrop-filter: blur(16px) saturate(1.15); backdrop-filter: blur(16px) saturate(1.15); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 30px 60px -34px rgba(0, 0, 0, 0.8); }
   .glass-strong { background: linear-gradient(180deg, rgba(30, 30, 37, 0.92), rgba(19, 19, 24, 0.92)); border-radius: 1.75rem; }
+  /* The one teal-tinted card (the filming add-on), so it reads apart from the lit monthly plan. */
+  .glass-teal { background: linear-gradient(180deg, rgba(21, 39, 41, 0.94), rgba(19, 19, 24, 0.92)); border-color: rgba(88, 191, 192, 0.18); }
 
   /* ---------- Problem: a map of Georgetown with a 10-mile ring, heading on the left, four worries as real objects on a desk ----------
      Everything on the map is placed from the pin: --px and --py put the pin in the section, --r is the ring's
@@ -538,7 +545,7 @@
   @media (min-width: 640px) { .rc-form { flex-direction: row; } }
   .rc-input { flex: 1; min-width: 0; height: 3.25rem; padding: 0 1rem; border-radius: 9999px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.18); color: #ffffff; font: inherit; font-size: 16px; }
   .rc-input::placeholder { color: rgba(255, 255, 255, 0.45); }
-  .rc-input:focus { outline: none; border-color: #eff88b; box-shadow: 0 0 0 3px rgba(239, 248, 139, 0.18); }
+  .rc-input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(88, 191, 192, 0.22); }
   .rc-err { margin-top: 0.8rem; color: #fca5a5; font-size: 0.95rem; }
   .rc-big { margin-top: 0.3rem; font-size: clamp(3rem, 12vw, 4.25rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: #ffffff; font-variant-numeric: tabular-nums; }
   .rc-big small { margin-left: 0.4rem; font-size: 1.1rem; font-weight: 600; letter-spacing: 0; color: rgba(255, 255, 255, 0.7); }
@@ -550,13 +557,14 @@
   .rc-mapwrap.gl-on #rc-gl { opacity: 1; }
   .rc-mapwrap.gl-on .rc-map { opacity: 0; }
   .rc-ringlabel { font: 700 10.5px/1 Inter, sans-serif; letter-spacing: 0.12em; color: #eff88b; background: rgba(12, 12, 12, 0.85); border: 1px solid rgba(239, 248, 139, 0.55); border-radius: 9999px; padding: 4px 9px; white-space: nowrap; }
-  .rc-ringlabel.is-five { color: rgba(255, 255, 255, 0.8); border-color: rgba(255, 255, 255, 0.3); }
+  .rc-ringlabel.is-five { color: var(--teal); border-color: rgba(88, 191, 192, 0.55); }
   .rc-mapwrap .maplibregl-ctrl-attrib { font-size: 10px; }
   .rc-map .rc-dot { fill: #eff88b; fill-opacity: 0.6; animation: rc-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: var(--d, 0ms); transform-box: fill-box; transform-origin: center; }
   @keyframes rc-pop { from { opacity: 0; transform: scale(0.2); } }
   @media (prefers-reduced-motion: reduce) { .rc-map .rc-dot { animation: none; } }
   .rc-fine { margin-top: 1rem; font-size: 0.8125rem; color: rgba(255, 255, 255, 0.55); }
   .rc-link { color: #ffffff; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  .rc-link:hover { color: var(--teal); }
   body.rc-open { overflow: hidden; }
   /* The Front Door Audit in a popup: the form, the "checking" wait, then the scorecard itself in a frame. */
   .af-panel { width: min(40rem, 100%); }
@@ -569,12 +577,12 @@
   select.af-input { appearance: none; -webkit-appearance: none; padding-right: 2.4rem; background-image: linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.6) 50%), linear-gradient(-45deg, transparent 50%, rgba(255,255,255,0.6) 50%); background-position: calc(100% - 18px) 52%, calc(100% - 12px) 52%; background-size: 6px 6px; background-repeat: no-repeat; }
   select.af-input option { background: #17171c; color: #ffffff; }
   .af-input::placeholder { color: rgba(255, 255, 255, 0.4); }
-  .af-input:focus { outline: none; border-color: #eff88b; box-shadow: 0 0 0 3px rgba(239, 248, 139, 0.18); }
+  .af-input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(88, 191, 192, 0.22); }
   .af-consent { display: flex; gap: 0.7rem; align-items: flex-start; font-size: 0.8125rem; line-height: 1.5; color: rgba(255, 255, 255, 0.65); }
-  .af-consent input { flex: none; width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; accent-color: #eff88b; }
+  .af-consent input { flex: none; width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; accent-color: var(--teal); }
   .af-consent a { color: inherit; text-decoration: underline; }
   .af-hp { position: absolute; left: -5000px; width: 1px; height: 1px; overflow: hidden; }
-  .af-spin { width: 2.4rem; height: 2.4rem; margin: 0 auto 1.2rem; border-radius: 50%; border: 3px solid rgba(255, 255, 255, 0.14); border-top-color: #eff88b; animation: af-spin 0.9s linear infinite; }
+  .af-spin { width: 2.4rem; height: 2.4rem; margin: 0 auto 1.2rem; border-radius: 50%; border: 3px solid rgba(255, 255, 255, 0.14); border-top-color: var(--teal); animation: af-spin 0.9s linear infinite; }
   @keyframes af-spin { to { transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce) { .af-spin { animation-duration: 2.7s; } }
   .af-cardbar { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 3.6rem 0.75rem 1.25rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.95rem; color: rgba(255, 255, 255, 0.8); }
@@ -631,10 +639,10 @@
 
   /* Follow-up timeline */
   .j-timeline { list-style: none; margin: 0; padding: 0; position: relative; max-width: 36rem; }
-  .j-timeline::before { content: ""; position: absolute; left: 0.45rem; top: 0.6rem; bottom: 0.6rem; width: 2px; background: rgba(255, 255, 255, 0.14); }
+  .j-timeline::before { content: ""; position: absolute; left: 0.45rem; top: 0.6rem; bottom: 0.6rem; width: 2px; background: linear-gradient(180deg, rgba(88, 191, 192, 0.55), rgba(88, 191, 192, 0.14)); }
   .j-timeline li { position: relative; padding: 0 0 2rem 2.25rem; }
-  .j-timeline li::before { content: ""; position: absolute; left: 0.05rem; top: 0.35rem; width: 0.85rem; height: 0.85rem; border-radius: 50%; background: var(--night); border: 2px solid rgba(255, 255, 255, 0.45); }
-  /* "Came back twice" is the hand-off to the church, so its dot is the one lime mark in the plan. */
+  .j-timeline li::before { content: ""; position: absolute; left: 0.05rem; top: 0.35rem; width: 0.85rem; height: 0.85rem; border-radius: 50%; background: var(--night); border: 2px solid var(--teal); }
+  /* The line and its dots are teal. "Came back twice" is the hand-off to the church, so its dot is the one lime mark in the plan. */
   .j-timeline li.j-tl-key::before { background: var(--lime); border-color: var(--lime); }
   .j-tl-when { font-size: 1.15rem; font-weight: 700; color: #ffffff; letter-spacing: -0.01em; }
   .j-timeline li > p + p { margin-top: 0.3rem; color: rgba(255, 255, 255, 0.76); line-height: 1.6; }
@@ -834,7 +842,7 @@
   .ps-over { font-size: 0.8125em; font-weight: 600; color: #a1a1aa; }
   .ps-list h4, .ps-report h4 { font-size: 1.5em; font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; }
   .ps-prog { height: 0.45em; border-radius: 1em; background: #2c2c2e; overflow: hidden; }
-  .ps-prog span { display: block; width: 50%; height: 100%; border-radius: 1em; background: rgba(255, 255, 255, 0.7); }
+  .ps-prog span { display: block; width: 50%; height: 100%; border-radius: 1em; background: var(--teal); }
   .ps-progtext { margin-top: -0.2em !important; font-size: 0.8125em; color: #d4d4d8; }
   .ps-fams { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.45em; }
   .ps-fams li { display: flex; align-items: center; gap: 0.65em; padding: 0.6em 0.7em; border-radius: 0.9em; background: #1c1c1e; }
@@ -890,7 +898,7 @@
 
   /* ---------- Front Door Audit ---------- */
   .audit { background: linear-gradient(180deg, var(--night), var(--ink) 40%, var(--ink) 70%, var(--night)); overflow: hidden; }
-  .audit-ico { width: 2.25rem; height: 2.25rem; border-radius: 0.65rem; display: grid; place-items: center; background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.88); font-size: 1.3rem; }
+  .audit-ico { width: 2.25rem; height: 2.25rem; border-radius: 0.65rem; display: grid; place-items: center; background: var(--teal-surface); color: var(--teal); box-shadow: inset 0 0 0 1px rgba(88, 191, 192, 0.2); font-size: 1.3rem; }
   .night .sc-detail { position: relative; }
   .night .sc-detail .sc-card { position: relative; border: 0; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 50px 100px -40px rgba(0, 0, 0, 0.95); }
   .night .sc-detail-cap { color: rgba(255, 255, 255, 0.7); font-size: 15px; }
@@ -948,7 +956,7 @@
   .faq-list details { border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
   .faq-list summary:hover span:first-child { color: rgba(255, 255, 255, 0.82); }
   .faq-plus { width: 2.25rem; height: 2.25rem; border-radius: 50%; display: grid; place-items: center; border: 1px solid rgba(255, 255, 255, 0.24); color: rgba(255, 255, 255, 0.85); font-size: 1.3rem; }
-  .faq-list details[open] .faq-plus { border-color: rgba(255, 255, 255, 0.5); }
+  .faq-list summary:hover .faq-plus, .faq-list details[open] .faq-plus { border-color: var(--teal); color: var(--teal); }
 
   /* ---------- Final CTA over the hero's footage ----------
      The same City Reach loop as the hero (already in the browser cache by now) under the hero's shade, centered on the copy.
@@ -1584,7 +1592,7 @@
           </div>
         </div>
 
-        <div class="glass glass-strong p-7 md:p-10 flex flex-col lg:col-span-5 reveal">
+        <div class="glass glass-strong glass-teal p-7 md:p-10 flex flex-col lg:col-span-5 reveal">
           <p class="text-sm font-bold label-quiet uppercase tracking-[0.12em]">Add-on</p>
           <h3 class="mt-2 text-2xl md:text-[1.75rem] font-bold tracking-tight text-white">Filming at your church</h3>
           <p class="mt-6 text-4xl md:text-[2.75rem] font-extrabold text-white tracking-tight">Custom quote</p>
@@ -1603,8 +1611,8 @@
       </div>
 
       <div class="mt-10 grid sm:grid-cols-2 gap-5 text-white/75 reveal">
-        <p class="flex gap-3"><span class="material-symbols-outlined label-quiet shrink-0" aria-hidden="true">verified</span>Everything we build for your church stays yours.</p>
-        <p class="flex gap-3"><span class="material-symbols-outlined label-quiet shrink-0" aria-hidden="true">groups</span>We never promise a set number of families. We count each family your welcome team checks off on Sunday.</p>
+        <p class="flex gap-3"><span class="material-symbols-outlined icon-teal shrink-0" aria-hidden="true">verified</span>Everything we build for your church stays yours.</p>
+        <p class="flex gap-3"><span class="material-symbols-outlined icon-teal shrink-0" aria-hidden="true">groups</span>We never promise a set number of families. We count each family your welcome team checks off on Sunday.</p>
       </div>
     </div>
   </section>
@@ -1715,9 +1723,9 @@
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-[15px] text-stone-400">
       <a href="./" aria-label="Big Splash for churches, home"><img src="assets/images/logo-bigsplash-white-lime.svg" alt="Big Splash" class="h-7 w-auto" width="655" height="191" loading="lazy"></a>
       <p>The marketing agency for the local church</p>
-      <p>&copy; 2026 Big Splash · Georgetown, TX · <a href="mailto:chris@bigsplash.agency" class="underline underline-offset-4 hover:text-primary">chris@bigsplash.agency</a> · <a href="https://bigsplash.video/privacy/" class="underline underline-offset-4 hover:text-primary">Privacy</a></p>
+      <p>&copy; 2026 Big Splash · Georgetown, TX · <a href="mailto:chris@bigsplash.agency" class="underline underline-offset-4 hover:text-secondary">chris@bigsplash.agency</a> · <a href="https://bigsplash.video/privacy/" class="underline underline-offset-4 hover:text-secondary">Privacy</a></p>
     </div>
-    <p class="max-w-6xl mx-auto mt-6 pt-6 border-t border-white/10 text-center md:text-left text-sm text-stone-400">We also make videos for Texas businesses. <a href="https://bigsplash.video/" class="underline underline-offset-4 hover:text-primary">See our work for businesses</a></p>
+    <p class="max-w-6xl mx-auto mt-6 pt-6 border-t border-white/10 text-center md:text-left text-sm text-stone-400">We also make videos for Texas businesses. <a href="https://bigsplash.video/" class="underline underline-offset-4 hover:text-secondary">See our work for businesses</a></p>
   </footer>
 
   <!-- ========== Front Door Audit popup: every "free audit" button opens this ========== -->
@@ -2199,7 +2207,7 @@
           map.addSource('rc-center', { type: 'geojson', data: center });
           map.addLayer({ id: 'rc-ten-fill', type: 'fill', source: 'rc-rings', filter: ['==', ['get', 'm'], 10], paint: { 'fill-color': '#eff88b', 'fill-opacity': 0.06 } });
           map.addLayer({ id: 'rc-ten-line', type: 'line', source: 'rc-rings', filter: ['==', ['get', 'm'], 10], paint: { 'line-color': '#eff88b', 'line-width': 2, 'line-dasharray': [2, 2] } });
-          map.addLayer({ id: 'rc-five-line', type: 'line', source: 'rc-rings', filter: ['==', ['get', 'm'], 5], paint: { 'line-color': '#ffffff', 'line-opacity': 0.35, 'line-width': 1.2, 'line-dasharray': [2, 2] } });
+          map.addLayer({ id: 'rc-five-line', type: 'line', source: 'rc-rings', filter: ['==', ['get', 'm'], 5], paint: { 'line-color': '#58bfc0', 'line-opacity': 0.8, 'line-width': 1.2, 'line-dasharray': [2, 2] } });
           map.addLayer({ id: 'rc-dots', type: 'circle', source: 'rc-dots', paint: { 'circle-color': '#eff88b', 'circle-opacity': 0.5, 'circle-radius': ['get', 'r'] } });
           map.addLayer({ id: 'rc-center-halo', type: 'circle', source: 'rc-center', paint: { 'circle-radius': 13, 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': '#eff88b', 'circle-stroke-width': 2 } });
           map.addLayer({ id: 'rc-center', type: 'circle', source: 'rc-center', paint: { 'circle-radius': 6, 'circle-color': '#eff88b' } });
@@ -2268,7 +2276,7 @@
       svg.innerHTML = '';
       const add = (tag, attrs) => { const el = document.createElementNS(ns, tag); for (const k in attrs) el.setAttribute(k, attrs[k]); svg.appendChild(el); return el; };
       add('circle', { cx: 0, cy: 0, r: 10, fill: 'rgba(239,248,139,0.05)', stroke: '#eff88b', 'stroke-width': 0.09, 'stroke-dasharray': '0.35 0.3' });
-      add('circle', { cx: 0, cy: 0, r: 5, fill: 'none', stroke: 'rgba(255,255,255,0.22)', 'stroke-width': 0.06, 'stroke-dasharray': '0.25 0.25' });
+      add('circle', { cx: 0, cy: 0, r: 5, fill: 'none', stroke: 'rgba(88,191,192,0.6)', 'stroke-width': 0.06, 'stroke-dasharray': '0.25 0.25' });
       points.slice().sort((a, b) => Math.hypot(a[0], a[1]) - Math.hypot(b[0], b[1])).forEach(([e, n, hh], i) => {
         const dot = add('circle', { class: 'rc-dot', cx: e, cy: -n, r: (0.1 + Math.sqrt(Math.max(hh, 0)) / 150).toFixed(3) });
         dot.style.setProperty('--d', `${Math.min(i * 6, 900)}ms`);
@@ -2277,7 +2285,7 @@
       add('circle', { cx: 0, cy: 0, r: 0.45, fill: '#eff88b' });
       const label = (x, y, text, fill) => { const t = add('text', { x, y, fill, 'font-size': 0.95, 'font-weight': 700, 'text-anchor': 'middle', 'font-family': 'Inter, sans-serif' }); t.textContent = text; };
       label(0, -10.45, '10 MILES', '#eff88b');
-      label(0, -5.35, '5 MILES', 'rgba(255,255,255,0.6)');
+      label(0, -5.35, '5 MILES', '#58bfc0');
     }
 
     $('rc-form').addEventListener('submit', async (e) => {
