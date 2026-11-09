@@ -7,7 +7,7 @@ paths adjusted for a site that lives at the domain root: the church page, the ol
 thanks page, the founding pages (church/founding/: checkout, terms, welcome) and
 the footage upload page (church/footage/), the
 privacy and terms pages (church/privacy/, church/terms/) that the intake form links to,
-and the Christmas campaign page (church/christmas/).
+and the Christmas campaign page and its after-checkout welcome page (church/christmas/).
 
     python3 sync_from_main_site.py
 
@@ -58,7 +58,7 @@ t = main_site_links(t.replace('../../assets/', '../assets/'))
 # and the privacy and terms pages the GHL intake form's texting consent links to ----
 # church/founding/ in the main repo becomes founding/ here, one folder closer to the root; church/footage/ becomes footage/.
 FOUNDING = ('founding/index.html', 'founding/terms/index.html', 'founding/welcome/index.html', 'footage/index.html',
-            'privacy/index.html', 'terms/index.html', 'christmas/index.html')
+            'privacy/index.html', 'terms/index.html', 'christmas/index.html', 'christmas/welcome/index.html')
 founding = {}
 for name in FOUNDING:
     src = SRC / 'church' / name

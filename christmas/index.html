@@ -191,6 +191,10 @@
   .opt.vip .tick { background: var(--ink); color: var(--lime); }
   .opt .btn { margin-top: auto; }
   .opt .checks { margin-bottom: 30px; }
+  .ask { align-self: center; margin-top: 12px; padding: 6px 8px; background: none; border: 0; cursor: pointer;
+    font: 600 15px/1.3 'Inter', sans-serif; color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  .ask:hover { text-decoration-thickness: 2px; }
+  .ask:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; border-radius: 6px; }
   .terms-line { margin-top: 22px; text-align: center; font-size: 15px; color: var(--muted); }
   @media (max-width: 860px) { .options { grid-template-columns: 1fr; } }
 
@@ -415,7 +419,11 @@
               <li><span class="tick"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span><span><b>A welcome text and a reminder</b> for every family who plans a visit</span></li>
               <li><span class="tick"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span><span><b>The Saturday list:</b> names of the families planning to visit, sent to your welcome team every week</span></li>
             </ul>
-            <button type="button" class="btn btn-second" data-book data-cta="option-campaign">Book a call about the Campaign</button>
+            <a class="btn btn-primary" href="https://buy.stripe.com/14AbJ1d8v6yba1Z7MT18c0a" data-buy="campaign" data-cta="buy-campaign">
+              Get the Christmas Campaign
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <button type="button" class="ask" data-book data-cta="option-campaign">Questions first? Book a free call</button>
           </div>
         </article>
 
@@ -440,10 +448,11 @@
               <li><span class="tick"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span><span><b>$1,000 of ad budget,</b> twice the Campaign's, so more families see your invitation</span></li>
               <li><span class="tick"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span><span><b>All the raw footage,</b> yours to keep for Easter and beyond</span></li>
             </ul>
-            <button type="button" class="btn btn-primary" data-book data-cta="option-vip">
-              Book a call about VIP
+            <a class="btn btn-primary" href="https://buy.stripe.com/00w28rfgD5u77TR6IP18c0b" data-buy="vip" data-cta="buy-vip">
+              Get VIP Filmed Christmas
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </button>
+            </a>
+            <button type="button" class="ask" data-book data-cta="option-vip">Questions first? Book a free call</button>
           </div>
         </article>
       </div>
@@ -666,6 +675,12 @@
       if (window.bsTrack) bsTrack('christmas_book_click', { cta: btn.dataset.cta || '' });
     }));
     dlg.querySelector('[data-close]').addEventListener('click', () => dlg.close());
+
+    // Stripe checkout buttons
+    document.querySelectorAll('[data-buy]').forEach(a => a.addEventListener('click', () => {
+      if (window.bsTrack) bsTrack('christmas_checkout_click', { offer: a.dataset.buy });
+      try { if (window.fbq) fbq('track', 'InitiateCheckout', { content_name: a.dataset.buy === 'vip' ? 'VIP Filmed Christmas' : 'Christmas Campaign', value: a.dataset.buy === 'vip' ? 5997 : 1997, currency: 'USD' }); } catch (e) {}
+    }));
     dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
 
     // Top bar border and phone sticky bar
