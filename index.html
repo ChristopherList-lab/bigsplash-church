@@ -571,6 +571,17 @@
   .rc-link { color: #ffffff; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
   .rc-link:hover { color: var(--teal); }
   body.rc-open { overflow: hidden; }
+  /* The Christmas popup: one push to the Christmas campaign page. The script near the end decides when it shows. */
+  .xp-panel { width: min(30rem, 100%); padding: 0; }
+  .xp-photo { position: relative; aspect-ratio: 16 / 10; overflow: hidden; }
+  .xp-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; display: block; }
+  .xp-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(23, 23, 28, 0) 50%, #17171c 100%); }
+  .xp-body { padding: 0.25rem 1.6rem 1.6rem; }
+  @media (min-width: 640px) { .xp-body { padding: 0.25rem 2.2rem 2rem; } }
+  .xp-panel .rc-x { z-index: 1; background: rgba(11, 11, 14, 0.55); color: #ffffff; }
+  .xp-panel .rc-x:hover { background: rgba(11, 11, 14, 0.8); }
+  @keyframes xp-in { from { opacity: 0; transform: translateY(14px) scale(0.98); } }
+  @media (prefers-reduced-motion: no-preference) { #xmas-modal:not([hidden]) .xp-panel { animation: xp-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; } }
   /* The Front Door Audit in a popup: the form, the "checking" wait, then the scorecard itself in a frame. */
   .af-panel { width: min(40rem, 100%); }
   .af-panel.is-card { width: min(68rem, 100%); padding: 0; overflow: hidden; display: flex; flex-direction: column; height: calc(100dvh - 2rem); }
@@ -1566,7 +1577,7 @@
       <div class="pricing-head max-w-2xl reveal">
         <p class="eyebrow mb-5">Pricing</p>
         <h2 class="display h2">Simple pricing, <span class="hl">6 or 12 months</span></h2>
-        <p class="lede mt-6">You pay us a monthly fee on a 6 or 12 month commitment. Your church pays Meta to show your videos on Facebook and Instagram. That's your campaign budget. We never mark it up.</p>
+        <p class="lede mt-6">You pay one monthly fee on a 6 or 12 month commitment. Your Facebook and Instagram ad budget is built in, and we never mark it up.</p>
       </div>
 
       <div class="mt-12 md:mt-16 grid lg:grid-cols-12 gap-6 items-stretch">
@@ -1576,15 +1587,15 @@
           <h3 class="mt-2 text-2xl md:text-[1.75rem] font-bold tracking-tight text-white">The monthly plan</h3>
           <p class="mt-6 text-[15px] font-semibold text-white/80">12-month commitment</p>
           <p class="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <s class="price-was tnum"><span class="sr-only">Regular price </span>$1,997</s>
-            <span class="plan-price tnum"><span class="sr-only">Price for our first 5 churches </span>$1,497</span><span class="text-white/65 text-lg">/month</span>
+            <s class="price-was tnum"><span class="sr-only">Regular price </span>$2,497</s>
+            <span class="plan-price tnum"><span class="sr-only">Price for our first 5 churches </span>$1,997</span><span class="text-white/65 text-lg">/month</span>
           </p>
-          <p class="mt-3 text-[15px] text-white/85">Or <b class="font-semibold text-white tnum">$1,697/month</b> on a 6-month commitment <span class="text-white/60">(<s class="tnum">$2,197</s> regular)</span>.</p>
-          <p class="mt-4 text-[15px] text-white/75">Our first 5 churches lock in these prices. New churches after that pay $1,997 for 12 months or $2,197 for 6 months.</p>
+          <p class="mt-3 text-[15px] text-white/85">Or <b class="font-semibold text-white tnum">$2,197/month</b> on a 6-month commitment <span class="text-white/60">(<s class="tnum">$2,697</s> regular)</span>.</p>
+          <p class="mt-4 text-[15px] text-white/75">Our first 5 churches lock in these prices. New churches after that pay $2,497 for 12 months or $2,697 for 6 months.</p>
           <p class="mt-1 text-[15px] text-white/75">Not happy in your first 90 days? Cancel with no fees. Your plan renews for the same term unless you give 30 days notice before it ends.</p>
           <ul class="mt-8 grid md:grid-cols-2 gap-x-8 gap-y-3.5 text-white/85">
             <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>A web page where new families plan their visit</li>
-            <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>Your Facebook and Instagram campaign. We run it for you and aim it at families nearby.</li>
+            <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>Your Facebook and Instagram campaign, with $500 a month in ads included. We run it and aim it at families nearby.</li>
             <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>Up to 4 new versions of your invite videos each month</li>
             <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>Follow-up texts to every new family, from a number in your church's name</li>
             <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>A monthly report that lists every new family by name</li>
@@ -1593,24 +1604,26 @@
           <div class="mt-auto pt-9">
             <a href="https://bigsplash.church/founding/?utm_source=church_page" data-cta="price-founding" class="btn-primary w-full">Claim a founding spot <span class="material-symbols-outlined text-xl" aria-hidden="true">arrow_forward</span></a>
             <a href="https://bigsplash.video/frontdoor/?utm_source=church_page" data-cta="price-monthly" class="btn-ghost w-full mt-3">Start with a free audit</a>
-            <p class="mt-4 text-[15px] text-white/70">Your campaign budget is separate. It starts at $500 a month.</p>
+            <p class="mt-4 text-[15px] text-white/70">Want to reach more families? Add to your ad budget anytime, paid straight to Meta.</p>
           </div>
         </div>
 
         <div class="glass glass-strong glass-teal p-7 md:p-10 flex flex-col lg:col-span-5 reveal">
-          <p class="text-sm font-bold label-quiet uppercase tracking-[0.12em]">Add-on</p>
-          <h3 class="mt-2 text-2xl md:text-[1.75rem] font-bold tracking-tight text-white">Filming at your church</h3>
-          <p class="mt-6 text-4xl md:text-[2.75rem] font-extrabold text-white tracking-tight">Custom quote</p>
-          <p class="mt-4 text-white/75">We'll talk first, then give you a price for your filming day.</p>
+          <p class="text-sm font-bold label-quiet uppercase tracking-[0.12em]">Campaign, follow-up and filming</p>
+          <h3 class="mt-2 text-2xl md:text-[1.75rem] font-bold tracking-tight text-white">The VIP plan</h3>
+          <p class="mt-6 text-[15px] font-semibold text-white/80">12-month commitment</p>
+          <p class="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1"><span class="text-4xl md:text-[2.75rem] font-extrabold text-white tracking-tight tnum">$3,997</span><span class="text-white/65 text-lg">/month</span></p>
+          <p class="mt-3 text-[15px] text-white/85">Or <b class="font-semibold text-white tnum">$4,397/month</b> on a 6-month commitment.</p>
           <ul class="mt-8 space-y-3.5 text-white/85">
-            <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>A filming day planned around your services</li>
+            <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>Everything in the monthly plan</li>
+            <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>$1,000 a month in Facebook and Instagram ads, included</li>
+            <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>A six-hour filming day at your church every quarter</li>
             <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>Your pastor inviting families, plus your people's stories</li>
             <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>Your Sunday experience and kids ministry</li>
-            <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>Book it when you need it, like before Easter or Christmas</li>
+            <li class="flex gap-3"><span class="material-symbols-outlined tick" aria-hidden="true">check</span>Filming days planned around your services, Easter and Christmas</li>
           </ul>
-          <p class="mt-8 text-white/80"><span class="font-semibold text-white">Have your own videos?</span> We can use them. Filming is optional.</p>
           <div class="mt-auto pt-8">
-            <button type="button" data-open-intake data-intake-service="Church" data-cta="price-filming" class="btn-ghost w-full">Book a call with our team</button>
+            <button type="button" data-open-intake data-intake-service="Church" data-cta="price-vip" class="btn-ghost w-full">Book a call with our team</button>
           </div>
         </div>
       </div>
@@ -1691,7 +1704,7 @@
         <details class="group py-6"><summary class="flex justify-between items-center gap-6 cursor-pointer list-none"><span class="text-lg md:text-xl font-semibold text-white">Do we own the videos?</span><span class="faq-plus material-symbols-outlined transition-transform duration-300 group-open:rotate-45 shrink-0" aria-hidden="true">add</span></summary>
           <p class="mt-4 text-white/75 leading-relaxed pr-10">Yes. You own the videos, your plan-your-visit page, the follow-up messages and your list of families. Post the videos anywhere you like.</p></details>
         <details class="group py-6"><summary class="flex justify-between items-center gap-6 cursor-pointer list-none"><span class="text-lg md:text-xl font-semibold text-white">Do we pay for the ads on top of your fee?</span><span class="faq-plus material-symbols-outlined transition-transform duration-300 group-open:rotate-45 shrink-0" aria-hidden="true">add</span></summary>
-          <p class="mt-4 text-white/75 leading-relaxed pr-10">Yes. Your church pays Meta (Facebook and Instagram) to show your videos, from its own account. We call this your campaign budget. It starts at $500 a month, and we never mark it up.</p></details>
+          <p class="mt-4 text-white/75 leading-relaxed pr-10">No. The monthly plan includes $500 a month in Facebook and Instagram ads, and the VIP plan includes $1,000. We never mark it up. Want to reach more families? Add more anytime, paid straight to Meta.</p></details>
         <details class="group py-6"><summary class="flex justify-between items-center gap-6 cursor-pointer list-none"><span class="text-lg md:text-xl font-semibold text-white">Do you edit the videos yourselves? Do you use AI?</span><span class="faq-plus material-symbols-outlined transition-transform duration-300 group-open:rotate-45 shrink-0" aria-hidden="true">add</span></summary>
           <p class="mt-4 text-white/75 leading-relaxed pr-10">Chris edits every video himself. If you add a filming day, he films at your church. AI helps with transcripts and rough edits, and Chris watches everything before you see it. You approve anything about your church's beliefs.</p></details>
         <details class="group py-6"><summary class="flex justify-between items-center gap-6 cursor-pointer list-none"><span class="text-lg md:text-xl font-semibold text-white">We're not in Texas. Can you work with us?</span><span class="faq-plus material-symbols-outlined transition-transform duration-300 group-open:rotate-45 shrink-0" aria-hidden="true">add</span></summary>
@@ -1814,6 +1827,24 @@
           <button type="button" data-open-intake data-intake-service="Church" class="btn-ghost justify-center">Book a call with our team</button>
         </div>
         <p class="rc-fine">Estimate from US Census data (ACS 2024, 5-year). Each dot is a Census tract, sized by its households. Map data from OpenStreetMap. <button type="button" id="rc-again" class="rc-link">Check another address</button></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== CHRISTMAS POPUP ========== -->
+  <div id="xmas-modal" class="rc-modal" role="dialog" aria-modal="true" aria-labelledby="xp-title" hidden>
+    <div class="rc-backdrop" data-xp-close></div>
+    <div class="rc-panel xp-panel night">
+      <button type="button" class="rc-x" data-xp-close aria-label="Close"><span class="material-symbols-outlined" aria-hidden="true">close</span></button>
+      <div class="xp-photo"><img data-src="assets/images/church/christmas/closing-golden-1000.webp" width="1000" height="787" alt="" decoding="async"></div>
+      <div class="xp-body">
+        <p class="eyebrow">Christmas Eve campaigns</p>
+        <h3 id="xp-title" class="rc-h">Fill your Christmas Eve services with <span class="hl">new families</span></h3>
+        <p class="mt-3 text-[15px] text-white/75">We make your invitation videos, show them to families within a 10-minute drive and text every family who plans a visit. From $1,997, ad budget included.</p>
+        <div class="mt-6 grid gap-3">
+          <a href="https://bigsplash.church/christmas/?utm_source=church_page&amp;utm_content=popup" data-cta="christmas-popup" class="btn-primary justify-center">See the Christmas campaign <span class="material-symbols-outlined text-xl" aria-hidden="true">arrow_forward</span></a>
+          <button type="button" data-xp-close class="btn-ghost justify-center">Not now</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2327,6 +2358,53 @@
     modal.querySelector('[data-open-intake]').addEventListener('click', close);
     $('rc-again').addEventListener('click', () => { show('ask'); $('rc-address').select(); $('rc-address').focus(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) close(); });
+  })();
+  </script>
+  <script>
+  // The Christmas popup sends visitors to the Christmas campaign page. It waits 15 seconds, or until the visitor
+  // scrolls into the family journey, never opens over another popup, shows once every 3 days in a browser and
+  // stops after Christmas Eve. The photo loads only when it is about to show.
+  (() => {
+    const modal = document.getElementById('xmas-modal');
+    const KEY = 'bs-xmas-popup';
+    const AGAIN_MS = 3 * 24 * 60 * 60 * 1000;
+    if (!modal || Date.now() > Date.parse('2026-12-25T06:00:00Z')) return;
+    try { if (Date.now() - Number(localStorage.getItem(KEY) || 0) < AGAIN_MS) return; } catch (e) {}
+    const track = (action) => { try { if (window.bsTrack) bsTrack('christmas_popup', { action }); } catch (e) {} };
+    const busy = () => document.body.classList.contains('rc-open') || Boolean(document.querySelector('#intake-modal.open'));
+    const mark = document.getElementById('journey');
+    let armed = true, opener = null;
+
+    async function show() {
+      if (!armed) return;
+      if (busy()) { setTimeout(show, 4000); return; }
+      armed = false;
+      clearTimeout(timer);
+      window.removeEventListener('scroll', onScroll);
+      try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {}
+      const img = modal.querySelector('img[data-src]');
+      img.src = img.dataset.src;
+      await Promise.race([img.decode().catch(() => {}), new Promise((r) => setTimeout(r, 1500))]);
+      if (busy()) return;
+      opener = document.activeElement;
+      modal.hidden = false;
+      document.body.classList.add('rc-open');
+      modal.querySelector('.btn-primary').focus({ preventScroll: true });
+      track('shown');
+    }
+    function close() {
+      if (modal.hidden) return;
+      modal.hidden = true;
+      document.body.classList.remove('rc-open');
+      if (opener && opener.focus) opener.focus({ preventScroll: true });
+      track('closed');
+    }
+    function onScroll() { if (mark && mark.getBoundingClientRect().top < innerHeight * 0.5) show(); }
+
+    const timer = setTimeout(show, 15000);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    modal.querySelectorAll('[data-xp-close]').forEach((el) => el.addEventListener('click', close));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
   })();
   </script>
   <script src="js/intake.js"></script>

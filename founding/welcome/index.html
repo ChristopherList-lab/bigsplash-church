@@ -161,7 +161,7 @@
     const session = params.get('session') || '';
     // ?term=12 or ?term=6 comes from the payment link the church used.
     const term = ['6', '12'].includes(params.get('term')) ? params.get('term') : '';
-    const value = term === '6' ? 1697 : 1497;
+    const value = term === '6' ? 2197 : 1997;
     if (term) $('term-length').textContent = term;
 
     function say(kind, title, text, icon) {
