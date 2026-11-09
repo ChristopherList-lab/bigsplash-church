@@ -4,10 +4,11 @@
 Until bigsplash.church is live, the church pages are edited in
 ~/Desktop/BigsplashWeb_VIdeoONLY/church and this script copies them here with the
 paths adjusted for a site that lives at the domain root: the church page, the old
-thanks page, the founding pages (church/founding/: checkout, terms, welcome) and
+thanks page, the founding pages (church/founding/: a forward to /start/, terms, welcome) and
 the footage upload page (church/footage/), the
 privacy and terms pages (church/privacy/, church/terms/) that the intake form links to,
-and the Christmas campaign page and its after-checkout welcome page (church/christmas/).
+the Christmas campaign page and its after-checkout welcome page (church/christmas/),
+and the private pricing page Chris sends after a discovery call (church/start/).
 
     python3 sync_from_main_site.py
 
@@ -58,7 +59,8 @@ t = main_site_links(t.replace('../../assets/', '../assets/'))
 # and the privacy and terms pages the GHL intake form's texting consent links to ----
 # church/founding/ in the main repo becomes founding/ here, one folder closer to the root; church/footage/ becomes footage/.
 FOUNDING = ('founding/index.html', 'founding/terms/index.html', 'founding/welcome/index.html', 'footage/index.html',
-            'privacy/index.html', 'terms/index.html', 'christmas/index.html', 'christmas/welcome/index.html')
+            'privacy/index.html', 'terms/index.html', 'christmas/index.html', 'christmas/welcome/index.html',
+            'start/index.html')
 founding = {}
 for name in FOUNDING:
     src = SRC / 'church' / name

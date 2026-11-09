@@ -86,7 +86,7 @@
 
   <main>
     <div class="wrap">
-      <p class="pill"><span class="material-symbols-outlined" aria-hidden="true" style="font-size:18px">celebration</span>Founding church</p>
+      <p class="pill"><span class="material-symbols-outlined" aria-hidden="true" style="font-size:18px">celebration</span><span id="pill-label">Founding church</span></p>
       <h1 id="welcome-title">Welcome to the partnership</h1>
       <p id="lede" class="lede">Thank you for trusting us to help your church welcome new families. The first two steps get your agreement signed and your kickoff call on the calendar.</p>
 
@@ -145,7 +145,7 @@
 
       <div class="note">
         <p><b style="color:var(--ink)">Your first month is paid.</b> After that, your monthly fee bills on the same date each month for the <span id="term-length">6 or 12</span> month commitment you chose. Not happy in your first 90 days? Cancel by email with no cancellation fees.</p>
-        <p>Your terms live at <a href="https://bigsplash.church/founding/terms/">Founding Church Terms</a>. Questions anytime: <a href="mailto:chris@bigsplash.agency">chris@bigsplash.agency</a>.</p>
+        <p>Your terms live at <a href="https://bigsplash.church/founding/terms/">Founding Church and VIP Plan Terms</a>. Questions anytime: <a href="mailto:chris@bigsplash.agency">chris@bigsplash.agency</a>.</p>
       </div>
       </div>
     </div>
@@ -168,7 +168,10 @@
     const session = params.get('session') || '';
     // ?term=12 or ?term=6 comes from the payment link the church used.
     const term = ['6', '12'].includes(params.get('term')) ? params.get('term') : '';
-    const value = term === '6' ? 2197 : 1997;
+    // ?plan=vip comes from the VIP payment links on the private /start/ page.
+    const vip = params.get('plan') === 'vip';
+    const value = vip ? (term === '6' ? 4397 : 3997) : (term === '6' ? 2197 : 1997);
+    if (vip) $('pill-label').textContent = 'VIP church';
     if (term) $('term-length').textContent = term;
 
     function say(kind, title, text, icon) {
@@ -184,7 +187,7 @@
     function trackPurchase(id) {
       const key = `bs_purchase_${id}`;
       try { if (localStorage.getItem(key)) return; localStorage.setItem(key, '1'); } catch (e) {}
-      try { if (window.fbq) fbq('track', 'Purchase', { value, currency: 'USD', content_name: `Church Monthly Plan, founding rate${term ? `, ${term} months` : ''}` }, { eventID: id }); } catch (e) {}
+      try { if (window.fbq) fbq('track', 'Purchase', { value, currency: 'USD', content_name: `${vip ? 'Church VIP Plan' : 'Church Monthly Plan, founding rate'}${term ? `, ${term} months` : ''}` }, { eventID: id }); } catch (e) {}
       try { if (window.gtag) gtag('event', 'purchase', { transaction_id: id, value, currency: 'USD' }); } catch (e) {}
     }
 

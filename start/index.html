@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Big Splash plan</title>
+<meta name="description" content="Pick your Big Splash plan and check out securely with Stripe.">
+<!-- The private pricing page Chris sends after a discovery call. Nothing on the site links here, and search engines skip it. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0b0b0e">
+<link rel="icon" type="image/png" href="../assets/images/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* The dark church site's look: near-black, lime for the main buttons and the one highlight, electric teal as the
+     second accent. Stripe payment links do the checkout; the worker's webhook takes it from there (agreement in
+     SignWell, GoHighLevel onboarding, the ClickUp task). */
+  :root { --night: #0b0b0e; --ink: #131318; --card: #17171c; --line: rgba(255, 255, 255, 0.1); --text: rgba(255, 255, 255, 0.78);
+    --lime: #eff88b; --lime-hover: #f5fbb5; --teal: #58bfc0; --teal-hover: #43a9aa; --teal-surface: #152729; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--night); color: var(--text); font-family: Inter, system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+  body { font-size: 17px; line-height: 1.6; }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; }
+  @media (min-width: 768px) { .wrap { padding: 0 2rem; } }
+
+  header.top { border-bottom: 1px solid var(--line); }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-top: 1rem; padding-bottom: 1rem; }
+  header.top img { height: 2.1rem; width: auto; }
+  header.top a.ask { font-size: 0.95rem; font-weight: 600; color: #ffffff; text-underline-offset: 4px; }
+  header.top a.ask:hover { color: var(--teal); }
+
+  .hero { padding: 4rem 0 2.5rem; }
+  @media (min-width: 768px) { .hero { padding: 5.5rem 0 3rem; } }
+  .eyebrow { margin: 0 0 1rem; color: var(--teal); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+  h1, h2, h3 { color: #ffffff; margin: 0; text-wrap: balance; }
+  h1 { font-size: clamp(2.3rem, 6vw, 3.8rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.035em; max-width: 46rem; }
+  .hl { color: #131318; background: var(--lime); padding: 0 0.12em 0.03em; border-radius: 0.09em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .lede { margin: 1.4rem 0 0; max-width: 40rem; font-size: 1.125rem; color: rgba(255, 255, 255, 0.78); }
+  @media (min-width: 768px) { .lede { font-size: 1.25rem; } }
+
+  .plans { display: grid; gap: 1.25rem; }
+  @media (min-width: 960px) { .plans { grid-template-columns: 1fr 1fr; } }
+  .plan { position: relative; display: flex; flex-direction: column; padding: 2rem 1.6rem 1.7rem; border-radius: 1.6rem;
+    background: linear-gradient(180deg, #1c1c22, #131317); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16), 0 50px 100px -50px rgba(0, 0, 0, 0.95); }
+  @media (min-width: 640px) { .plan { padding: 2.4rem 2.2rem 2rem; } }
+  .plan.vip { background: linear-gradient(180deg, rgba(21, 39, 41, 0.96), #131317); box-shadow: 0 0 0 1px rgba(88, 191, 192, 0.22), 0 50px 100px -50px rgba(0, 0, 0, 0.95); }
+  .badge { position: absolute; top: -0.85rem; left: 1.6rem; padding: 0.28rem 0.8rem; border-radius: 999px; background: #ffffff; color: #131318; font-size: 0.8125rem; font-weight: 700; }
+  .plan.vip .badge { background: var(--teal); color: #0b0b0e; }
+  .label { margin: 0; font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6); }
+  .plan h2 { margin-top: 0.35rem; font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em; }
+  .price { margin: 1.3rem 0 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.6rem; }
+  .price b { font-size: clamp(2.8rem, 7vw, 3.6rem); font-weight: 800; line-height: 1; letter-spacing: -0.04em; color: #ffffff; font-variant-numeric: tabular-nums; }
+  .price span { color: rgba(255, 255, 255, 0.65); }
+  .price s { color: rgba(255, 255, 255, 0.5); text-decoration-thickness: 2px; }
+  .sub { margin: 0.5rem 0 0; font-size: 0.95rem; color: rgba(255, 255, 255, 0.72); }
+  ul.checks { list-style: none; margin: 1.6rem 0 0; padding: 0; display: grid; gap: 0.7rem; }
+  ul.checks li { display: flex; gap: 0.7rem; align-items: flex-start; color: rgba(255, 255, 255, 0.86); font-size: 1rem; line-height: 1.5; }
+  .tick { flex: none; width: 1.35rem; height: 1.35rem; margin-top: 0.12rem; border-radius: 50%; display: grid; place-items: center; background: rgba(88, 191, 192, 0.16); color: var(--teal); }
+  .tick svg { width: 0.8rem; height: 0.8rem; }
+  .buy { margin-top: auto; padding-top: 1.8rem; display: grid; gap: 0.7rem; }
+  .btn { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.3rem; border-radius: 999px; font-weight: 700; font-size: 1rem; text-decoration: none; transition: background 0.2s, border-color 0.2s, transform 0.2s; }
+  .btn small { font-weight: 500; font-size: 0.9rem; opacity: 0.8; white-space: nowrap; }
+  .btn:active { transform: scale(0.985); }
+  .btn-lime { background: var(--lime); color: #131318; }
+  .btn-lime:hover { background: var(--lime-hover); }
+  .btn-teal { background: var(--teal); color: #0b0b0e; }
+  .btn-teal:hover { background: var(--teal-hover); }
+  .btn-line { border: 1.5px solid var(--teal); color: #ffffff; }
+  .btn-line:hover { background: rgba(88, 191, 192, 0.14); }
+  .btn:focus-visible, a:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+  .fine { margin: 0.9rem 0 0; font-size: 0.875rem; color: rgba(255, 255, 255, 0.6); }
+
+  section.block { padding: 4rem 0 0; }
+  section.block h2.title { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+  section.block > .wrap > p.lede { margin-top: 1rem; }
+  .xmas { display: grid; gap: 1.25rem; margin-top: 2rem; }
+  @media (min-width: 960px) { .xmas { grid-template-columns: 1fr 1fr; } }
+  .xmas .plan { padding-top: 1.8rem; }
+  .xmas .plan h3 { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.015em; }
+  .xmas .price b { font-size: 2.6rem; }
+
+  ol.steps { list-style: none; counter-reset: step; margin: 2rem 0 0; padding: 0; display: grid; gap: 1rem; }
+  @media (min-width: 768px) { ol.steps { grid-template-columns: repeat(3, 1fr); } }
+  ol.steps li { counter-increment: step; padding: 1.4rem 1.4rem 1.5rem; border-radius: 1.2rem; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.03); }
+  ol.steps li::before { content: counter(step); display: grid; place-items: center; width: 2rem; height: 2rem; margin-bottom: 0.9rem; border-radius: 50%; background: var(--teal); color: #0b0b0e; font-weight: 800; }
+  ol.steps h3 { font-size: 1.1rem; font-weight: 700; }
+  ol.steps p { margin: 0.4rem 0 0; font-size: 0.97rem; color: rgba(255, 255, 255, 0.72); }
+
+  .terms { margin-top: 2rem; padding: 1.5rem 1.6rem; border-radius: 1.2rem; border: 1px solid rgba(88, 191, 192, 0.25); background: var(--teal-surface); }
+  .terms p { margin: 0; font-size: 0.97rem; color: rgba(255, 255, 255, 0.8); }
+  .terms p + p { margin-top: 0.6rem; }
+  .terms a { color: #ffffff; font-weight: 600; text-underline-offset: 3px; }
+  .terms a:hover { color: var(--teal); }
+
+  footer { margin-top: 5rem; padding: 2.2rem 0 3rem; border-top: 1px solid var(--line); font-size: 0.9rem; color: rgba(255, 255, 255, 0.55); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 0.6rem 1.5rem; justify-content: space-between; }
+  footer a:hover { color: var(--teal); }
+</style>
+</head>
+<body>
+
+  <header class="top">
+    <div class="wrap">
+      <a href="https://bigsplash.church/" aria-label="Big Splash for churches, home"><img src="../assets/images/logo-bigsplash-white-lime.svg" alt="Big Splash" width="655" height="191"></a>
+      <a class="ask" href="https://api.leadconnectorhq.com/widget/booking/YcBm4L2c5a0DNBZyessz" target="_blank" rel="noopener">Questions? Book a call</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap hero">
+      <p class="eyebrow">Your plan</p>
+      <h1>Pick your plan and <span class="hl">get started</span></h1>
+      <p class="lede">Thanks for talking with us. Choose the plan we talked about and check out securely with Stripe. Right after you pay, you get your agreement to sign and a link to book your kickoff call.</p>
+    </div>
+
+    <div class="wrap plans">
+      <article class="plan" aria-labelledby="monthly-title">
+        <span class="badge">Founding rate for our first 5 churches</span>
+        <p class="label">Campaign and follow-up</p>
+        <h2 id="monthly-title">The monthly plan</h2>
+        <p class="price"><b>$1,997</b><span>/month for 12 months</span><s>$2,497</s></p>
+        <p class="sub">Or $2,197/month for 6 months (<s>$2,697</s> regular). Your price stays the same through each renewal.</p>
+        <ul class="checks">
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>A web page where new families plan their visit</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>Your Facebook and Instagram campaign, with $500 a month in ads included</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>Up to 4 new versions of your invite videos each month</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>Follow-up texts to every new family, from a number in your church's name</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>A monthly report that lists every new family by name</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>A short call each month to plan the month ahead</li>
+        </ul>
+        <div class="buy">
+          <a class="btn btn-lime" href="https://buy.stripe.com/8x29ATecz7Cf7TRebh18c08">Start the 12-month plan <small>$1,997/mo</small></a>
+          <a class="btn btn-line" href="https://buy.stripe.com/4gM3cv9Wjg8Lca7ffl18c09">Start the 6-month plan <small>$2,197/mo</small></a>
+        </div>
+      </article>
+
+      <article class="plan vip" aria-labelledby="vip-title">
+        <span class="badge">For churches in Texas</span>
+        <p class="label">Campaign, follow-up and filming</p>
+        <h2 id="vip-title">The VIP plan</h2>
+        <p class="price"><b>$3,997</b><span>/month for 12 months</span></p>
+        <p class="sub">Or $4,397/month for 6 months. We film on-site, so VIP is for churches in Texas.</p>
+        <ul class="checks">
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>Everything in the monthly plan</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>$1,000 a month in Facebook and Instagram ads, included</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>A six-hour filming day at your church every quarter</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>Your pastor inviting families, plus your people's stories</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>Filming days planned around your services, Easter and Christmas</li>
+        </ul>
+        <div class="buy">
+          <a class="btn btn-teal" href="https://buy.stripe.com/8x27sL9Wj3lZ7TR3wD18c0d">Start VIP for 12 months <small>$3,997/mo</small></a>
+          <a class="btn btn-line" href="https://buy.stripe.com/5kQ5kD7Ob5u70rp4AH18c0e">Start VIP for 6 months <small>$4,397/mo</small></a>
+        </div>
+      </article>
+    </div>
+
+    <div class="wrap">
+      <div class="terms">
+        <p><b>Your 90-day promise:</b> not happy in your first 90 days? Cancel by email with no cancellation fees. At the end of your term, the plan renews for the same length unless either side gives 30 days notice.</p>
+        <p>Pay by card or from your church's bank account. By subscribing, you agree to the <a href="https://bigsplash.church/founding/terms/">Founding Church and VIP Plan Terms</a>.</p>
+      </div>
+    </div>
+
+    <section class="block" aria-labelledby="xmas-title">
+      <div class="wrap">
+        <p class="eyebrow">Just for Christmas</p>
+        <h2 class="title" id="xmas-title">Christmas Eve campaigns</h2>
+        <p class="lede">One payment, no contract, and nothing renews. We make your invitation videos, show them to families within a 10-minute drive and text every family who plans a visit.</p>
+        <div class="xmas">
+          <article class="plan" aria-labelledby="xc-title">
+            <p class="label">You send the footage</p>
+            <h3 id="xc-title">Christmas Campaign</h3>
+            <p class="price"><b>$1,997</b><span>one time</span></p>
+            <p class="sub">Includes $500 of Facebook and Instagram ads.</p>
+            <div class="buy"><a class="btn btn-lime" href="https://buy.stripe.com/14AbJ1d8v6yba1Z7MT18c0a">Get the Christmas Campaign <small>$1,997</small></a></div>
+          </article>
+          <article class="plan vip" aria-labelledby="xv-title">
+            <span class="badge">For churches in Texas</span>
+            <p class="label">We film at your church</p>
+            <h3 id="xv-title">VIP Filmed Christmas</h3>
+            <p class="price"><b>$5,997</b><span>one time</span></p>
+            <p class="sub">Everything in the Christmas Campaign, a filming day at your church and $1,000 of ads.</p>
+            <div class="buy"><a class="btn btn-teal" href="https://buy.stripe.com/00w28rfgD5u77TR6IP18c0b">Get VIP Filmed Christmas <small>$5,997</small></a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="next-title">
+      <div class="wrap">
+        <p class="eyebrow">What happens next</p>
+        <h2 class="title" id="next-title">Three steps after you pay</h2>
+        <ol class="steps">
+          <li><h3>Check out with Stripe</h3><p>Pay by card or from your church's bank account. Stripe emails you a receipt.</p></li>
+          <li><h3>Sign your agreement</h3><p>For a monthly or VIP plan, look for an email from SignWell with your church's details already filled in. Sign it, and Chris signs right after you.</p></li>
+          <li><h3>Book your kickoff call</h3><p>The page after checkout links to our calendar. We plan your campaign and set your launch date together.</p></li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>&copy; 2026 Big Splash · Georgetown, TX</span>
+      <span><a href="mailto:chris@bigsplash.agency">chris@bigsplash.agency</a> · <a href="https://bigsplash.church/privacy/">Privacy</a></span>
+    </div>
+  </footer>
+
+</body>
+</html>
