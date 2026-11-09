@@ -103,6 +103,9 @@
   .hero h1 { margin-top: 22px; }
   .hero .lede { margin-top: 22px; }
   .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .promise { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; }
+  .promise li { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--ink); }
+  .promise svg { flex: none; width: 22px; height: 22px; padding: 4px; border-radius: 50%; background: var(--lime); color: var(--ink); }
   .hero-facts { display: flex; flex-wrap: wrap; gap: 14px 36px; margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--line); max-width: 34rem; }
   .hero-facts div { display: flex; align-items: baseline; gap: 10px; }
   .hero-facts b { font-size: 1.9rem; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1; }
@@ -327,6 +330,10 @@
           </button>
           <a href="#options" class="btn btn-second" data-cta="hero-options">See both options</a>
         </div>
+        <ul class="promise" aria-label="No commitment">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>No contract</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>One payment, nothing renews</li>
+        </ul>
         <div class="hero-facts">
           <div><b class="num">$1,997</b><span>with ad budget included</span></div>
           <div><b class="num" data-days>45</b><span data-days-label>days until Christmas Eve</span></div>
@@ -398,7 +405,7 @@
       <div class="sec-head center reveal">
         <p class="label">Pick your Christmas</p>
         <h2>Two ways to invite your town this Christmas.</h2>
-        <p class="lede">One price, paid once. Ad budget included. No contract.</p>
+        <p class="lede">One payment with the ad budget included. No contract, no monthly fees, and nothing renews after Christmas.</p>
       </div>
 
       <div class="options">
@@ -407,7 +414,7 @@
           <div class="opt-body">
             <h3>Christmas Campaign</h3>
             <p class="for">You send the footage. We do everything else.</p>
-            <div class="price"><b class="num">$1,997</b><span>one time</span></div>
+            <div class="price"><b class="num">$1,997</b><span>one time, no contract</span></div>
             <span class="budget">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
               Includes $500 ad budget
@@ -436,7 +443,7 @@
           <div class="opt-body">
             <h3>VIP Filmed Christmas</h3>
             <p class="for">We film at your church, then run it all.</p>
-            <div class="price"><b class="num">$5,997</b><span>one time</span></div>
+            <div class="price"><b class="num">$5,997</b><span>one time, no contract</span></div>
             <span class="budget">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
               Includes $1,000 ad budget
@@ -458,7 +465,7 @@
       </div>
 
       <div class="after reveal">
-        <p><b>After Christmas, keep the invitations going.</b> Churches that start with Christmas can move to a monthly plan in January and keep inviting families through Easter.</p>
+        <p><b>After Christmas, it's your call.</b> Your campaign ends after Christmas Eve and nothing renews. If you want invitations running toward Easter, you can choose a monthly plan in January.</p>
         <a href="https://bigsplash.church/#levels" class="btn btn-second btn-sm" data-cta="monthly-plan">See the monthly plan</a>
       </div>
     </div>
@@ -543,6 +550,10 @@
         <h2>Good questions.</h2>
       </div>
       <div class="faq">
+        <details class="reveal" open>
+          <summary>Is there a contract or commitment?<span class="pm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <p>No. You pay once for this Christmas, and that's it. No contract, no monthly fees, and nothing renews. Your campaign ends after Christmas Eve, and you keep the videos.</p>
+        </details>
         <details class="reveal">
           <summary>Do we need our own ad account?<span class="pm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span></summary>
           <p>No. We run your campaign from Big Splash's ad account, and the invitations show your church's name and page. You give us partner access to your Facebook and Instagram pages, and the ad budget is already in the price.</p>
@@ -586,6 +597,10 @@
           </button>
           <a href="#options" class="btn btn-second" data-cta="closing-options">Compare options</a>
         </div>
+        <ul class="promise" aria-label="No commitment">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>No contract</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>One payment, nothing renews</li>
+        </ul>
       </div>
     </div>
   </section>
