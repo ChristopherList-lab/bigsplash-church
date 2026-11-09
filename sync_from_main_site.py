@@ -5,8 +5,9 @@ Until bigsplash.church is live, the church pages are edited in
 ~/Desktop/BigsplashWeb_VIdeoONLY/church and this script copies them here with the
 paths adjusted for a site that lives at the domain root: the church page, the old
 thanks page, the founding pages (church/founding/: checkout, terms, welcome) and
-the footage upload page (church/footage/), and the
-privacy and terms pages (church/privacy/, church/terms/) that the intake form links to.
+the footage upload page (church/footage/), the
+privacy and terms pages (church/privacy/, church/terms/) that the intake form links to,
+and the Christmas campaign page (church/christmas/).
 
     python3 sync_from_main_site.py
 
@@ -57,7 +58,7 @@ t = main_site_links(t.replace('../../assets/', '../assets/'))
 # and the privacy and terms pages the GHL intake form's texting consent links to ----
 # church/founding/ in the main repo becomes founding/ here, one folder closer to the root; church/footage/ becomes footage/.
 FOUNDING = ('founding/index.html', 'founding/terms/index.html', 'founding/welcome/index.html', 'footage/index.html',
-            'privacy/index.html', 'terms/index.html')
+            'privacy/index.html', 'terms/index.html', 'christmas/index.html')
 founding = {}
 for name in FOUNDING:
     src = SRC / 'church' / name
@@ -96,6 +97,13 @@ for r in sorted(refs):
     dst = OUT / r
     dst.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(src, dst)
+# The Christmas page names most of its photos only in srcset, its share image and the ?hero= / ?closing=
+# review swaps, none of which the src scan above sees, so copy that folder whole.
+XMAS = Path('assets/images/church/christmas')
+(OUT / XMAS).mkdir(parents=True, exist_ok=True)
+for f in sorted((SRC / XMAS).iterdir()):
+    if f.is_file() and not f.name.startswith('.'):
+        shutil.copy2(f, OUT / XMAS / f.name)
 
 # ---- checks ----
 problems = []
