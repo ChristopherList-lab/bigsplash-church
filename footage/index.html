@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Send Your Videos | Big Splash</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#f8f5ee">
+<!-- Footage uploads for founding churches. The onboarding emails link here as ?c=<GoHighLevel contact id>.
+     Files go from the browser straight to Wasabi through the bigsplash-front-door worker (src/footage.js there):
+     S3 multipart, presigned part URLs, several parts at once, retries on each part, and a resume after a reload.
+     Localhost only: ?api=http://localhost:8787 points the page at a local worker. -->
+<link rel="icon" type="image/png" href="../assets/images/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+  /* Light church palette (church/BRAND.md). */
+  :root { --paper: #f8f5ee; --band: #f1ece1; --line: #ddd8ce; --ink: #131318; --copy: #3f3f47; --muted: #5f5f68; --olive: #56610a; --lime: #eff88b; --tint: #f3f8bf; --tint-line: #dde69a; --field: #8c877d; --warn: #fff4e5; --warn-line: #f0cf9c; --red: #a3261b; }
+  * { box-sizing: border-box; }
+  html, body { background: var(--paper); color: var(--copy); font-family: 'Inter', sans-serif; margin: 0; -webkit-font-smoothing: antialiased; }
+  body { font-size: 17px; line-height: 1.65; min-height: 100vh; display: flex; flex-direction: column; }
+  [hidden] { display: none !important; }
+  a { color: var(--ink); }
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .wrap { max-width: 44rem; width: 100%; margin: 0 auto; padding: 0 16px; }
+  nav { border-bottom: 1px solid var(--line); }
+  nav .wrap { padding-top: 16px; padding-bottom: 16px; }
+  nav img { height: 32px; width: auto; display: block; }
+  main { flex: 1; padding: 40px 0 72px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; background: var(--lime); color: var(--ink); font-size: 0.875rem; font-weight: 600; padding: 0.4rem 0.9rem; border-radius: 9999px; margin: 0; }
+  h1 { font-weight: 800; letter-spacing: -0.028em; line-height: 1.08; color: var(--ink); font-size: clamp(2rem, 7vw, 3rem); margin: 18px 0 0; text-wrap: balance; }
+  h2 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; color: var(--ink); font-size: 1.35rem; margin: 0; }
+  .lede { margin: 18px 0 0; font-size: 1.12rem; }
+  .status { display: flex; gap: 12px; align-items: flex-start; margin-top: 28px; padding: 16px 18px; border-radius: 14px; border: 1px solid var(--line); background: #fff; color: var(--ink); }
+  .status.good { background: var(--tint); border-color: var(--tint-line); }
+  .status.warn { background: var(--warn); border-color: var(--warn-line); }
+  .status .material-symbols-outlined { flex-shrink: 0; margin-top: 1px; }
+  .status p { margin: 0; overflow-wrap: anywhere; }
+  .status b { display: block; }
+  .card { margin-top: 20px; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 20px 18px; display: grid; gap: 16px; }
+  .card p { margin: 0; }
+  label { display: grid; gap: 6px; color: var(--ink); font-weight: 600; font-size: 0.97rem; }
+  .opt { color: var(--muted); font-weight: 400; }
+  input, textarea { font: inherit; font-size: 17px; color: var(--ink); background: #fff; border: 1.5px solid var(--field); border-radius: 10px; padding: 0.7rem 0.85rem; width: 100%; }
+  textarea { resize: vertical; min-height: 5.5rem; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--ink); color: #fff; font: inherit; font-weight: 600; font-size: 1.05rem; padding: 0.95rem 1.6rem; border-radius: 9999px; border: 0; cursor: pointer; text-decoration: none; }
+  .btn .material-symbols-outlined { color: var(--lime); }
+  .btn:hover { background: #2c2c35; }
+  .btn .burst { width: 22px; height: 22px; display: block; }
+  .btn:disabled { opacity: 0.55; cursor: default; }
+  .ghost { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: transparent; border: 1.5px solid var(--ink); color: var(--ink); font: inherit; font-weight: 600; padding: 0.8rem 1.3rem; border-radius: 9999px; cursor: pointer; text-decoration: none; }
+  .link { background: none; border: 0; padding: 0; font: inherit; font-size: 0.93rem; font-weight: 600; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .error { margin: 0; color: var(--red); font-weight: 600; font-size: 0.97rem; }
+  .drop { margin-top: 20px; border: 2px dashed var(--field); border-radius: 16px; background: #fff; padding: 32px 18px; text-align: center; transition: background 0.15s, border-color 0.15s; }
+  .drop.over { background: var(--tint); border-color: var(--ink); }
+  .drop .material-symbols-outlined.big { font-size: 44px; color: var(--olive); }
+  .drop p { margin: 6px 0 0; }
+  .drop .drop-title { color: var(--ink); font-weight: 700; font-size: 1.12rem; }
+  .drop .btn { margin-top: 16px; }
+  .drop .small { color: var(--muted); font-size: 0.93rem; }
+  .files { list-style: none; margin: 20px 0 0; padding: 0; background: #fff; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .files:empty { display: none; }
+  .file { padding: 14px 18px; border-top: 1px solid var(--line); }
+  .file:first-child { border-top: 0; }
+  .file-top { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; }
+  .file-name { color: var(--ink); font-weight: 600; overflow-wrap: anywhere; min-width: 0; }
+  .file-size { color: var(--muted); font-size: 0.93rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .bar { margin-top: 8px; height: 6px; border-radius: 9999px; background: var(--band); overflow: hidden; }
+  .bar span { display: block; height: 100%; width: 0; background: var(--ink); border-radius: 9999px; transition: width 0.3s linear; }
+  .file.done .bar span { background: var(--olive); }
+  .file-meta { margin-top: 6px; display: flex; gap: 14px; align-items: center; justify-content: space-between; font-size: 0.93rem; }
+  .file-status { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .file.done .file-status { color: var(--olive); font-weight: 600; }
+  .file.failed .file-status { color: var(--red); font-weight: 600; }
+  .file-actions { display: flex; gap: 14px; flex-shrink: 0; }
+  .totals { margin: 14px 0 0; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .send-row { margin-top: 20px; display: grid; gap: 12px; }
+  .send-row .btn { width: 100%; }
+  .tip { display: flex; gap: 10px; margin: 20px 0 0; color: var(--muted); font-size: 0.95rem; }
+  .tip .material-symbols-outlined { font-size: 20px; margin-top: 2px; color: var(--olive); }
+  .sign { margin: 18px 0 0; color: var(--ink); font-weight: 600; }
+  .after { margin-top: 20px; }
+  .after p { margin: 0 0 12px; }
+  footer { background: var(--ink); color: #a8a29e; font-size: 15px; padding: 32px 0; text-align: center; }
+  footer a { color: #e7e5e4; }
+  footer a:focus-visible { outline-color: var(--lime); }
+  footer img { height: 28px; width: auto; margin: 0 auto 12px; display: block; }
+  footer p { margin: 4px 0; }
+  @media (pointer: coarse) { .drag-only { display: none; } }
+  @media (min-width: 560px) { .card { padding: 24px; } .send-row .btn { width: auto; justify-self: start; } }
+  @media (min-width: 768px) { main { padding: 64px 0 96px; } }
+  @media (prefers-reduced-motion: reduce) { .bar span, .drop { transition: none; } }
+</style>
+</head>
+<body>
+  <nav><div class="wrap"><a href="https://bigsplash.church/" aria-label="Big Splash for churches, home"><img src="../assets/images/logo-bigsplash-dark.svg" alt="Big Splash"></a></div></nav>
+
+  <main>
+    <div class="wrap">
+      <p class="pill"><span class="material-symbols-outlined" aria-hidden="true" style="font-size:18px">movie</span>Founding church</p>
+      <h1>Send us your videos</h1>
+      <p class="lede">Phone videos and camera files both work, at any size. We cut your invite videos from what you send.</p>
+
+      <div id="status" class="status" role="status" hidden>
+        <span id="status-icon" class="material-symbols-outlined" aria-hidden="true">hourglass_top</span>
+        <p><b id="status-title"></b><span id="status-text"></span></p>
+      </div>
+
+      <!-- No link in the URL (or a link that didn't match): find the church by the email we write to. -->
+      <form id="find" class="card" hidden novalidate>
+        <h2>Find your church</h2>
+        <p>Use the email address that gets our onboarding emails.</p>
+        <label>Church name <input id="f-church" name="church" autocomplete="organization" maxlength="120" required></label>
+        <label>Your email <input id="f-email" name="email" type="email" autocomplete="email" maxlength="200" required></label>
+        <p id="find-error" class="error" role="alert" hidden></p>
+        <div><button id="find-btn" class="btn" type="submit">Continue <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></button></div>
+      </form>
+
+      <section id="upload" hidden>
+        <div class="status good">
+          <span class="material-symbols-outlined" aria-hidden="true">church</span>
+          <p>Uploading for <b id="church-name"></b></p>
+        </div>
+        <div class="card">
+          <label>Your name <input id="u-name" autocomplete="name" maxlength="120" required></label>
+          <label><span>Note for our team <span class="opt">(optional)</span></span><textarea id="u-note" rows="3" maxlength="2000" placeholder="Easter Sunday and two baptisms"></textarea></label>
+        </div>
+
+        <div id="drop" class="drop">
+          <span class="material-symbols-outlined big" aria-hidden="true">cloud_upload</span>
+          <p class="drop-title drag-only">Drag your videos here</p>
+          <p class="small drag-only">or</p>
+          <button id="choose" class="btn" type="button">Choose videos <img class="burst" src="../assets/images/starburst-lime.svg" alt="" aria-hidden="true" width="22" height="22"></button>
+          <p class="small">Add as many as you like<span class="drag-only">, or drop a whole folder</span>.</p>
+          <input id="pick" type="file" multiple hidden>
+        </div>
+
+        <ul id="files" class="files" aria-label="Your files"></ul>
+        <p id="totals" class="totals" aria-live="polite" hidden></p>
+        <p id="u-error" class="error" role="alert" hidden></p>
+        <div class="send-row">
+          <button id="send" class="btn" type="button" hidden>Upload</button>
+          <button id="notify" class="btn" type="button" hidden>Try again</button>
+        </div>
+        <p class="tip"><span class="material-symbols-outlined" aria-hidden="true">info</span><span>Keep this page open until every file says Done. On a phone, stay on Wi-Fi and keep it plugged in.</span></p>
+      </section>
+
+      <section id="done" hidden>
+        <div class="status good">
+          <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+          <p><b>We got your videos.</b><span id="done-text"></span></p>
+        </div>
+        <div class="after">
+          <p>Watch your inbox for a note from our team. Questions anytime: <a href="mailto:chris@bigsplash.agency">chris@bigsplash.agency</a>.</p>
+          <p class="sign">The Big Splash Team</p>
+          <button id="more" class="ghost" type="button"><span class="material-symbols-outlined" aria-hidden="true">add</span>Send more files</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <a href="https://bigsplash.church/" aria-label="Big Splash for churches, home"><img src="../assets/images/logo-bigsplash.svg" alt="Big Splash"></a>
+      <p>The marketing agency for the local church</p>
+      <p>&copy; 2026 Big Splash · Georgetown, TX · <a href="mailto:chris@bigsplash.agency">chris@bigsplash.agency</a> · <a href="https://bigsplash.video/privacy/">Privacy</a></p>
+    </div>
+  </footer>
+
+  <script>
+  (() => {
+    const $ = (id) => document.getElementById(id);
+    const params = new URLSearchParams(location.search);
+    const local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || /\.localhost$/.test(location.hostname);
+    const apiParam = params.get('api') || '';
+    const API = local && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(apiParam) ? apiParam : 'https://bigsplash-front-door.chris-bc4.workers.dev';
+    const contactId = (params.get('c') || '').trim();
+
+    const PARALLEL = 4;         // parts in flight at once, across every file
+    const FILES_AT_ONCE = 2;
+    const TRIES = 8;            // per part, with a growing wait between tries
+    const URL_BATCH = 20;
+    const URL_FRESH_MS = 90 * 60 * 1000;  // the worker signs part URLs for 2 hours
+    const STALL_MS = 90 * 1000;
+    const ACTIVE = ['starting', 'uploading', 'finishing'];
+    const NO_LINK = "Reply to your onboarding email and we'll send your link.";
+    const OFFLINE = "We couldn't reach our server. Check your connection and try again.";
+
+    const state = { token: '', who: null, church: '', folder: '', files: [], running: false, keys: new Set(), sent: new Set(), seq: 0 };
+
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    const backoff = (n) => Math.min(30000, 1000 * 2 ** (n - 1)) * (0.75 + Math.random() / 2);
+    const online = () => navigator.onLine ? Promise.resolve() : new Promise((r) => addEventListener('online', r, { once: true }));
+    function size(n) {
+      if (n >= 1e9) return `${(n / 1e9).toFixed(1)} GB`;
+      if (n >= 1e6) return `${Math.round(n / 1e6)} MB`;
+      return `${Math.max(1, Math.round(n / 1e3))} KB`;
+    }
+    const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+    // An error whose words a pastor can read as they are.
+    const oops = (msg, extra) => Object.assign(new Error(msg), { friendly: true }, extra);
+
+    function say(kind, icon, title, text) {
+      const box = $('status');
+      box.hidden = false;
+      box.className = `status ${kind}`;
+      $('status-icon').textContent = icon;
+      $('status-title').textContent = title;
+      $('status-text').textContent = text ? ` ${text}` : '';
+    }
+    function showError(id, text) { const el = $(id); el.textContent = text || ''; el.hidden = !text; }
+
+    // POST to the worker. Retries a dropped connection or a server error with a growing wait. An expired upload
+    // token is renewed once from the same link or email.
+    async function api(path, body, { retries = 3 } = {}) {
+      let renewed = false;
+      for (let attempt = 1; ; attempt++) {
+        let res = null, data = {};
+        try {
+          res = await fetch(API + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: state.token, ...body }) });
+          data = await res.json().catch(() => ({}));
+        } catch (e) {}
+        if (res && res.status === 401 && data.expired && !renewed && state.who) {
+          renewed = true;
+          if (await renew()) { attempt--; continue; }
+        }
+        if (res && (res.ok || (res.status >= 400 && res.status < 500 && res.status !== 429))) return { status: res.status, ...data };
+        if (attempt > retries) return { status: res ? res.status : 0, ok: false, closed: data.closed, error: data.error || OFFLINE };
+        await online();
+        await sleep(backoff(attempt));
+      }
+    }
+    async function renew() {
+      const r = await api('/footage/church', state.who, { retries: 3 });
+      if (r.ok) state.token = r.token;
+      return Boolean(r.ok);
+    }
+
+    // ---------- Finding the church ----------
+
+    async function lookup(who) {
+      const r = await api('/footage/church', who, { retries: 2 });
+      if (r.ok) {
+        Object.assign(state, { who, token: r.token, church: r.church, folder: r.folder });
+        $('status').hidden = true;
+        $('find').hidden = true;
+        $('church-name').textContent = r.church;
+        if (!$('u-name').value) $('u-name').value = r.name || '';
+        $('upload').hidden = false;
+        return true;
+      }
+      if (r.closed) {
+        say('warn', 'schedule', "Uploads aren't open yet.", r.error);
+        $('find').hidden = true;
+        return false;
+      }
+      if (r.reason === 'no_link') {
+        if (who.c) {
+          say('warn', 'link_off', "We couldn't find your upload link.", `${NO_LINK} You can also find your church by email below.`);
+          $('find').hidden = false;
+        } else {
+          showError('find-error', `We couldn't match that email to a founding church. ${NO_LINK}`);
+        }
+        return false;
+      }
+      if (who.c) { say('warn', 'wifi_off', "We couldn't check your link.", r.error || OFFLINE); $('find').hidden = false; }
+      else showError('find-error', r.error || OFFLINE);
+      return false;
+    }
+
+    $('find').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const church = $('f-church').value.trim();
+      const email = $('f-email').value.trim();
+      if (!church || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('find-error', 'Type your church name and the email you use with us.'); return; }
+      showError('find-error', '');
+      $('find-btn').disabled = true;
+      await lookup({ email, church });
+      $('find-btn').disabled = false;
+    });
+
+    // ---------- Adding files ----------
+
+    const fingerprint = (f) => `${f.name}|${f.size}|${f.lastModified}`;
+    function addFiles(list) {
+      const have = new Set(state.files.filter((f) => f.status !== 'removed').map((f) => fingerprint(f.file)));
+      for (const file of list) {
+        if (!file || !file.size || /^\./.test(file.name) || /^(thumbs\.db|desktop\.ini)$/i.test(file.name) || have.has(fingerprint(file))) continue;
+        have.add(fingerprint(file));
+        const f = { id: ++state.seq, file, name: file.name, size: file.size, status: state.running ? 'waiting' : 'ready', etags: {}, loaded: {}, urls: {}, doneBytes: 0, xhrs: new Set() };
+        state.files.push(f);
+        draw(f);
+      }
+      showError('u-error', '');
+      if (state.running) pump();
+      refresh();
+    }
+
+    // A dropped folder (a camera card, say) brings every file inside it. Entries must be read during the drop event.
+    async function droppedFiles(dt) {
+      const entries = [...(dt.items || [])].map((i) => (i.kind === 'file' && i.webkitGetAsEntry ? i.webkitGetAsEntry() : null)).filter(Boolean);
+      if (!entries.length) return [...(dt.files || [])];
+      const out = [];
+      const walk = async (entry, depth) => {
+        if (entry.isFile) out.push(await new Promise((res) => entry.file(res, () => res(null))));
+        else if (entry.isDirectory && depth < 8) {
+          const reader = entry.createReader();
+          for (;;) {
+            const batch = await new Promise((res) => reader.readEntries(res, () => res([])));
+            if (!batch.length) break;
+            for (const e of batch) await walk(e, depth + 1);
+          }
+        }
+      };
+      for (const e of entries) await walk(e, 0);
+      return out.filter(Boolean);
+    }
+
+    $('choose').addEventListener('click', () => $('pick').click());
+    $('pick').addEventListener('change', () => { addFiles([...$('pick').files]); $('pick').value = ''; });
+    // Files dropped anywhere on the page count, so a near miss never opens a video in the tab.
+    const zone = $('drop');
+    let depth = 0;
+    const canDrop = () => !$('upload').hidden;
+    const hasFiles = (e) => [...(e.dataTransfer?.types || [])].includes('Files');
+    addEventListener('dragenter', (e) => { if (!hasFiles(e)) return; e.preventDefault(); depth++; if (canDrop()) zone.classList.add('over'); });
+    addEventListener('dragleave', (e) => { if (!hasFiles(e)) return; depth = Math.max(0, depth - 1); if (!depth) zone.classList.remove('over'); });
+    addEventListener('dragover', (e) => { if (!hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = canDrop() ? 'copy' : 'none'; });
+    addEventListener('drop', async (e) => {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      depth = 0;
+      zone.classList.remove('over');
+      if (canDrop()) addFiles(await droppedFiles(e.dataTransfer));
+    });
+
+    // ---------- The file list ----------
+
+    function draw(f) {
+      const li = document.createElement('li');
+      li.className = 'file';
+      li.innerHTML = '<div class="file-top"><span class="file-name"></span><span class="file-size"></span></div>' +
+        '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>' +
+        '<div class="file-meta"><span class="file-status"></span><span class="file-actions">' +
+        '<button type="button" class="link" data-act="retry" hidden>Try again</button><button type="button" class="link" data-act="remove">Remove</button></span></div>';
+      li.querySelector('.file-name').textContent = f.name;
+      li.querySelector('.file-size').textContent = size(f.size);
+      li.querySelector('.bar').setAttribute('aria-label', f.name);
+      li.querySelector('[data-act="remove"]').addEventListener('click', () => remove(f));
+      li.querySelector('[data-act="retry"]').addEventListener('click', () => retry(f));
+      f.el = li;
+      $('files').appendChild(li);
+      paint(f);
+    }
+
+    const sentBytes = (f) => f.status === 'done' ? f.size : Math.min(f.size, f.doneBytes + Object.values(f.loaded).reduce((a, b) => a + b, 0));
+    function paint(f) {
+      if (!f.el) return;
+      const pct = f.size ? Math.floor((sentBytes(f) / f.size) * 100) : 0;
+      const shown = f.status === 'done' ? 100 : Math.min(99, pct);
+      f.el.className = `file ${f.status}`;
+      f.el.querySelector('.bar span').style.width = `${shown}%`;
+      f.el.querySelector('.bar').setAttribute('aria-valuenow', String(shown));
+      const words = {
+        ready: 'Ready', waiting: 'Waiting', starting: 'Starting',
+        uploading: f.retrying ? `Connection dropped, trying again · ${shown}%` : `${shown}%`,
+        finishing: 'Finishing', done: 'Done', failed: f.error || "This file didn't make it.",
+      };
+      f.el.querySelector('.file-status').textContent = words[f.status] || '';
+      f.el.querySelector('[data-act="retry"]').hidden = f.status !== 'failed';
+      f.el.querySelector('[data-act="remove"]').hidden = f.status === 'done';
+    }
+
+    let frame = 0;
+    function tick() {
+      if (frame) return;
+      frame = requestAnimationFrame(() => { frame = 0; state.files.forEach(paint); totals(); });
+    }
+
+    // "3.4 GB of 12.4 GB sent · about 18 minutes left", from the last 20 seconds of progress.
+    const samples = [];
+    function totals() {
+      const live = state.files.filter((f) => f.status !== 'removed' && !state.sent.has(f.key));
+      const el = $('totals');
+      if (!live.length) { el.hidden = true; return; }
+      const all = live.reduce((a, f) => a + f.size, 0);
+      el.hidden = false;
+      if (!state.running) { el.textContent = `${plural(live.length, 'file', 'files')}, ${size(all)}`; return; }
+      const sent = live.reduce((a, f) => a + sentBytes(f), 0);
+      const now = Date.now();
+      samples.push([now, sent]);
+      while (samples.length > 2 && now - samples[0][0] > 20000) samples.shift();
+      const [t0, b0] = samples[0];
+      const rate = now - t0 > 3000 ? (sent - b0) / ((now - t0) / 1000) : 0;
+      let left = '';
+      if (!navigator.onLine) left = ' · waiting for a connection';
+      else if (rate > 0) {
+        const mins = Math.ceil((all - sent) / rate / 60);
+        left = mins > 90 ? ` · about ${Math.round(mins / 60)} hours left` : mins > 1 ? ` · about ${mins} minutes left` : ' · about a minute left';
+      }
+      el.textContent = `${size(sent)} of ${size(all)} sent${left}`;
+    }
+
+    function refresh() {
+      const ready = state.files.filter((f) => f.status === 'ready');
+      const send = $('send');
+      send.hidden = state.running || !ready.length;
+      if (ready.length) send.innerHTML = `Upload ${plural(ready.length, 'file', 'files')} (${size(ready.reduce((a, f) => a + f.size, 0))}) <span class="material-symbols-outlined" aria-hidden="true">arrow_upward</span>`;
+      totals();
+    }
+
+    function remove(f) {
+      const was = f.status;
+      f.status = 'removed';
+      f.halt = true;
+      f.xhrs.forEach((x) => x.abort());
+      f.el?.remove();
+      forget(f);
+      if (f.uploadId && was !== 'done') api('/footage/abort', { key: f.key, uploadId: f.uploadId }, { retries: 1 });
+      if (f.key) state.keys.delete(f.key);
+      pump();
+      refresh();
+    }
+
+    function retry(f) {
+      f.status = 'waiting';
+      f.halt = false;
+      f.error = '';
+      paint(f);
+      state.running = true;
+      showError('u-error', '');
+      keepAwake(true);
+      pump();
+      refresh();
+    }
+
+    // ---------- Uploading ----------
+
+    $('send').addEventListener('click', () => {
+      if (!$('u-name').value.trim()) { showError('u-error', 'Add your name so we know who sent these.'); $('u-name').focus(); return; }
+      showError('u-error', '');
+      state.files.filter((f) => f.status === 'ready').forEach((f) => { f.status = 'waiting'; paint(f); });
+      state.running = true;
+      keepAwake(true);
+      pump();
+      refresh();
+    });
+
+    function pump() {
+      let free = FILES_AT_ONCE - state.files.filter((f) => ACTIVE.includes(f.status)).length;
+      for (const f of state.files) {
+        if (free <= 0) break;
+        if (f.status === 'waiting') { free--; run(f); }
+      }
+      finished();
+    }
+
+    // Part slots shared by every file.
+    let inFlight = 0;
+    const queue = [];
+    const acquire = () => (inFlight < PARALLEL ? (inFlight++, Promise.resolve()) : new Promise((r) => queue.push(r)));
+    const release = () => { const next = queue.shift(); if (next) next(); else inFlight--; };
+
+    async function run(f) {
+      try {
+        f.status = 'starting';
+        paint(f);
+        await begin(f);
+        if (f.halt) {
+          // Removed while it was starting: cancel the upload Wasabi opened for it.
+          if (f.status === 'removed' && f.uploadId) { forget(f); api('/footage/abort', { key: f.key, uploadId: f.uploadId }, { retries: 1 }); }
+          return;
+        }
+        f.status = 'uploading';
+        paint(f);
+        const todo = [];
+        for (let n = 1; n <= f.total; n++) if (!f.etags[n]) todo.push(n);
+        await Promise.all(todo.map((n) => part(f, n)));
+        if (f.halt) return;
+        f.status = 'finishing';
+        paint(f);
+        const parts = Array.from({ length: f.total }, (_, i) => ({ n: i + 1, etag: f.etags[i + 1] }));
+        const r = await api('/footage/complete', { key: f.key, uploadId: f.uploadId, parts }, { retries: 6 });
+        if (!r.ok) throw oops(r.error || "This file didn't finish.");
+        Object.assign(f, { receipt: r.receipt, finalSize: r.size, status: 'done' });
+        forget(f);
+        paint(f);
+      } catch (err) {
+        if (f.status === 'removed') return;
+        f.halt = true;
+        f.xhrs.forEach((x) => x.abort());
+        Object.assign(f, { status: 'failed', retrying: false, error: err && err.friendly ? err.message : "This file didn't make it. Check your connection and tap Try again." });
+        paint(f);
+      } finally {
+        pump();
+        refresh();
+      }
+    }
+
+    // Starts the file in Wasabi, or picks up an upload this browser left unfinished (closed tab, dead battery).
+    async function begin(f) {
+      if (f.uploadId) return;
+      const saved = recall(f);
+      if (saved) {
+        const r = await api('/footage/resume', { key: saved.key, uploadId: saved.uploadId });
+        if (r.ok) {
+          Object.assign(f, { key: saved.key, uploadId: saved.uploadId, partSize: saved.partSize, total: Math.max(1, Math.ceil(f.size / saved.partSize)) });
+          for (const p of r.parts || []) {
+            if (p.n >= 1 && p.n <= f.total && p.size === partLength(f, p.n)) { f.etags[p.n] = p.etag; f.doneBytes += p.size; }
+          }
+          state.keys.add(f.key);
+          return;
+        }
+        forget(f);
+      }
+      const r = await api('/footage/start', { name: f.name, size: f.size, type: f.file.type || '', avoid: [...state.keys] }, { retries: 4 });
+      if (!r.ok) throw oops(r.error || "We couldn't start this file.");
+      Object.assign(f, { key: r.key, uploadId: r.uploadId, partSize: r.partSize, total: Math.max(1, Math.ceil(f.size / r.partSize)) });
+      state.keys.add(f.key);
+      remember(f);
+    }
+
+    const partLength = (f, n) => Math.min(f.size, n * f.partSize) - (n - 1) * f.partSize;
+
+    async function part(f, n) {
+      for (let attempt = 1; ; attempt++) {
+        if (f.halt) throw new Error('stopped');
+        await online();
+        await acquire();
+        let err = null;
+        try {
+          if (f.halt) throw new Error('stopped');
+          const url = await urlFor(f, n);
+          const etag = await put(f, n, url);
+          delete f.loaded[n];
+          f.etags[n] = etag;
+          f.doneBytes += partLength(f, n);
+          f.retrying = false;
+          remember(f);
+          tick();
+          return;
+        } catch (e) {
+          err = e;
+        } finally {
+          release();
+        }
+        delete f.loaded[n];
+        if (err.fatal || f.halt || attempt >= TRIES) throw err;
+        if (err.status === 403 || err.status === 400) delete f.urls[n];
+        f.retrying = true;
+        tick();
+        await sleep(backoff(attempt));
+      }
+    }
+
+    async function urlFor(f, n) {
+      const fresh = (u) => u && Date.now() - u.at < URL_FRESH_MS;
+      while (!fresh(f.urls[n])) {
+        if (!f.urlReq) {
+          const want = [];
+          for (let k = n; k <= f.total && want.length < URL_BATCH; k++) if (!f.etags[k] && !fresh(f.urls[k])) want.push(k);
+          f.urlReq = api('/footage/parts', { key: f.key, uploadId: f.uploadId, parts: want }, { retries: 4 }).then((r) => {
+            if (!r.ok) throw oops(r.error || OFFLINE, { fatal: r.status >= 400 && r.status < 500 });
+            const at = Date.now();
+            for (const [k, u] of Object.entries(r.urls)) f.urls[k] = { u, at };
+          }).finally(() => { f.urlReq = null; });
+        }
+        await f.urlReq;
+      }
+      return f.urls[n].u;
+    }
+
+    // One part, PUT straight to Wasabi. XHR, because fetch can't report upload progress. A part that goes quiet
+    // for 90 seconds is dropped and tried again.
+    function put(f, n, url) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        const start = (n - 1) * f.partSize;
+        const len = partLength(f, n);
+        let last = Date.now();
+        const watch = setInterval(() => { if (Date.now() - last > STALL_MS) xhr.abort(); }, 5000);
+        const end = () => { clearInterval(watch); f.xhrs.delete(xhr); };
+        f.xhrs.add(xhr);
+        xhr.open('PUT', url);
+        xhr.upload.onprogress = (e) => { last = Date.now(); f.loaded[n] = Math.min(len, e.loaded); tick(); };
+        xhr.onload = () => {
+          end();
+          if (xhr.status >= 200 && xhr.status < 300) {
+            const etag = xhr.getResponseHeader('ETag');
+            // No ETag means the bucket's CORS rules hide it, and no retry can fix that.
+            if (etag) resolve(etag);
+            else reject(oops('Our storage blocked this upload. Email chris@bigsplash.agency and we will fix it.', { fatal: true }));
+          } else reject(Object.assign(new Error(`Storage answered ${xhr.status}`), { status: xhr.status }));
+        };
+        xhr.onerror = () => { end(); reject(new Error('The connection dropped.')); };
+        xhr.onabort = () => { end(); reject(new Error(f.halt ? 'stopped' : 'The connection stalled.')); };
+        xhr.send(f.file.slice(start, start + len));
+      });
+    }
+
+    // ---------- Finishing ----------
+
+    const busy = () => state.files.some((f) => f.status === 'waiting' || ACTIVE.includes(f.status));
+
+    function finished() {
+      if (!state.running || busy()) return;
+      const failed = state.files.filter((f) => f.status === 'failed');
+      if (failed.length) {
+        keepAwake(false);
+        showError('u-error', `${plural(failed.length, "file didn't", "files didn't")} make it. Tap Try again, or remove ${failed.length === 1 ? 'it' : 'them'} to finish with the rest.`);
+        return;
+      }
+      const batch = state.files.filter((f) => f.status === 'done' && !state.sent.has(f.key));
+      state.running = false;
+      keepAwake(false);
+      if (batch.length) notify(batch);
+      refresh();
+    }
+
+    // Tells the worker every file is in. It tags the church in GoHighLevel, and the "we got your videos" email follows.
+    async function notify(batch) {
+      $('notify').hidden = true;
+      showError('u-error', '');
+      $('totals').hidden = false;
+      $('totals').textContent = 'Letting our team know…';
+      const r = await api('/footage/done', {
+        name: $('u-name').value.trim(), note: $('u-note').value.trim(),
+        files: batch.map((f) => ({ key: f.key, size: f.finalSize, receipt: f.receipt })),
+      }, { retries: 6 });
+      if (!r.ok) {
+        $('totals').hidden = true;
+        showError('u-error', `Your files are uploaded, but we couldn't tell our team. ${r.error || OFFLINE}`);
+        const btn = $('notify');
+        btn.hidden = false;
+        btn.onclick = () => notify(batch);
+        return;
+      }
+      batch.forEach((f) => state.sent.add(f.key));
+      const total = batch.reduce((a, f) => a + f.finalSize, 0);
+      $('done-text').textContent = ` ${batch.length === 1 ? 'Your file' : `All ${batch.length} files`} (${size(total)}) made it to ${state.church}'s folder.`;
+      $('upload').hidden = true;
+      $('done').hidden = false;
+      $('done').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    $('more').addEventListener('click', () => {
+      state.files.filter((f) => f.status === 'done').forEach((f) => { f.el?.remove(); f.status = 'removed'; });
+      $('u-note').value = '';
+      $('done').hidden = true;
+      $('upload').hidden = false;
+      refresh();
+    });
+
+    // ---------- Resume, screen and leaving ----------
+
+    const memoryKey = (f) => `bs_footage:${state.folder}:${fingerprint(f.file)}`;
+    function remember(f) { try { localStorage.setItem(memoryKey(f), JSON.stringify({ key: f.key, uploadId: f.uploadId, partSize: f.partSize })); } catch (e) {} }
+    function forget(f) { try { localStorage.removeItem(memoryKey(f)); } catch (e) {} }
+    function recall(f) {
+      try {
+        const v = JSON.parse(localStorage.getItem(memoryKey(f)) || 'null');
+        return v && typeof v.key === 'string' && typeof v.uploadId === 'string' && v.partSize > 0 ? v : null;
+      } catch (e) { return null; }
+    }
+
+    // A phone that dims its screen can pause the upload, so the screen stays on while files are moving.
+    let lock = null;
+    async function keepAwake(on) {
+      try {
+        if (on && !lock && 'wakeLock' in navigator && document.visibilityState === 'visible') {
+          lock = await navigator.wakeLock.request('screen');
+          lock.addEventListener('release', () => { lock = null; });
+        } else if (!on && lock) { await lock.release(); lock = null; }
+      } catch (e) {}
+    }
+    document.addEventListener('visibilitychange', () => { if (state.running && document.visibilityState === 'visible') keepAwake(true); });
+    addEventListener('beforeunload', (e) => { if (busy()) { e.preventDefault(); e.returnValue = ''; } });
+    addEventListener('online', tick);
+    addEventListener('offline', tick);
+
+    // ---------- Start ----------
+
+    if (contactId) {
+      say('', 'hourglass_top', 'Checking your link…', '');
+      lookup({ c: contactId });
+    } else {
+      $('find').hidden = false;
+    }
+  })();
+  </script>
+</body>
+</html>

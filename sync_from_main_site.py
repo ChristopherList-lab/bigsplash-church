@@ -4,7 +4,8 @@
 Until bigsplash.church is live, the church pages are edited in
 ~/Desktop/BigsplashWeb_VIdeoONLY/church and this script copies them here with the
 paths adjusted for a site that lives at the domain root: the church page, the old
-thanks page and the founding pages (church/founding/: checkout, terms, welcome).
+thanks page, the founding pages (church/founding/: checkout, terms, welcome) and
+the footage upload page (church/footage/).
 
     python3 sync_from_main_site.py
 
@@ -51,9 +52,9 @@ t = main_site_links(t.replace('../../assets/', '../assets/'))
 (OUT / 'thanks').mkdir(exist_ok=True)
 (OUT / 'thanks' / 'index.html').write_text(t)
 
-# ---- founding church pages: checkout, terms and the welcome page after Stripe ----
-# church/founding/ in the main repo becomes founding/ here, one folder closer to the root.
-FOUNDING = ('founding/index.html', 'founding/terms/index.html', 'founding/welcome/index.html')
+# ---- founding church pages: checkout, terms, the welcome page after Stripe, and the footage upload page ----
+# church/founding/ in the main repo becomes founding/ here, one folder closer to the root; church/footage/ becomes footage/.
+FOUNDING = ('founding/index.html', 'founding/terms/index.html', 'founding/welcome/index.html', 'footage/index.html')
 founding = {}
 for name in FOUNDING:
     src = SRC / 'church' / name
@@ -99,7 +100,8 @@ for name, text in [('index.html', s), ('thanks/index.html', t)] + list(founding.
     base = (OUT / name).parent
     for m in re.finditer(r'''(?:src|href|poster)=["']([^"']+)["']''', text):
         u = m.group(1)
-        if re.match(r'^(https?:|mailto:|tel:|#|data:|javascript:)', u) or u in ('./', '../'):
+        # ${...} is a JavaScript template (a querySelector on a script's own URL), not a file.
+        if re.match(r'^(https?:|mailto:|tel:|#|data:|javascript:)', u) or u in ('./', '../') or '${' in u:
             continue
         target = (base / u.split('?')[0].split('#')[0]).resolve()
         if OUT not in target.parents and target != OUT:
