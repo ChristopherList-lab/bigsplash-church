@@ -2361,7 +2361,7 @@
   })();
   </script>
   <script>
-  // The Christmas popup sends visitors to the Christmas campaign page. It waits 15 seconds, or until the visitor
+  // The Christmas popup sends visitors to the Christmas campaign page. It waits 8 seconds, or until the visitor
   // scrolls into the family journey, never opens over another popup, shows once every 3 days in a browser and
   // stops after Christmas Eve. The photo loads only when it is about to show.
   (() => {
@@ -2401,7 +2401,7 @@
     }
     function onScroll() { if (mark && mark.getBoundingClientRect().top < innerHeight * 0.5) show(); }
 
-    const timer = setTimeout(show, 15000);
+    const timer = setTimeout(show, 8000);
     window.addEventListener('scroll', onScroll, { passive: true });
     modal.querySelectorAll('[data-xp-close]').forEach((el) => el.addEventListener('click', close));
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
