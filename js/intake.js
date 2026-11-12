@@ -381,3 +381,24 @@ body.intake-locked { overflow: hidden; }
     });
   });
 })();
+
+// Booked calls: the GHL booking widget posts ["msgsndr-booking-complete", {fingerprint, calendarId}]
+// to the page around it once an appointment saves. Count each booking once as a Meta Schedule event.
+// The same guarded listener lives in /js/intake.js, so a page that has both still counts once.
+(function () {
+  if (window.__bsBookingListener) return;
+  window.__bsBookingListener = true;
+  window.addEventListener('message', function (e) {
+    var d = e && e.data;
+    if (!Array.isArray(d) || d[0] !== 'msgsndr-booking-complete') return;
+    var host = '';
+    try { host = new URL(e.origin).hostname; } catch (err) { return; }
+    if (!/(^|\.)(leadconnectorhq\.com|msgsndr\.com)$/.test(host)) return;
+    var info = d[1] || {};
+    var key = 'bs_booked_' + String(info.calendarId || '') + '_' + String(info.fingerprint || '');
+    try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, '1'); } catch (err) {}
+    var id = 'book_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    try { if (window.fbq) fbq('track', 'Schedule', { content_name: 'Discovery call' }, { eventID: id }); } catch (err) {}
+    try { if (window.gtag) gtag('event', 'generate_lead', { method: 'booked_call' }); } catch (err) {}
+  });
+})();
