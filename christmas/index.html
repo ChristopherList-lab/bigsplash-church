@@ -714,6 +714,42 @@
       });
     })();
 
+    // Ad tags for GHL bookings: the GHL booking widget asks the page around it for the page URL, tags and
+    // referrer ("fetch-query-params") and saves the answer as the contact's attribution. GHL's form_embed.js
+    // answers that; these pages don't load it, so this block answers in the same format:
+    // ["query-params", params, url, referrer, frameId, {consent, isConsentExpected}]. It also keeps the
+    // tagged landing URL for 30 days, so a visitor who lands on one page and books on another still counts.
+    (function () {
+      if (window.__bsGhlAttribution) return;
+      window.__bsGhlAttribution = true;
+      var KEY = 'bs_attrib', DAYS = 30;
+      var tagged = function (search) { return /[?&](utm_[a-z_]+|fbclid|gclid)=/i.test(search || ''); };
+      try {
+        if (tagged(location.search)) localStorage.setItem(KEY, JSON.stringify({ url: location.href, referrer: document.referrer || '', ts: Date.now() }));
+      } catch (err) {}
+      function landing() {
+        if (!tagged(location.search)) {
+          try {
+            var saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+            if (saved && saved.url && Date.now() - saved.ts < DAYS * 864e5) return saved;
+          } catch (err) {}
+        }
+        return { url: location.href, referrer: document.referrer || '' };
+      }
+      window.addEventListener('message', function (e) {
+        var d = e && e.data;
+        if (!Array.isArray(d) || d[0] !== 'fetch-query-params' || !e.source) return;
+        var host = '';
+        try { host = new URL(e.origin).hostname; } catch (err) { return; }
+        if (!/(^|\.)(leadconnectorhq\.com|msgsndr\.com)$/.test(host)) return;
+        var l = landing(), params = {}, frameId = '';
+        try { new URL(l.url).searchParams.forEach(function (v, k) { params[k] = v; }); } catch (err) {}
+        var frames = document.getElementsByTagName('iframe');
+        for (var i = 0; i < frames.length; i++) if (frames[i].contentWindow === e.source) { frameId = frames[i].id || ''; break; }
+        try { e.source.postMessage(['query-params', params, l.url, l.referrer, frameId, { consent: null, isConsentExpected: false }], '*'); } catch (err) {}
+      });
+    })();
+
     // Stripe checkout buttons
     document.querySelectorAll('[data-buy]').forEach(a => a.addEventListener('click', () => {
       if (window.bsTrack) bsTrack('christmas_checkout_click', { offer: a.dataset.buy });
