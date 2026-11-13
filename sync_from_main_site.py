@@ -8,7 +8,8 @@ thanks page, the founding pages (church/founding/: a forward to /start/, terms, 
 the footage upload page (church/footage/), the
 privacy and terms pages (church/privacy/, church/terms/) that the intake form links to,
 the Christmas campaign page and its after-checkout welcome page (church/christmas/),
-and the private pricing page Chris sends after a discovery call (church/start/).
+the private pricing page Chris sends after a discovery call (church/start/),
+and the filming guide for pastors who record their own invite videos (church/film/).
 
     python3 sync_from_main_site.py
 
@@ -60,7 +61,7 @@ t = main_site_links(t.replace('../../assets/', '../assets/'))
 # church/founding/ in the main repo becomes founding/ here, one folder closer to the root; church/footage/ becomes footage/.
 FOUNDING = ('founding/index.html', 'founding/terms/index.html', 'founding/welcome/index.html', 'footage/index.html',
             'privacy/index.html', 'terms/index.html', 'christmas/index.html', 'christmas/welcome/index.html',
-            'start/index.html')
+            'start/index.html', 'film/index.html')
 founding = {}
 for name in FOUNDING:
     src = SRC / 'church' / name
@@ -102,10 +103,14 @@ for r in sorted(refs):
 # The Christmas page names most of its photos only in srcset, its share image and the ?hero= / ?closing=
 # review swaps, none of which the src scan above sees, so copy that folder whole.
 XMAS = Path('assets/images/church/christmas')
-(OUT / XMAS).mkdir(parents=True, exist_ok=True)
-for f in sorted((SRC / XMAS).iterdir()):
-    if f.is_file() and not f.name.startswith('.'):
-        shutil.copy2(f, OUT / XMAS / f.name)
+# The filming guide has the same gap: one photo sits only in srcset, and its share image and the thumbnail
+# its email shows (film-guide-email.jpg) appear in no src at all.
+FILM = Path('assets/images/church/film')
+for folder in (XMAS, FILM):
+    (OUT / folder).mkdir(parents=True, exist_ok=True)
+    for f in sorted((SRC / folder).iterdir()):
+        if f.is_file() and not f.name.startswith('.'):
+            shutil.copy2(f, OUT / folder / f.name)
 
 # ---- checks ----
 problems = []
