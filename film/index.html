@@ -970,7 +970,8 @@
         if (on && chipBar.scrollWidth > chipBar.clientWidth) chipBar.scrollTo({ left: on.offsetLeft - 16, behavior: 'smooth' });
       });
     }, { rootMargin: '-45% 0px -50% 0px' });
-    Object.keys(chips).forEach(function (k) { var s = document.getElementById(k); if (s) so.observe(s); });
+    // Watch every section, so the chips go dark again above step 1 and below step 6.
+    [].slice.call(document.querySelectorAll('main > section')).forEach(function (s) { so.observe(s); });
   } else {
     reveals.forEach(function (el) { el.classList.add('in'); });
   }
