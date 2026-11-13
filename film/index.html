@@ -186,9 +186,14 @@
   .pin i { width: 22px; height: 22px; border-radius: 50%; background: var(--lime); display: grid; place-items: center; font-style: normal; font-size: 12px; font-weight: 800; }
   @media (max-width: 520px) { .pin { font-size: 12px; padding: 5px 9px 5px 6px; gap: 6px; } .pin i { width: 18px; height: 18px; font-size: 11px; } }
 
+  .ways { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .ways .mini { margin: 0; }
+  .mini figcaption b { font-weight: 800; }
+  @media (max-width: 700px) { .ways { grid-template-columns: 1fr; } }
   .mini { margin: 28px 0 0; border-radius: 18px; overflow: hidden; background: var(--white); border: 1px solid var(--line); }
   .mini img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; object-position: 30% 50%; }
-  .mini figcaption { padding: 12px 16px; font-size: 15px; font-weight: 600; color: var(--ink); }
+  .mini figcaption { padding: 14px 18px; font-size: 15.5px; font-weight: 500; line-height: 1.5; color: var(--copy); }
+  .mini figcaption b { color: var(--ink); }
   .settings { margin-top: 44px; background: var(--paper); border: 1px solid var(--line); border-radius: 24px; padding: 30px; display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 36px; align-items: center; }
   .chapter:nth-of-type(odd) .settings { background: var(--white); }
   .settings h3 { font-size: 1.4rem; }
@@ -403,7 +408,7 @@
           <button class="play" type="button" id="play-btn" aria-label="Play the walkthrough video">
             <span><svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/></svg></span>
           </button>
-          <span class="len" id="video-len">Watch first · 1:13</span>
+          <span class="len" id="video-len">Watch first · 1:17</span>
         </div>
         <p class="vnote">The whole guide in about a minute. The steps below fill in the details.</p>
       </div>
@@ -421,7 +426,7 @@
         <li class="reveal">
           <div class="top-row"><span class="n">1</span><span class="who">Big Splash</span></div>
           <h3>We send your scripts</h3>
-          <p>Short invitations written for your church. They arrive as a Google Doc link.</p>
+          <p>Short invitations written for your church. Our email links to them.</p>
         </li>
         <li class="reveal you">
           <div class="top-row"><span class="n">2</span><span class="who">You</span></div>
@@ -459,11 +464,11 @@
           </li>
           <li>
             <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v9M12 13l-6 8M12 13l6 8M12 13v8"/><rect x="9" y="2" width="6" height="4" rx="1"/></svg></span>
-            <div><b>A tripod or a stack of books</b><span>Hands off the phone</span></div>
+            <div><b>A tripod or a stack of books</b><span>Or hold the phone yourself</span></div>
           </li>
           <li>
             <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9.5 13h6M9.5 17h6"/></svg></span>
-            <div><b>Your scripts</b><span>In the Google Doc we sent</span></div>
+            <div><b>Your scripts</b><span>Linked in our email</span></div>
           </li>
           <li>
             <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4a1 1 0 0 1 1-1h9l4 3v15"/><path d="M3 21h18"/><circle cx="14.5" cy="12.5" r="1"/></svg></span>
@@ -527,7 +532,7 @@
         <span class="ch-num">2</span>
         <div>
           <h2>Set your phone</h2>
-          <p class="lede">Set it upright at eye level, an arm's length away. Then take your hands off it.</p>
+          <p class="lede">Set it upright at eye level, an arm's length away. A tripod gives the steadiest picture, and holding it yourself works too.</p>
         </div>
       </div>
       <div class="ch-body wide-left">
@@ -549,11 +554,19 @@
             <li><span class="tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span><b>Stand an arm's length away,</b> about three feet. The phone's microphone hears you best from there.</span></li>
             <li><span class="tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span><b>Frame yourself from the chest up,</b> with a little room above your head.</span></li>
           </ul>
-          <figure class="mini">
-            <img src="../assets/images/church/film/setup-books-1200.webp" alt="A phone on a tall stack of books at eye level, with the pastor standing in front of it" width="1200" height="750" loading="lazy">
-            <figcaption>No tripod? Stack books until the lens meets your eyes.</figcaption>
-          </figure>
         </div>
+      </div>
+
+      <p class="tips-title" style="margin:44px 0 16px">No tripod? Two more ways</p>
+      <div class="ways">
+        <figure class="mini reveal">
+          <img src="../assets/images/church/film/setup-books-1200.webp" alt="A phone on a tall stack of books at eye level, with the pastor standing in front of it" width="1200" height="750" loading="lazy">
+          <figcaption><b>Stack books.</b> Keep stacking until the lens meets your eyes.</figcaption>
+        </figure>
+        <figure class="mini reveal">
+          <img src="../assets/images/church/film/setup-selfie-1200.webp" alt="The pastor holding his phone at arm's length, level with his eyes" width="1200" height="675" loading="lazy">
+          <figcaption><b>Hold it yourself, selfie style.</b> Keep the lens level with your eyes and stand still while you read.</figcaption>
+        </figure>
       </div>
 
       <div class="ch-body wide-right" style="margin-top:56px">
@@ -659,7 +672,7 @@
           <ol class="ol">
             <li><span><b>Download Edits</b> from the App Store and sign in with an Instagram account.</span></li>
             <li><span><b>Open the camera</b> inside Edits and flip to the front camera, so you can see the screen.</span></li>
-            <li><span><b>Open the teleprompter</b> and paste in your scripts. Copy them from the Google Doc we sent you.</span></li>
+            <li><span><b>Open the teleprompter</b> and paste in your scripts. Copy them from the link in our email.</span></li>
             <li><span><b>After you record,</b> export the video and save it to your Photos at the highest quality Edits offers.</span></li>
           </ol>
           <a class="btn btn-primary" href="https://apps.apple.com/us/app/edits-an-instagram-app/id6738967378" target="_blank" rel="noopener">
@@ -684,7 +697,7 @@
           </ul>
           <ol class="ol">
             <li><span><b>Buy PromptSmart Pro</b> on the App Store. You pay $29.99 once.</span></li>
-            <li><span><b>Start a new script</b> and paste yours in. Copy them from the Google Doc we sent you.</span></li>
+            <li><span><b>Start a new script</b> and paste yours in. Copy them from the link in our email.</span></li>
             <li><span><b>Turn on Selfie Mode.</b> The text moves beside the camera, and the app records while you read.</span></li>
             <li><span><b>Turn on VoiceTrack.</b> The text scrolls as you speak and waits when you pause.</span></li>
           </ol>
@@ -782,7 +795,7 @@
             <li><span class="tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span><b>Talk to one family.</b> Picture the couple you greeted at the door last Sunday.</span></li>
             <li><span class="tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span><b>Change a word that feels stiff.</b> The script is a guide, and your own phrasing sounds better.</span></li>
             <li><span class="tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span><b>Got five more minutes?</b> Read the whole set a second time in the same recording. The second pass comes out warmer.</span></li>
-            <li><span class="tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span><b>Past ten minutes?</b> Stop and start a second recording. Send us both.</span></li>
+            <li><span class="tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span><b>Arm tired, or past ten minutes?</b> Stop between scripts and start a new recording. Send us each one.</span></li>
           </ul>
         </div>
       </div>
@@ -892,6 +905,10 @@
         <details class="reveal">
           <summary>Front camera or back camera?<span class="pm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span></summary>
           <p>Use the front camera with a teleprompter, since you need to see the screen. Filming with a helper and no teleprompter? Turn the phone around. The back camera is a little sharper.</p>
+        </details>
+        <details class="reveal">
+          <summary>Can I hold the phone myself?<span class="pm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <p>Yes. Hold it at arm's length with the lens level with your eyes, and stand still while you read. A tripod or a stack of books gives a steadier picture, so use one if it's handy.</p>
         </details>
         <details class="reveal">
           <summary>Can I film on an Android phone?<span class="pm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span></summary>
