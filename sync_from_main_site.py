@@ -9,7 +9,8 @@ the footage upload page (church/footage/), the
 privacy and terms pages (church/privacy/, church/terms/) that the intake form links to,
 the Christmas campaign page and its after-checkout welcome page (church/christmas/),
 the private pricing page Chris sends after a discovery call (church/start/),
-and the filming guide for pastors who record their own invite videos (church/film/).
+the filming guide for pastors who record their own invite videos (church/film/),
+and the page that shows a church its invite scripts by private link (church/scripts/).
 
     python3 sync_from_main_site.py
 
@@ -61,7 +62,7 @@ t = main_site_links(t.replace('../../assets/', '../assets/'))
 # church/founding/ in the main repo becomes founding/ here, one folder closer to the root; church/footage/ becomes footage/.
 FOUNDING = ('founding/index.html', 'founding/terms/index.html', 'founding/welcome/index.html', 'footage/index.html',
             'privacy/index.html', 'terms/index.html', 'christmas/index.html', 'christmas/welcome/index.html',
-            'start/index.html', 'film/index.html')
+            'start/index.html', 'film/index.html', 'scripts/index.html')
 founding = {}
 for name in FOUNDING:
     src = SRC / 'church' / name

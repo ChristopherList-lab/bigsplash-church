@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Invite Scripts | Big Splash</title>
+<meta name="description" content="The invite scripts Big Splash wrote for your church, ready to copy into a teleprompter app.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#f8f5ee">
+<link rel="icon" type="image/png" href="../assets/images/favicon.png">
+<link rel="apple-touch-icon" href="../assets/images/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!--
+  One page for every church. It reads ?s=<token> from its own address and asks the bigsplash-church-scripts worker
+  for that church's scripts, so no church's name or words live in this file or in the site's repository.
+  Built in ~/BigSplash/church-scripts (page/scripts/index.html). Edit it there and run tools/publish_page.py.
+-->
+<style>
+  :root {
+    --paper: #f8f5ee; --band: #f1ece1; --white: #ffffff; --line: #ddd8ce;
+    --ink: #131318; --copy: #3f3f47; --muted: #5f5f68; --olive: #56610a;
+    --lime: #eff88b; --lime-tint: #f3f8bf; --lime-line: #dde69a; --berry: #b42318;
+    --shadow: 0 18px 50px -24px rgba(19, 19, 24, 0.3);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--paper); color: var(--copy); font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; }
+  [hidden] { display: none !important; }
+  .wrap { width: 100%; max-width: 760px; margin: 0 auto; padding: 0 24px; }
+  @media (max-width: 600px) { .wrap { padding: 0 16px; } }
+  h1, h2, h3 { font-weight: 800; letter-spacing: -0.028em; line-height: 1.08; color: var(--ink); margin: 0; text-wrap: balance; }
+  h1 { font-size: clamp(2.2rem, 7vw, 3.3rem); }
+  h2 { font-size: clamp(1.5rem, 4.4vw, 2rem); }
+  p { margin: 0; }
+  .hl { background: linear-gradient(transparent 52%, var(--lime) 52%, var(--lime) 92%, transparent 92%); padding: 0 0.08em; white-space: nowrap; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 24px; border-radius: 999px;
+    font: 700 16px/1 'Inter', sans-serif; text-decoration: none; cursor: pointer; border: 2px solid var(--ink); white-space: nowrap;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease; -webkit-tap-highlight-color: transparent; }
+  .btn-primary { background: var(--ink); color: #fff; }
+  .btn-primary svg { color: var(--lime); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -12px rgba(19,19,24,.6); }
+  .btn-second { background: transparent; color: var(--ink); }
+  .btn-second:hover { background: var(--white); }
+  .btn-sm { min-height: 44px; padding: 0 18px; font-size: 15px; }
+  .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .btn.done { background: var(--lime); border-color: var(--lime); color: var(--ink); }
+  .btn.done svg { color: var(--ink); }
+
+  .top { position: sticky; top: 0; z-index: 40; background: rgba(248, 245, 238, 0.92); backdrop-filter: saturate(1.4) blur(12px);
+    -webkit-backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line); }
+  .top .bar { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+  .brand img { height: 26px; width: auto; }
+  .brand span { font-size: 13px; font-weight: 700; color: var(--olive); background: var(--lime-tint); border: 1px solid var(--lime-line); padding: 5px 11px; border-radius: 999px; }
+  @media (max-width: 420px) { .brand span { display: none; } }
+
+  .hero { position: relative; padding: 40px 0 34px; overflow: hidden; }
+  .hero::before { content: ""; position: absolute; inset: -30% -30% auto auto; width: 90vw; height: 90vw; max-width: 720px; max-height: 720px;
+    background: radial-gradient(circle at 60% 40%, rgba(239, 248, 139, 0.55), rgba(239, 248, 139, 0) 62%); pointer-events: none; }
+  .hero .wrap { position: relative; z-index: 1; }
+  .kicker { display: inline-flex; align-items: center; gap: 8px; background: var(--lime); color: var(--ink); font-size: 14px; font-weight: 600; padding: 7px 14px; border-radius: 999px; }
+  .hero h1 { margin-top: 18px; }
+  .lede { margin-top: 16px; font-size: 1.08rem; max-width: 34rem; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+  @media (max-width: 600px) { .ctas .btn { flex: 1 1 100%; } }
+  .hint { margin-top: 14px; font-size: 15px; color: var(--muted); max-width: 34rem; }
+
+  .list { padding: 6px 0 56px; }
+  .script { background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 22px 22px 20px; box-shadow: var(--shadow); }
+  .script + .gap { margin: 0; }
+  .gap { display: flex; align-items: center; gap: 12px; padding: 14px 6px; font-size: 13px; font-weight: 700; color: var(--olive); }
+  .gap::before, .gap::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .s-head { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; align-items: center; }
+  .s-head .n { grid-row: span 2; width: 46px; height: 46px; border-radius: 14px; background: var(--ink); color: var(--lime); display: grid; place-items: center;
+    font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+  .s-head h2 { font-size: 1.3rem; letter-spacing: -0.02em; line-height: 1.15; }
+  .s-head .secs { font-size: 14px; font-weight: 600; color: var(--muted); }
+  .lines { margin: 18px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+  .lines li { padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 1.12rem; line-height: 1.38; font-weight: 600; color: var(--ink); letter-spacing: -0.008em; }
+  .s-foot { margin-top: 16px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+
+  .next { background: var(--ink); color: #d9d9de; padding: 52px 0 56px; }
+  .next h2 { color: #fff; }
+  .next p { margin-top: 12px; max-width: 32rem; }
+  .next .btn-primary { background: var(--lime); color: var(--ink); border-color: var(--lime); }
+  .next .btn-second { color: #fff; border-color: rgba(255,255,255,.4); }
+  .next .btn-second:hover { background: transparent; border-color: #fff; }
+  .next .btn:focus-visible { outline-color: var(--lime); }
+
+  .state { background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 28px 24px; box-shadow: var(--shadow); }
+  .state h2 { font-size: 1.4rem; }
+  .state p { margin-top: 10px; }
+  .state .btn { margin-top: 18px; }
+  .skel { height: 232px; border-radius: 20px; background: linear-gradient(100deg, var(--band) 40%, #f6f2e9 50%, var(--band) 60%); background-size: 200% 100%; animation: sweep 1.3s linear infinite; }
+  .skel + .skel { margin-top: 16px; }
+  @keyframes sweep { to { background-position: -200% 0; } }
+  @media (prefers-reduced-motion: reduce) { .skel { animation: none; } .btn { transition: none; } }
+
+  footer { background: var(--band); border-top: 1px solid var(--line); padding: 36px 0 44px; font-size: 15px; color: var(--muted); }
+  footer .wrap { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+  footer .f-brand img { height: 22px; width: auto; }
+  footer .f-brand p { margin-top: 8px; }
+  footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--ink); text-decoration: underline; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="bar">
+      <a class="brand" href="https://bigsplash.church/" aria-label="Big Splash church home">
+        <img src="../assets/images/logo-bigsplash-dark.svg" alt="Big Splash" width="120" height="26">
+        <span>Your scripts</span>
+      </a>
+      <a class="btn btn-second btn-sm" href="https://bigsplash.church/film/" data-guide>Filming guide</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <p class="kicker" id="for" hidden></p>
+      <h1>Your <span class="hl" id="set" hidden></span> invite scripts</h1>
+      <p class="lede" id="lede">Paste them into your teleprompter app and read them back to back in one recording. We cut the rest.</p>
+      <div class="ctas" id="ctas" hidden>
+        <button class="btn btn-primary" type="button" id="copy-all">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg>
+          <span>Copy all scripts</span>
+        </button>
+        <a class="btn btn-second" id="pdf" href="#" target="_blank" rel="noopener">Open the PDF</a>
+      </div>
+      <p class="hint" id="hint" hidden>Change any word that feels stiff once it's in your app. Your own phrasing sounds better on camera.</p>
+    </div>
+  </section>
+
+  <section class="list" aria-label="Your scripts">
+    <div class="wrap" id="list">
+      <div class="skel" aria-hidden="true"></div>
+      <div class="skel" aria-hidden="true"></div>
+      <p class="sr" id="loading">Loading your scripts</p>
+    </div>
+  </section>
+
+  <section class="next" id="next" hidden>
+    <div class="wrap">
+      <h2>Ready to record?</h2>
+      <p>The filming guide shows your setup in a one-minute video. Send us the recording from the same page.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="https://bigsplash.church/film/" data-guide>Open the filming guide</a>
+        <a class="btn btn-second" href="https://bigsplash.church/footage/" data-upload>Send your recording</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-brand">
+      <img src="../assets/images/logo-bigsplash-dark.svg" alt="Big Splash" width="100" height="22">
+      <p>The marketing agency for the local church</p>
+    </div>
+    <nav aria-label="Footer">
+      <a href="https://bigsplash.church/">Home</a>
+      <a href="https://bigsplash.church/privacy/">Privacy</a>
+      <a href="https://bigsplash.church/terms/">Terms</a>
+      <a href="mailto:chris@bigsplash.agency">chris@bigsplash.agency</a>
+    </nav>
+  </div>
+</footer>
+
+<p class="sr" role="status" aria-live="polite" id="say"></p>
+
+<script>
+(function () {
+  var API = 'https://bigsplash-church-scripts.chris-bc4.workers.dev';
+  var q = new URLSearchParams(location.search);
+  var token = (q.get('s') || '').trim();
+  var list = document.getElementById('list'), say = document.getElementById('say');
+  var COPY_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg>';
+  var COUNT = ['', 'One script', 'Two scripts', 'Three scripts', 'Four scripts', 'Five scripts', 'Six scripts', 'Seven scripts', 'Eight scripts'];
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  function state(title, body, action) {
+    list.textContent = '';
+    var box = el('div', 'state');
+    box.appendChild(el('h2', '', title));
+    box.appendChild(el('p', '', body));
+    if (action) box.appendChild(action);
+    list.appendChild(box);
+  }
+
+  function mailButton() {
+    var a = el('a', 'btn btn-primary btn-sm', 'Email our team');
+    a.href = 'mailto:chris@bigsplash.agency?subject=' + encodeURIComponent('My scripts link');
+    return a;
+  }
+
+  // Clipboard: the modern call needs https and a tap. The textarea route covers older phones.
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+    return new Promise(function (ok, fail) {
+      var t = document.createElement('textarea');
+      t.value = text; t.setAttribute('readonly', ''); t.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+      document.body.appendChild(t); t.select(); t.setSelectionRange(0, text.length);
+      var done = false;
+      try { done = document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(t);
+      done ? ok() : fail(new Error('copy refused'));
+    });
+  }
+
+  function wire(btn, getText, label, spoken) {
+    var span = btn.querySelector('span');
+    btn.addEventListener('click', function () {
+      copyText(getText()).then(function () {
+        span.textContent = 'Copied';
+        btn.classList.add('done');
+        say.textContent = spoken + ' copied';
+        clearTimeout(btn._t);
+        btn._t = setTimeout(function () { span.textContent = label; btn.classList.remove('done'); }, 2200);
+      }, function () {
+        span.textContent = 'Press and hold the text to copy';
+        clearTimeout(btn._t);
+        btn._t = setTimeout(function () { span.textContent = label; }, 4000);
+      });
+    });
+  }
+
+  function render(d) {
+    var scripts = d.scripts || [];
+    document.title = d.church + ': invite scripts | Big Splash';
+    var who = document.getElementById('for');
+    who.textContent = 'Written for ' + d.church;
+    who.hidden = false;
+    if (d.set_label) { var set = document.getElementById('set'); set.textContent = d.set_label; set.hidden = false; }
+    document.getElementById('lede').textContent = (COUNT[scripts.length] || scripts.length + ' scripts') +
+      ' for one recording. Paste them into your teleprompter app and read them back to back. We cut the rest.';
+    document.getElementById('pdf').href = API + '/s/' + encodeURIComponent(token) + '/pdf';
+    ['ctas', 'hint', 'next'].forEach(function (id) { document.getElementById(id).hidden = false; });
+
+    list.textContent = '';
+    scripts.forEach(function (s, i) {
+      if (i) list.appendChild(el('p', 'gap', 'Pause two seconds'));
+      var card = el('article', 'script');
+      var head = el('div', 's-head');
+      head.appendChild(el('span', 'n', String(s.n)));
+      head.appendChild(el('h2', '', s.title));
+      head.appendChild(el('span', 'secs', 'About ' + s.secs + ' seconds'));
+      card.appendChild(head);
+      var ol = el('ol', 'lines');
+      s.lines.forEach(function (ln) { ol.appendChild(el('li', '', ln)); });
+      card.appendChild(ol);
+      var foot = el('div', 's-foot');
+      var btn = el('button', 'btn btn-second btn-sm');
+      btn.type = 'button';
+      btn.innerHTML = COPY_ICON + '<span>Copy script ' + s.n + '</span>';
+      wire(btn, function () { return s.lines.join('\n'); }, 'Copy script ' + s.n, 'Script ' + s.n);
+      foot.appendChild(btn);
+      card.appendChild(foot);
+      list.appendChild(card);
+    });
+    wire(document.getElementById('copy-all'), function () {
+      return scripts.map(function (s) { return s.lines.join('\n'); }).join('\n\n[Pause two seconds]\n\n');
+    }, 'Copy all scripts', 'All scripts');
+
+    // Carry the church's contact id to the guide and the upload page, so both know the church.
+    var c = (q.get('c') || d.contact || '').trim();
+    if (/^[A-Za-z0-9]{6,40}$/.test(c)) {
+      document.querySelectorAll('[data-guide]').forEach(function (a) { a.href = '/film/?c=' + encodeURIComponent(c); });
+      document.querySelectorAll('[data-upload]').forEach(function (a) { a.href = '/footage/?c=' + encodeURIComponent(c); });
+    }
+  }
+
+  function load() {
+    if (!/^[A-Za-z0-9_-]{16,64}$/.test(token)) {
+      state('Open this page from our email', 'Your scripts sit behind a private link. Tap "Open your scripts" in the email we sent, and they load here.', mailButton());
+      return;
+    }
+    fetch(API + '/s/' + encodeURIComponent(token), { cache: 'no-store' }).then(function (r) {
+      if (r.status === 404) {
+        state('We can\'t find scripts for this link', 'The link may be an old one. Reply to our email and we\'ll send a fresh link.', mailButton());
+        return null;
+      }
+      if (!r.ok) throw new Error('status ' + r.status);
+      return r.json();
+    }).then(function (d) { if (d) render(d); }).catch(function () {
+      var again = el('button', 'btn btn-primary btn-sm', 'Try again');
+      again.type = 'button';
+      again.addEventListener('click', function () {
+        list.textContent = '';
+        list.appendChild(el('div', 'skel'));
+        load();
+      });
+      state('Your scripts didn\'t load', 'Check your connection, then try again.', again);
+    });
+  }
+  load();
+})();
+</script>
+</body>
+</html>
