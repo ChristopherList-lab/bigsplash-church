@@ -203,7 +203,15 @@
   @media (max-width: 420px) { .set-list li { flex-direction: column; gap: 2px; } .set-list b { text-align: left; white-space: normal; } }
 
   /* teleprompter */
-  .app { background: var(--white); border: 2px solid var(--ink); border-radius: 24px; padding: 28px; }
+  .choose { margin-top: 36px; max-width: 50rem; font-size: 18px; line-height: 1.6; }
+  .choose b { color: var(--ink); }
+  .apps { margin-top: 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: stretch; }
+  @media (max-width: 860px) { .apps { grid-template-columns: 1fr; } }
+  .app { display: flex; flex-direction: column; background: var(--white); border: 2px solid var(--ink); border-radius: 24px; padding: 28px; }
+  .app .ol { margin-bottom: 22px; }
+  .app .btn { align-self: flex-start; margin-top: auto; }
+  .app-note { margin: 0 0 20px; font-size: 14.5px; line-height: 1.55; color: var(--muted); }
+  @media (max-width: 420px) { .app { padding: 22px 20px; } }
   .chapter:nth-of-type(even) .app { background: var(--paper); }
   .app-top { display: flex; align-items: center; gap: 16px; }
   .app-ic { flex: none; width: 60px; height: 60px; border-radius: 16px; background: var(--ink); color: var(--lime); display: grid; place-items: center; }
@@ -215,7 +223,6 @@
   .ol li { counter-increment: o; display: grid; grid-template-columns: 30px 1fr; gap: 14px; font-size: 16.5px; line-height: 1.5; }
   .ol li::before { content: counter(o); width: 30px; height: 30px; border-radius: 50%; background: var(--band); color: var(--ink); font-weight: 800; font-size: 14px; display: grid; place-items: center; }
   .ol li b { color: var(--ink); }
-  .app .btn { margin-top: 24px; }
   .alts { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .alt { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; }
   .chapter:nth-of-type(even) .alt { background: var(--paper); }
@@ -631,46 +638,65 @@
           <p class="lede">A teleprompter app scrolls your script beside the camera lens while you record. You read, and your eyes stay on the families you're inviting.</p>
         </div>
       </div>
-      <div class="ch-body wide-left">
-        <div class="reveal">
-          <div class="app">
-            <div class="app-top">
-              <span class="app-ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 9h10M7 13h10M7 17h5"/></svg></span>
-              <div>
-                <p class="label" style="margin:0">Our pick</p>
-                <h3>Edits, from Instagram</h3>
-              </div>
-            </div>
-            <ul class="tags">
-              <li>Free</li>
-              <li>No watermark</li>
-              <li>Clips up to 10 minutes</li>
-              <li>Saves in 4K</li>
-            </ul>
-            <ol class="ol">
-              <li><span><b>Download Edits</b> from the App Store and sign in with an Instagram account.</span></li>
-              <li><span><b>Open the camera</b> inside Edits and flip to the front camera, so you can see the screen.</span></li>
-              <li><span><b>Open the teleprompter</b> and paste in your scripts. Copy them from the Google Doc we sent you.</span></li>
-              <li><span><b>Drag the text to the top of the screen,</b> right under the lens.</span></li>
-              <li><span><b>Make the text big and the speed slow.</b> Read it through once before the real take.</span></li>
-              <li><span><b>After you record,</b> export the video and save it to your Photos at the highest quality Edits offers.</span></li>
-            </ol>
-            <a class="btn btn-primary" href="https://apps.apple.com/us/app/edits-an-instagram-app/id6738967378" target="_blank" rel="noopener">
-              Get Edits on the App Store
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
-            </a>
-          </div>
-          <div class="alts">
-            <div class="alt">
-              <h3>Want the text to follow your voice?</h3>
-              <p>PromptSmart Pro listens and scrolls at your pace, and it waits while you pause. It costs $29.99 once on the App Store.</p>
-            </div>
-            <div class="alt">
-              <h3>Filming without an app?</h3>
-              <p>Read one sentence off a page, then look up at the lens and say it. Repeat for each line. We cut the pauses.</p>
+
+      <p class="choose reveal"><b>Two apps we recommend.</b> Have an Instagram account? Edits is free. Want the text to wait while you pause? PromptSmart Pro follows your voice.</p>
+
+      <div class="apps">
+        <div class="app reveal">
+          <div class="app-top">
+            <span class="app-ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 9h10M7 13h10M7 17h5"/></svg></span>
+            <div>
+              <p class="label" style="margin:0">Our free pick</p>
+              <h3>Edits, from Instagram</h3>
             </div>
           </div>
+          <ul class="tags">
+            <li>Free</li>
+            <li>No watermark</li>
+            <li>Clips up to 10 minutes</li>
+            <li>Saves in 4K</li>
+          </ul>
+          <ol class="ol">
+            <li><span><b>Download Edits</b> from the App Store and sign in with an Instagram account.</span></li>
+            <li><span><b>Open the camera</b> inside Edits and flip to the front camera, so you can see the screen.</span></li>
+            <li><span><b>Open the teleprompter</b> and paste in your scripts. Copy them from the Google Doc we sent you.</span></li>
+            <li><span><b>After you record,</b> export the video and save it to your Photos at the highest quality Edits offers.</span></li>
+          </ol>
+          <a class="btn btn-primary" href="https://apps.apple.com/us/app/edits-an-instagram-app/id6738967378" target="_blank" rel="noopener">
+            Get Edits on the App Store
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+          </a>
         </div>
+
+        <div class="app reveal">
+          <div class="app-top">
+            <span class="app-ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M8.5 21h7"/></svg></span>
+            <div>
+              <p class="label" style="margin:0">Our paid pick</p>
+              <h3>PromptSmart Pro</h3>
+            </div>
+          </div>
+          <ul class="tags">
+            <li>$29.99 once</li>
+            <li>Follows your voice</li>
+            <li>No Instagram needed</li>
+            <li>Saves to Photos</li>
+          </ul>
+          <ol class="ol">
+            <li><span><b>Buy PromptSmart Pro</b> on the App Store. You pay $29.99 once.</span></li>
+            <li><span><b>Start a new script</b> and paste yours in. Copy them from the Google Doc we sent you.</span></li>
+            <li><span><b>Turn on Selfie Mode.</b> The text moves beside the camera, and the app records while you read.</span></li>
+            <li><span><b>Turn on VoiceTrack.</b> The text scrolls as you speak and waits when you pause.</span></li>
+          </ol>
+          <p class="app-note">VoiceTrack follows English. Reading in Spanish? Set the scroll speed by hand, or use Edits. The app also offers an Extended subscription, and you can skip it.</p>
+          <a class="btn btn-primary" href="https://apps.apple.com/us/app/promptsmart-pro-teleprompter/id894811756" target="_blank" rel="noopener">
+            Get PromptSmart Pro
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="ch-body wide-right" style="margin-top:56px">
         <div class="reveal">
           <div class="phone" aria-hidden="true">
             <span class="callout lens">The lens</span>
@@ -689,6 +715,19 @@
             </div>
           </div>
           <p class="eg">A sample script on a sample screen. Your app's buttons look a little different.</p>
+        </div>
+        <div class="reveal">
+          <p class="tips-title">In either app</p>
+          <ul class="tips">
+            <li><span class="tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span><b>Put the text at the top of the screen,</b> right under the lens.</span></li>
+            <li><span class="tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span><b>Make the text big.</b> You should read it with ease from an arm's length away.</span></li>
+            <li><span class="tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span><b>Using Edits? Slow the scroll</b> until you can read without rushing.</span></li>
+            <li><span class="tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span><b>Read it through once</b> before the real take.</span></li>
+          </ul>
+          <div class="alt" style="margin-top:30px">
+            <h3>Filming without an app?</h3>
+            <p>Read one sentence off a page, then look up at the lens and say it. Repeat for each line. We cut the pauses.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -856,7 +895,7 @@
         </details>
         <details class="reveal">
           <summary>Can I film on an Android phone?<span class="pm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <p>Yes. The setup and the one-take plan stay the same. Set your camera to its highest video quality and use a teleprompter app from the Play Store.</p>
+          <p>Yes. The setup and the one-take plan stay the same. Set your camera to its highest video quality and use a teleprompter app from the Play Store. PromptSmart Pro has an Android version.</p>
         </details>
         <details class="reveal">
           <summary>Should I turn the phone sideways?<span class="pm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span></summary>
