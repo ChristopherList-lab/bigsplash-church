@@ -212,18 +212,24 @@
     return a;
   }
 
-  // Clipboard: the modern call needs https and a tap. The textarea route covers older phones.
-  function copyText(text) {
-    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+  // Clipboard: the modern call needs https and a tap, and some in-app browsers (the ones mail apps open) refuse it.
+  // The textarea route covers those and older phones, so it runs whenever the modern call is missing or says no.
+  function copyByHand(text) {
     return new Promise(function (ok, fail) {
       var t = document.createElement('textarea');
-      t.value = text; t.setAttribute('readonly', ''); t.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
-      document.body.appendChild(t); t.select(); t.setSelectionRange(0, text.length);
+      t.value = text; t.setAttribute('readonly', ''); t.style.cssText = 'position:fixed;top:0;left:0;opacity:0;font-size:16px';
+      document.body.appendChild(t); t.focus(); t.select(); t.setSelectionRange(0, text.length);
       var done = false;
       try { done = document.execCommand('copy'); } catch (e) {}
       document.body.removeChild(t);
       done ? ok() : fail(new Error('copy refused'));
     });
+  }
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).catch(function () { return copyByHand(text); });
+    }
+    return copyByHand(text);
   }
 
   function wire(btn, getText, label, spoken) {
