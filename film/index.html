@@ -18,13 +18,28 @@
 <meta name="theme-color" content="#f8f5ee">
 
 <!-- Google Analytics (the bigsplash.church property), added 2026-11-13 when Chris asked to see this page's views.
-     The page's address goes to Google without its ?c= part, so a church's contact id stays here. No Meta pixel. -->
+     A church's link carries its contact id (?c=...). Google's tag reports the address in the address bar, and asking
+     it to report a cleaner one did not work (tested 2026-11-13: page_location in config or set still sent ?c=).
+     So the id is lifted out of the address before the tag loads: kept in window.BS_CONTACT and in this tab's session
+     storage for the upload buttons, and never sent to Google. No Meta pixel on this page. -->
 <script>
   (function (id) {
+    try {
+      var q = new URLSearchParams(location.search), c = q.get('c');
+      if (c !== null) {
+        if (/^[A-Za-z0-9_-]{6,40}$/.test(c)) { window.BS_CONTACT = c; try { sessionStorage.setItem('bs-film-c', c); } catch (e) {} }
+        q.delete('c');
+        var rest = q.toString();
+        history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
+      } else {
+        try { window.BS_CONTACT = sessionStorage.getItem('bs-film-c') || ''; } catch (e) {}
+      }
+    } catch (e) {}
+    if (/[?&]c=/.test(location.search)) return;       // the id is still in the address: send nothing
     var g = document.createElement('script'); g.async = true; g.src = 'https://www.googletagmanager.com/gtag/js?id=' + id; document.head.appendChild(g);
     window.dataLayer = window.dataLayer || []; window.gtag = function () { dataLayer.push(arguments); };
     gtag('js', new Date());
-    gtag('config', id, { page_location: location.origin + location.pathname });
+    gtag('config', id);
   })('G-2L9Z57NZHC');
 </script>
 
@@ -998,9 +1013,10 @@
     video.addEventListener('ended', function () { video.controls = true; });
   }
 
-  // A church's upload link carries its contact id (?c=...). Keep it on the upload buttons.
+  // A church's link carries its contact id (?c=...). The script in the head lifted it out of the address and
+  // kept it in window.BS_CONTACT. Put it on the upload buttons.
   try {
-    var c = new URLSearchParams(location.search).get('c');
+    var c = window.BS_CONTACT || '';
     if (c && /^[A-Za-z0-9_-]{6,40}$/.test(c)) {
       document.querySelectorAll('[data-upload]').forEach(function (a) { a.href = '/footage/?c=' + encodeURIComponent(c); });
     }
