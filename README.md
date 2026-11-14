@@ -4,11 +4,9 @@ The Big Splash church page as its own site. GitHub Pages serves this folder at h
 
 ## Where to edit
 
-Until the old address (bigsplash.video/church) redirects here, edit the page in `~/Desktop/BigsplashWeb_VIdeoONLY/church` and run:
+Edit the files in this folder, then commit and push. Since Nov 14, 2026, bigsplash.video/church/ (plus /church/thanks/ and /church/christmas/) redirects here, so the old sync script from the main site repo is gone. The `church/` folder in `~/Desktop/BigsplashWeb_VIdeoONLY` is no longer the source for these pages.
 
-    python3 sync_from_main_site.py
-
-Then commit and push this folder. After the redirect is on, edit the files here directly and delete the sync script.
+Keep `google3ec98a98707c1572.html` (Google Search Console verification) and `facd856bef3fa30b0cb9f77965374989.txt` (IndexNow key for Bing) at the root.
 
 ## DNS (GoDaddy)
 
