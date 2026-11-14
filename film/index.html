@@ -17,6 +17,17 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f8f5ee">
 
+<!-- Google Analytics (the bigsplash.church property), added 2026-11-13 when Chris asked to see this page's views.
+     The page's address goes to Google without its ?c= part, so a church's contact id stays here. No Meta pixel. -->
+<script>
+  (function (id) {
+    var g = document.createElement('script'); g.async = true; g.src = 'https://www.googletagmanager.com/gtag/js?id=' + id; document.head.appendChild(g);
+    window.dataLayer = window.dataLayer || []; window.gtag = function () { dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', id, { page_location: location.origin + location.pathname });
+  })('G-2L9Z57NZHC');
+</script>
+
 <link rel="icon" type="image/png" href="../assets/images/favicon.png">
 <link rel="apple-touch-icon" href="../assets/images/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -971,10 +982,14 @@
 
 <script>
 (function () {
+  // Two taps go to Google Analytics as events: the video starting, and a tap on an upload button.
+  function track(name) { try { if (window.gtag) gtag('event', name); } catch (e) {} }
+
   // Video: one tap to play, native controls after that.
   var player = document.getElementById('player'), video = document.getElementById('guide-video'), play = document.getElementById('play-btn');
   if (play && video) {
     play.addEventListener('click', function () {
+      track('film_video_play');
       player.classList.add('playing');
       video.controls = true;
       var p = video.play();
@@ -990,6 +1005,9 @@
       document.querySelectorAll('[data-upload]').forEach(function (a) { a.href = '/footage/?c=' + encodeURIComponent(c); });
     }
   } catch (e) {}
+  [].forEach.call(document.querySelectorAll('[data-upload]'), function (a) {
+    a.addEventListener('click', function () { track('film_upload_click'); });
+  });
 
   // Checklist: remembers its ticks on this device.
   var KEY = 'bs-film-checklist', boxes = [].slice.call(document.querySelectorAll('#ck-list input')), done = document.getElementById('ck-done');
