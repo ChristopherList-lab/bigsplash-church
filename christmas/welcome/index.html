@@ -65,6 +65,16 @@
   .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
   .note { margin-top: 28px; background: var(--lime-tint); border: 1px solid #dde69a; border-radius: 16px; padding: 18px 22px; font-size: 16px; }
   .note b { color: var(--ink); }
+  .steps li.film { background: var(--ink); border-color: var(--ink); color: #d4d4d8; }
+  .steps li.film h3 { color: #fff; }
+  .steps li.film .n { background: var(--lime); color: var(--ink); }
+  .steps li.film .btn { background: var(--lime); color: var(--ink); border-color: var(--lime); }
+  .steps li.film .btn svg { color: var(--ink); }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 14px; font-size: 14px; }
+  .facts b { color: #fff; }
+  .skip { margin-top: 14px; font-size: 15px; }
+  .skip a { color: #fff; font-weight: 700; }
+  .steps li.flash { box-shadow: 0 0 0 3px var(--lime); transition: box-shadow .3s; }
   .foot { margin-top: 32px; font-size: 15px; color: var(--muted); }
   .foot a { color: var(--ink); }
   [hidden] { display: none !important; }
@@ -91,7 +101,20 @@
 
     <h2>Your next steps</h2>
     <ol class="steps">
-      <li>
+      <li class="film" data-offer="vip" hidden>
+        <span class="n">1</span>
+        <div>
+          <h3>Book your filming day</h3>
+          <p>Pick a weekday for our crew to film at your church. We plan the shots with you before the day, so all you bring is your pastor and a few of your people.</p>
+          <p class="facts"><span><b>4 hours</b> on site</span><span>We bring <b>the camera and lights</b></span></p>
+          <a class="btn" href="https://api.leadconnectorhq.com/widget/booking/buWGwsXCoZ4RlIfTdENc" target="_blank" rel="noopener">
+            Pick your filming day
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <p class="skip">Not ready to pick a date? <a href="#step-intake" id="skip-filming">Skip for now and start onboarding &darr;</a></p>
+        </div>
+      </li>
+      <li id="step-intake">
         <span class="n">1</span>
         <div>
           <h3>Fill out your church intake form</h3>
@@ -113,20 +136,10 @@
           </a>
         </div>
       </li>
-      <li data-offer="vip" hidden>
-        <span class="n">2</span>
-        <div>
-          <h3>Book your filming day</h3>
-          <p>Pick a weekday for us to film at your church, up to 6 hours. We'll plan the shots together on your kickoff call.</p>
-          <a class="btn" href="https://api.leadconnectorhq.com/widget/booking/zkAhmsdUB0JmTAUIJGxk" target="_blank" rel="noopener">
-            Book your filming day
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </a>
-        </div>
-      </li>
     </ol>
 
-    <p class="note"><b>Do the intake form first.</b> Phone carriers take 1 to 3 weeks to approve a church's texting number, and we file it the day your form comes in.</p>
+    <p class="note" data-offer="campaign"><b>Do the intake form first.</b> Phone carriers take 1 to 3 weeks to approve a church's texting number, and we file it the day your form comes in.</p>
+    <p class="note" data-offer="vip" hidden><b>No date yet? That's fine.</b> Skip it and start your intake form today, since phone carriers take 1 to 3 weeks to approve your church's texting number. We'll email you a link to book your filming day.</p>
 
     <p class="foot">Questions anytime: <a href="mailto:chris@bigsplash.agency">chris@bigsplash.agency</a>. Your receipt is on its way from Stripe.</p>
     <p class="foot"><a href="https://bigsplash.church/privacy/">Privacy and cookies</a></p>
@@ -146,6 +159,19 @@
     $('plan-name').textContent = o.name;
     $('plan-detail').textContent = o.detail;
     document.querySelectorAll('[data-offer]').forEach(el => { el.hidden = el.dataset.offer !== offer; });
+    // Number the steps this offer shows: VIP books filming first, then the intake form.
+    let n = 0;
+    document.querySelectorAll('.steps > li').forEach(li => { if (!li.hidden) li.querySelector('.n').textContent = ++n; });
+    // VIP: the skip link jumps to the intake form. The church still gets the booking reminders by email.
+    const skip = $('skip-filming');
+    if (skip) skip.addEventListener('click', e => {
+      e.preventDefault();
+      const step = $('step-intake');
+      step.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      step.classList.add('flash');
+      setTimeout(() => step.classList.remove('flash'), 1600);
+      try { if (window.gtag) gtag('event', 'vip_skip_filming'); } catch (err) {}
+    });
 
     // Meta Purchase and GA4 purchase, once per checkout. The session id doubles as the Meta eventID,
     // so a reload or a second tab doesn't count the sale twice.
