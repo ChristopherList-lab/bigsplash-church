@@ -945,7 +945,7 @@
     // Stripe checkout buttons
     document.querySelectorAll('[data-buy]').forEach(a => a.addEventListener('click', () => {
       if (window.bsTrack) bsTrack('christmas_checkout_click', { offer: a.dataset.buy });
-      try { if (window.fbq) fbq('track', 'InitiateCheckout', { content_name: a.dataset.buy === 'vip' ? 'VIP Filmed Christmas' : 'Christmas Campaign', value: a.dataset.buy === 'vip' ? 5997 : 1997, currency: 'USD' }); } catch (e) {}
+      try { if (window.fbq) fbq('track', 'InitiateCheckout', { content_name: a.dataset.buy === 'vip' ? 'VIP Filmed Christmas' : 'Christmas Campaign', value: a.dataset.buy === 'vip' ? 4997 : 1997, currency: 'USD' }); } catch (e) {}
     }));
     dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
 
