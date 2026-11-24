@@ -8,6 +8,24 @@
 <meta name="description" content="The terms between Big Splash Media LLC and a church on the monthly plan at the founding rate or on the VIP plan, version 2026-10-23.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#f8f5ee">
+<!-- TRACKING: the church pages' block with Google Analytics only, added 2026-11-23 so visits from the after-call links show in GA4. The Meta pixel stays off until an ID is present. -->
+<script>
+  window.BS_TRACK = { META_PIXEL_ID: '', GA4_ID: 'G-2L9Z57NZHC' };
+  (function(t){
+    if (t.META_PIXEL_ID) {
+      !function(f,b,e,v,n,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];s=b.createElement(e);s.async=!0;s.src=v;b.head.appendChild(s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', t.META_PIXEL_ID); fbq('track', 'PageView');
+    }
+    if (t.GA4_ID) {
+      var g=document.createElement('script'); g.async=true; g.src='https://www.googletagmanager.com/gtag/js?id='+t.GA4_ID; document.head.appendChild(g);
+      window.dataLayer=window.dataLayer||[]; window.gtag=function(){dataLayer.push(arguments)}; gtag('js', new Date()); gtag('config', t.GA4_ID);
+    }
+    window.bsTrack = function(name, data){
+      try { if (window.fbq) fbq('trackCustom', name, data||{}); } catch(e){}
+      try { if (window.gtag) gtag('event', name, data||{}); } catch(e){}
+    };
+  })(window.BS_TRACK);
+</script>
 <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
